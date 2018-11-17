@@ -1,7 +1,7 @@
-const { MongoClient } = require('mongodb')
-const assert = require('assert')
+import { MongoClient } from 'mongodb'
+import assert from 'assert'
 
-module.exports = function setupDb () {
+export default function setupDb () {
   return new Promise((resolve) => {
     // Create a new MongoClient
     const client = new MongoClient(
