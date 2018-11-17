@@ -3,35 +3,53 @@ const {
 } = require('redux-saga')
 const {
   getContext,
-  put
+  put,
+  all
 } = require('redux-saga/effects')
+const _ = require('lodash')
 const { promisify } = require('util')
 
+function * chunks (min, max, chunkSize) {
+  yield* _.chunk(
+    _.range(min, max),
+    chunkSize
+  )
+}
+
+const FETCH_CHUNK_SIZE = 50
 function * catchUpFromBlock ({
   web3,
   log,
   cache
 }, cursor) {
-  let latestBlock
-  do {
-    latestBlock = yield web3.eth.getBlockNumber()
-    for (; cursor < latestBlock; cursor++) {
-      const block = yield web3.eth.getBlock(cursor, true)
+  let latestBlock = yield web3.eth.getBlockNumber()
+  if (latestBlock <= cursor) {
+    return cursor
+  }
 
-      if (block === null) return cursor
+  for (let chunk of chunks(cursor, latestBlock, FETCH_CHUNK_SIZE)) {
+    const blocks = yield all(
+      chunk.map((block) => web3.eth.getBlock(block, true))
+    )
 
-      // Periodically checkpoint progress by setting block cursor in cache
-      if (cursor % 100 === 0) {
-        yield cache.set('block', cursor)
-        log.info('Set checkpoint', { cursor })
-      }
+    // If any of the blocks were null then we have to retry
+    // again later
+    if (blocks.contains(null)) {
+      return cursor
+    }
+    cursor += chunk.length
 
-      yield put({
+    // Periodically checkpoint progress by setting block cursor in cache
+    yield cache.set('block', cursor)
+    log.info('Set checkpoint', { cursor })
+
+    yield all(
+      blocks.map((block) => put({
         type: 'daolist/eth/BLOCK',
         payload: block
-      })
-    }
-  } while (cursor < latestBlock)
+      }))
+    )
+  }
 
   return cursor
 }
@@ -50,7 +68,7 @@ module.exports = function * blockFetcher () {
   // Get the starting block from cache, otherwise default to
   // earliest known DAO
   let cursor = (
-    yield get('block')
+    parseInt(yield get('block'), 10)
   ) || GENESIS_DAO_BLOCK
 
   log.info('Started', { cursor })
