@@ -1,12 +1,12 @@
-const {
+import {
   getContext,
   take,
   put
-} = require('redux-saga/effects')
-const _ = require('lodash')
-const abi = require('web3-eth-abi')
+} from 'redux-saga/effects'
+import _ from 'lodash'
+import abi from 'web3-eth-abi'
 
-const DAO_KITS = {
+export const DAO_KITS = {
   '0x705Cd9a00b87Bb019a87beEB9a50334219aC4444': {
     name: 'Democracy',
     abi: {
@@ -56,7 +56,7 @@ const DAO_KITS = {
   }
 }
 
-module.exports = function * () {
+export default function * () {
   const web3 = yield getContext('web3')
 
   const kitAdresses = _.keys(DAO_KITS)

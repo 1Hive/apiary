@@ -1,19 +1,19 @@
-const {
+import {
   setContext,
   fork
-} = require('redux-saga/effects')
-const Web3 = require('web3')
-const winston = require('winston')
-const createDb = require('./db')
-const createCache = require('./cache')
+} from 'redux-saga/effects'
+import Web3 from 'web3'
+import * as winston from 'winston'
+import createDb from './db'
+import createCache from './cache'
 
 // Sagas
-const blockFetcher = require('./fetchers/block')
-const transactionFetcher = require('./fetchers/transaction')
-const transactionClassifier = require('./classifiers/transaction')
-const daoPersister = require('./persisters/dao')
+import blockFetcher from './fetchers/block'
+import transactionFetcher from './fetchers/transaction'
+import transactionClassifier from './classifiers/transaction'
+import daoPersister from './persisters/dao'
 
-module.exports = function * main () {
+export default function * main () {
   // Create context
   const context = {
     db: yield createDb(),

@@ -1,15 +1,15 @@
-const {
+import {
   delay
-} = require('redux-saga')
-const {
+} from 'redux-saga'
+import {
   getContext,
   put,
   all
-} = require('redux-saga/effects')
-const _ = require('lodash')
-const { promisify } = require('util')
+} from 'redux-saga/effects'
+import _ from 'lodash'
+import { promisify } from 'util'
 
-function * chunks (min, max, chunkSize) {
+export function * chunks (min, max, chunkSize) {
   yield* _.chunk(
     _.range(min, max),
     chunkSize
@@ -17,7 +17,7 @@ function * chunks (min, max, chunkSize) {
 }
 
 const FETCH_CHUNK_SIZE = 50
-function * catchUpFromBlock ({
+export function * catchUpFromBlock ({
   web3,
   log,
   cache
@@ -56,7 +56,7 @@ function * catchUpFromBlock ({
 
 const ONE_MINUTE = 60 * 1000
 const GENESIS_DAO_BLOCK = 6593345
-module.exports = function * blockFetcher () {
+export default function * blockFetcher () {
   const web3 = yield getContext('web3')
   const cache = yield getContext('cache')
   const log = yield getContext('log')

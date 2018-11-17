@@ -1,9 +1,9 @@
-const {
+import {
   getContext,
   take
-} = require('redux-saga/effects')
+} from 'redux-saga/effects'
 
-module.exports = function * () {
+export default function * () {
   const db = yield getContext('db')
   const log = yield getContext('log')
 

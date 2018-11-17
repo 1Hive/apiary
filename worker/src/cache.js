@@ -1,6 +1,6 @@
-const redis = require('redis')
+import redis from 'redis'
 
-module.exports = function setupCache () {
+export default function setupCache () {
   return new Promise((resolve) => {
     // Create a new Redis client
     const client = redis.createClient({

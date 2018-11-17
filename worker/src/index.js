@@ -1,6 +1,6 @@
-const EventEmitter = require('events')
-const { runSaga } = require('redux-saga')
-const main = require('./root')
+import EventEmitter from 'events'
+import { runSaga } from 'redux-saga'
+import main from './root'
 
 const emitter = new EventEmitter()
 

@@ -1,9 +1,9 @@
-const {
+import {
   take,
   put
-} = require('redux-saga/effects')
+} from 'redux-saga/effects'
 
-module.exports = function * transactionFetcher () {
+export default function * transactionFetcher () {
   while (true) {
     const { payload: { transactions } } = yield take('daolist/eth/BLOCK')
 
