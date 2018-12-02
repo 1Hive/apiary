@@ -7,10 +7,7 @@ import {
   AppView,
   Text,
   Card,
-  Badge,
-  DropDown,
-  TextInput,
-  Info
+  Badge
 } from '@aragon/ui'
 
 const Wrapper = styled(AragonApp)`
@@ -59,6 +56,7 @@ const DaoCard = styled(Card).attrs({ width: '100%', height: 'auto' })`
   padding-top: 25px;
   transition: box-shadow 0.3s ease-in-out;
   cursor: pointer;
+  height: 175px;
 
   &:hover {
     box-shadow: 0 5px 15px rgba(0,0,0,0.3);
@@ -97,39 +95,6 @@ const Tag = styled(Badge)`
   color: white;
 `
 
-const Description = styled(Text)`
-  padding: 0 1rem;
-  margin-bottom: 30px;
-  text-align: center;
-`
-
-const Filters = styled.div`
-  width: 100%;
-  display: flex;
-  flex-wrap: nowrap;
-  margin-bottom: 1em;
-`
-
-const Filter = styled.label`
-  display: flex;
-  flex-wrap: nowrap;
-  align-items: center;
-  white-space: nowrap;
-  margin-left: ${({ right }) => right ? 'auto' : 'inherit'};
-`
-
-const FilterLabel = styled.span`
-  margin-right: 15px;
-  margin-left: 20px;
-  font-variant: small-caps;
-  text-transform: lowercase;
-  font-weight: 600;
-`
-
-const FilterInfo = styled(Info)`
-  width: 100%;
-  margin-bottom: 1em;
-`
 
 const fetchDaos = () =>
   fetch('https://daolist-io.herokuapp.com').then(res => res.json())
@@ -173,6 +138,20 @@ class App extends React.Component {
     safeWindow.location = link
   }
 
+  renderDao (dao) {
+    return <DaoCard
+      key={dao.name}
+      onClick={() => this.openSafe(`https://mainnet.aragon.org/#/${dao.name}.aragonid.eth`)}>
+      <Icon>
+        <Img width="64" height="64" src="https://mainnet.aragon.org/default.d2b45fd4.png" alt="" />
+      </Icon>
+      <Name>{dao.name}.aragonid.eth</Name>
+      <TagWrapper>
+        <Tag background={this.kitColor(dao.kit)}>{this.kitName(dao.kit)}</Tag>
+      </TagWrapper>
+    </DaoCard>
+  }
+
   render () {
     if (!this.state.daos) {
       return (
@@ -195,7 +174,7 @@ class App extends React.Component {
     })
 
     return (
-      <AppView title="daolist.io">
+      <AppView title='Daolist'>
         <Wrapper publicUrl="/">
           <Stats>
             <StatsCard height="150px">
@@ -211,41 +190,13 @@ class App extends React.Component {
               <Text size="small">Democracies</Text>
             </StatsCard>
           </Stats>
-          {/* <FilterInfo>
-            <b>Coming soon!</b> Filters and search are coming to a list near you.
-          </FilterInfo>
-          <Filters>
-            <Filter><FilterLabel>Sort</FilterLabel>
-              <DropDown
-                items={['Newest', 'Oldest']}
-              />
-            </Filter>
-            <Filter><FilterLabel>Type</FilterLabel>
-              <DropDown
-                items={['Democracy', 'Multisig', 'Other']}
-              />
-            </Filter>
-            <Filter right>
-              <TextInput placeholder="Search..." />
-            </Filter>
-          </Filters> */}
+          <Text size="xlarge">Favorites</Text>
           <DaoGrid>
-            {daos.map((dao) => (
-              <DaoCard
-                key={dao.name}
-                onClick={() => this.openSafe(`https://mainnet.aragon.org/#/${dao.name}.aragonid.eth`)}>
-                <Icon>
-                  <Img width="64" height="64" src="https://mainnet.aragon.org/default.d2b45fd4.png" alt="" />
-                </Icon>
-                <Name>{dao.name}.aragonid.eth</Name>
-                <TagWrapper>
-                  <Tag background={this.kitColor(dao.kit)}>{this.kitName(dao.kit)}</Tag>
-                </TagWrapper>
-                <Description>
-                  {/* Lorem ipsum dolor sit amet. */}
-                </Description>
-              </DaoCard>
-            ))}
+            {daos.slice(0, 6).map(this.renderDao.bind(this))}
+          </DaoGrid>
+          <Text size="xlarge">DAOs</Text>
+          <DaoGrid>
+            {daos.map(this.renderDao.bind(this))}
           </DaoGrid>
         </Wrapper>
       </AppView>
