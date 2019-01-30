@@ -171,7 +171,7 @@ class App extends React.Component {
       kits[dao.kit] = (kits[dao.kit] || 0) + 1
 
       return kits
-    })
+    }, {})
 
     return (
       <AppView title='Daolist'>
