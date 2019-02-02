@@ -190,11 +190,6 @@ class App extends React.Component {
               <Text size="small">Democracies</Text>
             </StatsCard>
           </Stats>
-          <Text size="xlarge">Favorites</Text>
-          <DaoGrid>
-            {daos.slice(0, 6).map(this.renderDao.bind(this))}
-          </DaoGrid>
-          <Text size="xlarge">DAOs</Text>
           <DaoGrid>
             {daos.map(this.renderDao.bind(this))}
           </DaoGrid>
