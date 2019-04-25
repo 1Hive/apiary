@@ -35,6 +35,7 @@ export function * catchUpFromBlock ({
     // If any of the blocks were null then we have to retry
     // again later
     if (blocks.includes(null)) {
+      log.debug('A block could not be fetched, trying again later...', { cursor })
       return cursor
     }
     cursor += chunk.length
