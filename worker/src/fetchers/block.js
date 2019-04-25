@@ -42,7 +42,7 @@ export function * catchUpFromBlock ({
 
     // Periodically checkpoint progress by setting block cursor in cache
     yield cache.set('block', cursor)
-    log.info('Set checkpoint', { cursor })
+    log.info('Set checkpoint', { cursor, latestBlock })
 
     yield all(
       blocks.map((block) => put({
