@@ -115,6 +115,13 @@ export default function * () {
       !kitAdresses.includes(transaction.to)
     ) continue
 
+    log.info('Transaction sent to known kit', {
+      kit: {
+        address: transaction.to,
+        name: DAO_KITS[transaction.to].name
+      }
+    })
+
     const kit = DAO_KITS[transaction.to]
     const methodId = web3.eth.abi.encodeFunctionSignature(
       kit.abi
@@ -123,7 +130,15 @@ export default function * () {
     // We only want transactions with whitelisted method IDs
     if (
       transaction.input.slice(0, 10) !== methodId
-    ) continue
+    ) {
+      log.info('Unknown method signature called on kit', {
+        kit: {
+          address: transaction.to,
+          name: DAO_KITS[transaction.to].name
+        }
+      })
+      continue
+    }
 
     // Get the DAO name
     const { name } = abi.decodeParameters(
