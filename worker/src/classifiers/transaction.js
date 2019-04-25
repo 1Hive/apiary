@@ -105,6 +105,7 @@ export const DAO_KITS = {
 
 export default function * () {
   const web3 = yield getContext('web3')
+  const log = yield getContext('log')
 
   const kitAdresses = _.keys(DAO_KITS)
   while (true) {
