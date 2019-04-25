@@ -4,7 +4,7 @@
   "main": "index.html",
   "scripts": {
     "start": "parcel src/index.html --open",
-    "build": "parcel build src/index.html",
+    "build": "parcel build src/index.html && cp src/dao.svg dist",
     "now-build": "npm run build"
   },
   "dependencies": {

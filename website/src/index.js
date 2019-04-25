@@ -112,8 +112,10 @@ class App extends React.Component {
 
   kitName (kit) {
     const name = {
-      '0x705Cd9a00b87Bb019a87beEB9a50334219aC4444': 'Democracy',
-      '0x41bbaf498226b68415f1C78ED541c45A18fd7696': 'Multisig'
+      '0x705Cd9a00b87Bb019a87beEB9a50334219aC4444': 'Democracy (1.0.0)',
+      '0x7f3ed10366826a1227025445D4f4e3e14BBfc91d': 'Democracy (2.0.0)',
+      '0x41bbaf498226b68415f1C78ED541c45A18fd7696': 'Multisig (1.0.0)',
+      '0x87aa2980dde7d2D4e57191f16BB57cF80bf6E5A6': 'Multisig (2.0.0)'
     }[kit]
 
     return name
@@ -122,7 +124,9 @@ class App extends React.Component {
   kitColor (kit) {
     const color = {
       '0x705Cd9a00b87Bb019a87beEB9a50334219aC4444': 'rgb(2, 139, 207)',
-      '0x41bbaf498226b68415f1C78ED541c45A18fd7696': 'rgb(127, 173, 220)'
+      '0x7f3ed10366826a1227025445D4f4e3e14BBfc91d': 'rgb(2, 139, 207)',
+      '0x41bbaf498226b68415f1C78ED541c45A18fd7696': 'rgb(127, 173, 220)',
+      '0x87aa2980dde7d2D4e57191f16BB57cF80bf6E5A6': 'rgb(127, 173, 220)'
     }[kit]
 
     return color
@@ -143,7 +147,7 @@ class App extends React.Component {
       key={dao.name}
       onClick={() => this.openSafe(`https://mainnet.aragon.org/#/${dao.name}.aragonid.eth`)}>
       <Icon>
-        <Img width="64" height="64" src="https://mainnet.aragon.org/default.d2b45fd4.png" alt="" />
+        <Img width="64" height="64" src="dao.svg" alt="" />
       </Icon>
       <Name>{dao.name}.aragonid.eth</Name>
       <TagWrapper>
