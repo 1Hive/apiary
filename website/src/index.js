@@ -97,7 +97,7 @@ const Tag = styled(Badge)`
 
 
 const fetchDaos = () =>
-  fetch('https://daolist-io.herokuapp.com').then(res => res.json())
+  fetch('https://daolist.1hive.org').then(res => res.json())
 
 class App extends React.Component {
   constructor () {
