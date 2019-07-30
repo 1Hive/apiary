@@ -59,6 +59,14 @@ for dir in ./*; do (cd "$dir" && npm i); done
 for dir in ./*; do (cd "$dir" && npm start); done
 ```
 
+Alternatively you can use Docker Compose:
+
+```sh
+docker-compose up
+```
+
+The API will be available at localhost:3000 and the website will be available at localhost:8888.
+
 ## Release
 
 - The API can be found at https://api.daolist.io
