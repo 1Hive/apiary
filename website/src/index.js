@@ -159,7 +159,7 @@ class App extends React.Component {
   render () {
     if (!this.state.daos) {
       return (
-        <AppView title="daolist.io" backgroundLogo>
+        <AppView title="Apiary Explorer" backgroundLogo>
           <Wrapper publicUrl="/">Loading...</Wrapper>
         </AppView>
       )
@@ -178,7 +178,7 @@ class App extends React.Component {
     }, {})
 
     return (
-      <AppView title='Daolist'>
+      <AppView title='Apiary Explorer'>
         <Wrapper publicUrl="/">
           <Stats>
             <StatsCard height="150px">
