@@ -18,7 +18,15 @@ export default function * main () {
   const context = {
     db: yield createDb(),
     cache: yield createCache(),
-    web3: new Web3(process.env.ETH_NODE || 'wss://mainnet.infura.io/ws'),
+    web3: new Web3(
+      new Web3.providers.WebsocketProvider(
+        process.env.ETH_NODE || 'wss://mainnet.infura.io/ws', {
+        clientConfig: {
+          maxReceivedFrameSize: 100000000,
+          maxReceivedMessageSize: 100000000,
+        }
+      })
+    ),
     log: winston.createLogger({
       level: process.env.LOG_LEVEL || 'info',
       transports: [
