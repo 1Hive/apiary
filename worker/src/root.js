@@ -20,7 +20,7 @@ export default function * main () {
     cache: yield createCache(),
     web3: new Web3(
       new Web3.providers.WebsocketProvider(
-        process.env.ETH_NODE || 'wss://mainnet.infura.io/ws', , {
+        process.env.ETH_NODE || 'wss://mainnet.infura.io/ws', {
         clientConfig: {
           maxReceivedFrameSize: 100000000,
           maxReceivedMessageSize: 100000000,
