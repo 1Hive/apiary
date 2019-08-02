@@ -1,6 +1,5 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import ReactGA from 'react-ga'
 import styled from 'styled-components'
 import {
   AragonApp,
@@ -133,10 +132,6 @@ class App extends React.Component {
   }
 
   openSafe (link) {
-    ReactGA.outboundLink({
-      label: link
-    })
-
     var safeWindow = window.open()
     safeWindow.opener = null
     safeWindow.location = link
@@ -202,8 +197,5 @@ class App extends React.Component {
     )
   }
 }
-
-ReactGA.initialize('UA-129065081-1')
-ReactGA.pageview(window.location.pathname + window.location.search)
 
 ReactDOM.render(<App />, document.getElementById('app'))
