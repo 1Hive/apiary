@@ -5,25 +5,32 @@ export default {
       name: 'newInstance',
       constant: false,
       type: 'function',
-      inputs: [{
-        name: 'name',
-        type: 'string'
-      }, {
-        name: 'holders',
-        type: 'address[]'
-      }, {
-        name: 'tokens',
-        type: 'uint256[]'
-      }, {
-        name: 'supportNeeded',
-        type: 'uint64'
-      }, {
-        name: 'minAcceptanceQuorum',
-        type: 'uint64'
-      }, {
-        name: 'voteDuration',
-        type: 'uint64'
-      }],
+      inputs: [
+        {
+          name: 'name',
+          type: 'string'
+        },
+        {
+          name: 'holders',
+          type: 'address[]'
+        },
+        {
+          name: 'tokens',
+          type: 'uint256[]'
+        },
+        {
+          name: 'supportNeeded',
+          type: 'uint64'
+        },
+        {
+          name: 'minAcceptanceQuorum',
+          type: 'uint64'
+        },
+        {
+          name: 'voteDuration',
+          type: 'uint64'
+        }
+      ],
       outputs: []
     }
   },
@@ -33,25 +40,32 @@ export default {
       name: 'newInstance',
       constant: false,
       type: 'function',
-      inputs: [{
-        name: 'name',
-        type: 'string'
-      }, {
-        name: 'holders',
-        type: 'address[]'
-      }, {
-        name: 'tokens',
-        type: 'uint256[]'
-      }, {
-        name: 'supportNeeded',
-        type: 'uint64'
-      }, {
-        name: 'minAcceptanceQuorum',
-        type: 'uint64'
-      }, {
-        name: 'voteDuration',
-        type: 'uint64'
-      }],
+      inputs: [
+        {
+          name: 'name',
+          type: 'string'
+        },
+        {
+          name: 'holders',
+          type: 'address[]'
+        },
+        {
+          name: 'tokens',
+          type: 'uint256[]'
+        },
+        {
+          name: 'supportNeeded',
+          type: 'uint64'
+        },
+        {
+          name: 'minAcceptanceQuorum',
+          type: 'uint64'
+        },
+        {
+          name: 'voteDuration',
+          type: 'uint64'
+        }
+      ],
       outputs: []
     }
   },
@@ -61,16 +75,20 @@ export default {
       name: 'newInstance',
       constant: false,
       type: 'function',
-      inputs: [{
-        name: 'name',
-        type: 'string'
-      }, {
-        name: 'signers',
-        type: 'address[]'
-      }, {
-        name: 'neededSignatures',
-        type: 'uint256'
-      }],
+      inputs: [
+        {
+          name: 'name',
+          type: 'string'
+        },
+        {
+          name: 'signers',
+          type: 'address[]'
+        },
+        {
+          name: 'neededSignatures',
+          type: 'uint256'
+        }
+      ],
       outputs: []
     }
   },
@@ -80,16 +98,20 @@ export default {
       name: 'newInstance',
       constant: false,
       type: 'function',
-      inputs: [{
-        name: 'name',
-        type: 'string'
-      }, {
-        name: 'signers',
-        type: 'address[]'
-      }, {
-        name: 'neededSignatures',
-        type: 'uint256'
-      }],
+      inputs: [
+        {
+          name: 'name',
+          type: 'string'
+        },
+        {
+          name: 'signers',
+          type: 'address[]'
+        },
+        {
+          name: 'neededSignatures',
+          type: 'uint256'
+        }
+      ],
       outputs: []
     }
   }

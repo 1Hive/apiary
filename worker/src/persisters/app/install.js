@@ -1,8 +1,4 @@
-import {
-  getContext,
-  takeEvery,
-  fork
-} from 'redux-saga/effects'
+import { getContext, takeEvery, fork } from 'redux-saga/effects'
 import ENS from 'ethjs-ens'
 
 export default function * () {

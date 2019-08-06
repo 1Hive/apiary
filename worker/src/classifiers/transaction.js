@@ -1,8 +1,4 @@
-import {
-  getContext,
-  take,
-  put
-} from 'redux-saga/effects'
+import { getContext, take, put } from 'redux-saga/effects'
 import _ from 'lodash'
 import abi from 'web3-eth-abi'
 import kits from '../data/kits'
@@ -16,9 +12,7 @@ export default function * () {
     const { payload: transaction } = yield take('daolist/eth/TRANSACTION')
 
     // We only want transactions to DAO kits
-    if (
-      !kitAdresses.includes(transaction.to)
-    ) continue
+    if (!kitAdresses.includes(transaction.to)) continue
 
     log.info('Transaction sent to known kit', {
       kit: {
@@ -28,14 +22,10 @@ export default function * () {
     })
 
     const kit = kits[transaction.to]
-    const methodId = web3.eth.abi.encodeFunctionSignature(
-      kit.abi
-    )
+    const methodId = web3.eth.abi.encodeFunctionSignature(kit.abi)
 
     // We only want transactions with whitelisted method IDs
-    if (
-      transaction.input.slice(0, 10) !== methodId
-    ) {
+    if (transaction.input.slice(0, 10) !== methodId) {
       log.info('Unknown method signature called on kit', {
         kit: {
           address: transaction.to,

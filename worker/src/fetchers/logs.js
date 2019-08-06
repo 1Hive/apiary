@@ -1,8 +1,4 @@
-import {
-  getContext,
-  takeEvery,
-  put
-} from 'redux-saga/effects'
+import { getContext, takeEvery, put } from 'redux-saga/effects'
 import abi from 'web3-eth-abi'
 
 export default function * () {
@@ -11,9 +7,7 @@ export default function * () {
   yield takeEvery('daolist/eth/TRANSACTION', function * ({
     payload: transaction
   }) {
-    const { logs } = yield web3.eth.getTransactionReceipt(
-      transaction.hash
-    )
+    const { logs } = yield web3.eth.getTransactionReceipt(transaction.hash)
 
     for (let log of logs) {
       yield put({

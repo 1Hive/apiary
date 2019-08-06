@@ -1,8 +1,4 @@
-import {
-  getContext,
-  takeEvery,
-  put
-} from 'redux-saga/effects'
+import { getContext, takeEvery, put } from 'redux-saga/effects'
 import abi from 'web3-eth-abi'
 import topics from '../data/topics'
 
@@ -11,21 +7,27 @@ export default function * () {
   const log = yield getContext('log')
 
   const topicHashes = Object.values(topics)
-  yield takeEvery('daolist/eth/LOG', function * ({
-    payload: event
-  }) {
+  yield takeEvery('daolist/eth/LOG', function * ({ payload: event }) {
     switch (event.topics[0]) {
       case topics.NEW_APP_PROXY:
-        const { proxy, appId } = abi.decodeLog([{
-          type: 'address',
-          name: 'proxy'
-        }, {
-          type: 'bool',
-          name: 'isUpgradeable'
-        }, {
-          type: 'bytes32',
-          name: 'appId'
-        }], event.data, [])
+        const { proxy, appId } = abi.decodeLog(
+          [
+            {
+              type: 'address',
+              name: 'proxy'
+            },
+            {
+              type: 'bool',
+              name: 'isUpgradeable'
+            },
+            {
+              type: 'bytes32',
+              name: 'appId'
+            }
+          ],
+          event.data,
+          []
+        )
 
         const appInstall = {
           address: proxy,
@@ -40,13 +42,20 @@ export default function * () {
         break
 
       case topics.NEW_VERSION:
-        const { versionId, semanticVersion } = abi.decodeLog([{
-          type: 'uint256',
-          name: 'versionId'
-        }, {
-          type: 'uint16[3]',
-          name: 'semanticVersion'
-        }], event.data, [])
+        const { versionId, semanticVersion } = abi.decodeLog(
+          [
+            {
+              type: 'uint256',
+              name: 'versionId'
+            },
+            {
+              type: 'uint16[3]',
+              name: 'semanticVersion'
+            }
+          ],
+          event.data,
+          []
+        )
 
         const newVersion = {
           id: versionId,
