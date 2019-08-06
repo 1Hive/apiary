@@ -1,6 +1,6 @@
 import {
   setContext,
-  fork
+  all
 } from 'redux-saga/effects'
 import Web3 from 'web3'
 import * as winston from 'winston'
@@ -10,8 +10,11 @@ import createCache from './cache'
 // Sagas
 import blockFetcher from './fetchers/block'
 import transactionFetcher from './fetchers/transaction'
+import logsFetcher from './fetchers/logs'
 import transactionClassifier from './classifiers/transaction'
-import daoPersister from './persisters/dao'
+import eventClassifier from './classifiers/event'
+import appPersister from './persisters/app/index'
+import daoPersister from './persisters/dao/index'
 
 export default function * main () {
   // Create context
@@ -41,10 +44,15 @@ export default function * main () {
   yield setContext(context)
 
   // Start sagas
-  yield [
-    fork(blockFetcher),
-    fork(transactionFetcher),
-    fork(transactionClassifier),
-    fork(daoPersister)
-  ]
+  yield all([
+    blockFetcher(),
+    transactionFetcher(),
+    logsFetcher(),
+
+    eventClassifier(),
+    transactionClassifier(),
+
+    daoPersister(),
+    appPersister()
+  ])
 }

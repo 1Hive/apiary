@@ -54,9 +54,9 @@ export function * catchUpFromBlock ({
 
   return cursor
 }
-
+ 
 const ONE_MINUTE = 60 * 1000
-const GENESIS_DAO_BLOCK = 6593345
+const DEFAULT_CURSOR = 6592900
 export default function * blockFetcher () {
   const web3 = yield getContext('web3')
   const cache = yield getContext('cache')
@@ -70,7 +70,7 @@ export default function * blockFetcher () {
   // earliest known DAO
   let cursor = (
     parseInt(yield get('block'), 10)
-  ) || GENESIS_DAO_BLOCK
+  ) || DEFAULT_CURSOR
 
   log.info('Started', { cursor })
 
