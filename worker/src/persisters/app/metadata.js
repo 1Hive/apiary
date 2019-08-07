@@ -1,13 +1,14 @@
 import { getContext, takeEvery, fork } from 'redux-saga/effects'
 import abi from 'web3-eth-abi'
 import got from 'got'
+import path from 'path'
 
 export function fetchIpfsAsset (uri, file) {
   const extension = file.split('.').pop()
-  let url = new URL(file)
 
-  if (!url.hostname) {
-    url = new URL(path.join(uri, file), process.env.IPFS_URI)
+  let url = file
+  if (!url.includes('http')) {
+    url = new URL(path.join('ipfs', uri, file), process.env.IPFS_URI)
   }
 
   return got(url.toString(), {
@@ -76,8 +77,8 @@ export async function fetchVersion (web3, repository, versionId) {
 
   const isKnownApp = !!KNOWN_APPS_BY_URI[uri]
 
-  let manifest
-  let artifact
+  let manifest = {}
+  let artifact = {}
   if (type === 'ipfs' && uri && !isKnownApp) {
     manifest = (await fetchIpfsAsset(uri, 'manifest.json')) || {}
     artifact = (await fetchIpfsAsset(uri, 'artifact.json')) || {}
