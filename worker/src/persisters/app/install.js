@@ -1,5 +1,6 @@
 import { getContext, takeEvery, fork } from 'redux-saga/effects'
 import ENS from 'ethjs-ens'
+import { safeUpsert } from '../../utils/index'
 
 export default function * () {
   const web3 = yield getContext('web3')
@@ -13,7 +14,8 @@ export default function * () {
     log.info('App installed', appInstall)
 
     // Add app to org
-    yield orgs.updateOne(
+    yield safeUpsert(
+      orgs,
       { address: appInstall.dao },
       {
         $addToSet: {
@@ -22,8 +24,7 @@ export default function * () {
             address: appInstall.address
           }
         }
-      },
-      { upsert: true }
+      }
     )
   })
 }

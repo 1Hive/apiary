@@ -1,4 +1,5 @@
 import { getContext, take } from 'redux-saga/effects'
+import { safeUpsert } from '../../utils/index'
 
 export default function * () {
   const web3 = yield getContext('web3')
@@ -14,6 +15,6 @@ export default function * () {
     const address = yield web3.eth.ens.getAddress(dao.name)
     dao.address = address
 
-    yield orgs.updateOne({ address }, { $set: dao }, { upsert: true })
+    yield safeUpsert(orgs, { address }, { $set: dao })
   }
 }

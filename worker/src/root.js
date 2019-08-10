@@ -16,6 +16,11 @@ import eventClassifier from './classifiers/event'
 import appPersister from './persisters/app/index'
 import daoPersister from './persisters/dao/index'
 
+export async function createIndexes (db) {
+  await db.createIndex('orgs', 'address', { unique: true })
+  await db.createIndex('apps', 'address', { unique: true })
+}
+
 export default function * main () {
   // Create context
   const context = {
@@ -42,6 +47,7 @@ export default function * main () {
     })
   }
   yield setContext(context)
+  yield createIndexes(context.db)
 
   // Start sagas
   yield all([
