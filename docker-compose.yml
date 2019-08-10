@@ -4,21 +4,26 @@ services:
   mongo:
     image: mongo
     ports:
-     - "27017:27017"
+    - "27017:27017"
+    volumes:
+    - mongo-data:/data/db
   # Cache
   redis:
     image: "redis:alpine"
+    entrypoint: redis-server --appendonly yes
+    volumes:
+    - cache-data:/data
   # API
   api:
     build:
       context: ./api
       dockerfile: Dockerfile.web
     ports:
-     - "3000:3000"
+    - "3000:3000"
     environment:
-      - MONGODB_URI=mongodb://mongo:27017
+    - MONGODB_URI=mongodb://mongo:27017
     depends_on:
-     - mongo
+    - mongo
   # Worker
   worker:
     build:
@@ -43,3 +48,7 @@ services:
     depends_on:
     - api
     - worker
+
+volumes:
+  cache-data:
+  mongo-data:
