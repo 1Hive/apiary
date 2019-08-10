@@ -22,16 +22,18 @@ This pattern is built around the concept that Ethereum is basically one huge eve
 
 #### Configuration
 
-| Environment Variable | Description                                   | Default                       |
-|----------------------|-----------------------------------------------|-------------------------------|
-| **Database**         |                                               |                               |
-| `MONGODB_URI`        | The URI of the MongoDB instance to connect to | `mongodb://localhost:27017`   |
-| **Ethereum**         |                                               |                               |
-| `ETH_NODE`           | The URI of the Parity node to connect to      | `wss://mainnet.daolist.io/ws` |
-| **Cache**            |                                               |                               |
-| `REDIS_URL`          | The URL of the Redis instance to connect to   | `redis://localhost:6379`      |
-| **Misc**             |                                               |                               |
-| `LOG_LEVEL`          | The log level                                 | `info`                        |
+| Environment Variable | Description                                     | Default                       |
+|----------------------|-------------------------------------------------|-------------------------------|
+| **Database**         |                                                 |                               |
+| `MONGODB_URI`        | The URI of the MongoDB instance to connect to   | `mongodb://localhost:27017`   |
+| **Ethereum**         |                                                 |                               |
+| `ETH_NODE`           | The URI of the Parity node to connect to        | `wss://mainnet.daolist.io/ws` |
+| **Cache**            |                                                 |                               |
+| `REDIS_URL`          | The URL of the Redis instance to connect to     | `redis://localhost:6379`      |
+| **IPFS**             |                                                 |                               |
+| `IPFS_URL`           | The URL of the IPFS gateway to fetch files from |                               |
+| **Misc**             |                                                 |                               |
+| `LOG_LEVEL`          | The log level                                   | `info`                        |
 
 ### [api](/api)
 

@@ -1,22 +1,18 @@
 import EventEmitter from 'events'
-import { runSaga } from 'redux-saga'
+import { runSaga, stdChannel } from 'redux-saga'
 import main from './root'
 
 const emitter = new EventEmitter()
+const channel = stdChannel()
 
-runSaga(
-  {
-    subscribe (cb) {
-      emitter.on('event', (event) => cb(event))
+emitter.on('action', channel.put)
 
-      return () => emitter.removeAllListeners()
-    },
-    dispatch (event) {
-      emitter.emit('event', event)
-    },
-    getState () {
-      return {}
-    }
+runSaga({
+  channel,
+  dispatch (output) {
+    emitter.emit('action', output)
   },
-  main
-)
+  getState () {
+    return {}
+  }
+}, main)
