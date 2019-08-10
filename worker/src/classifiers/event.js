@@ -30,9 +30,8 @@ export default function * () {
         )
 
         const appInstall = {
-          address: proxy,
-          appId,
-          dao: event.address
+          proxy,
+          appId
         }
 
         yield put({

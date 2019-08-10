@@ -1,6 +1,6 @@
 import { getContext, takeEvery, fork } from 'redux-saga/effects'
 import ENS from 'ethjs-ens'
-import { safeUpsert } from '../../utils/index'
+import { safeUpsert, getKernelAddress } from '../../utils/index'
 
 export default function * () {
   const web3 = yield getContext('web3')
@@ -11,17 +11,22 @@ export default function * () {
   yield takeEvery('daolist/dao/APP_INSTALLED', function * ({
     payload: appInstall
   }) {
-    log.info('App installed', appInstall)
+    const address = yield getKernelAddress(web3, appInstall.proxy)
+    log.info('App installed', {
+      appId: appInstall.appId,
+      proxy: appInstall.proxy,
+      address
+    })
 
     // Add app to org
     yield safeUpsert(
       orgs,
-      { address: appInstall.dao },
+      { address },
       {
         $addToSet: {
           apps: {
             id: appInstall.appId,
-            address: appInstall.address
+            address: appInstall.proxy
           }
         }
       }
