@@ -140,14 +140,15 @@ class App extends React.Component {
   renderDao (dao) {
     return <DaoCard
       key={dao.name}
-      onClick={() => this.openSafe(`https://mainnet.aragon.org/#/${dao.name}.aragonid.eth`)}>
+      onClick={() => this.openSafe(`https://mainnet.aragon.org/#/${dao.name || dao.address}`)}>
       <Icon>
         <Img width="64" height="64" src="dao.svg" alt="" />
       </Icon>
-      <Name>{dao.name}.aragonid.eth</Name>
-      <TagWrapper>
-        <Tag background={this.kitColor(dao.kit)}>{this.kitName(dao.kit)}</Tag>
-      </TagWrapper>
+      <Name>{dao.name || dao.address}</Name>
+      {dao.kit &&
+        <TagWrapper>
+          <Tag background={this.kitColor(dao.kit)}>{this.kitName(dao.kit)}</Tag>
+        </TagWrapper>}
     </DaoCard>
   }
 
@@ -167,7 +168,9 @@ class App extends React.Component {
     })
 
     const kits = this.state.daos.reduce((kits = {}, dao) => {
-      kits[dao.kit] = (kits[dao.kit] || 0) + 1
+      if (dao.kit) {
+        kits[dao.kit] = (kits[dao.kit] || 0) + 1
+      }
 
       return kits
     }, {})
