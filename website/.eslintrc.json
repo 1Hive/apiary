@@ -4,7 +4,7 @@
         "es6": true
     },
     "extends": [
-        "standard"
+        "eslint:recommended"
     ],
     "globals": {
         "Atomics": "readonly",
