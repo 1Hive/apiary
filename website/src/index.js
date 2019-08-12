@@ -5,8 +5,7 @@ import {
   AragonApp,
   AppView,
   Text,
-  Card,
-  Badge
+  Card
 } from '@aragon/ui'
 
 const Wrapper = styled(AragonApp)`
@@ -55,7 +54,7 @@ const DaoCard = styled(Card).attrs({ width: '100%', height: 'auto' })`
   padding-top: 25px;
   transition: box-shadow 0.3s ease-in-out;
   cursor: pointer;
-  height: 175px;
+  height: 150px;
 
   &:hover {
     box-shadow: 0 5px 15px rgba(0,0,0,0.3);
@@ -79,19 +78,9 @@ const Name = styled.p`
   width: 100%;
   justify-content: center;
   margin-bottom: 10px;
-`
-
-const TagWrapper = styled.div`
-  max-width: 100%;
-  padding: 0 20px;
-  margin-bottom: 10px;
-`
-
-const Tag = styled(Badge)`
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: block;
-  color: white;
+  word-break: break-word;
+  padding: 0 .5em;
+  text-align: center;
 `
 
 const fetchDaos = () =>
@@ -108,28 +97,6 @@ class App extends React.Component {
     fetchDaos().then(daos => this.setState({ daos }))
   }
 
-  kitName (kit) {
-    const name = {
-      '0x705Cd9a00b87Bb019a87beEB9a50334219aC4444': 'Democracy (1.0.0)',
-      '0x7f3ed10366826a1227025445D4f4e3e14BBfc91d': 'Democracy (2.0.0)',
-      '0x41bbaf498226b68415f1C78ED541c45A18fd7696': 'Multisig (1.0.0)',
-      '0x87aa2980dde7d2D4e57191f16BB57cF80bf6E5A6': 'Multisig (2.0.0)'
-    }[kit]
-
-    return name
-  }
-
-  kitColor (kit) {
-    const color = {
-      '0x705Cd9a00b87Bb019a87beEB9a50334219aC4444': 'rgb(2, 139, 207)',
-      '0x7f3ed10366826a1227025445D4f4e3e14BBfc91d': 'rgb(2, 139, 207)',
-      '0x41bbaf498226b68415f1C78ED541c45A18fd7696': 'rgb(127, 173, 220)',
-      '0x87aa2980dde7d2D4e57191f16BB57cF80bf6E5A6': 'rgb(127, 173, 220)'
-    }[kit]
-
-    return color
-  }
-
   openSafe (link) {
     var safeWindow = window.open()
     safeWindow.opener = null
@@ -144,10 +111,6 @@ class App extends React.Component {
         <Img width="64" height="64" src="dao.svg" alt="" />
       </Icon>
       <Name>{dao.name || dao.address}</Name>
-      {dao.kit &&
-        <TagWrapper>
-          <Tag background={this.kitColor(dao.kit)}>{this.kitName(dao.kit)}</Tag>
-        </TagWrapper>}
     </DaoCard>
   }
 
@@ -166,14 +129,6 @@ class App extends React.Component {
       return 0
     })
 
-    const kits = this.state.daos.reduce((kits = {}, dao) => {
-      if (dao.kit) {
-        kits[dao.kit] = (kits[dao.kit] || 0) + 1
-      }
-
-      return kits
-    }, {})
-
     return (
       <AppView title='Apiary Explorer'>
         <Wrapper publicUrl="/">
@@ -181,14 +136,6 @@ class App extends React.Component {
             <StatsCard height="150px">
               <Text size="xxlarge">{this.state.daos.length}</Text>
               <Text size="small">DAOs since genesis</Text>
-            </StatsCard>
-            <StatsCard height="150px">
-              <Text size="xxlarge">{kits['0x41bbaf498226b68415f1C78ED541c45A18fd7696']}</Text>
-              <Text size="small">Multisigs</Text>
-            </StatsCard>
-            <StatsCard height="150px">
-              <Text size="xxlarge">{kits['0x705Cd9a00b87Bb019a87beEB9a50334219aC4444']}</Text>
-              <Text size="small">Democracies</Text>
             </StatsCard>
           </Stats>
           <DaoGrid>
