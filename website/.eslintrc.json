@@ -1,10 +1,12 @@
 {
+    "parser": "babel-eslint",
     "env": {
         "browser": true,
         "es6": true
     },
     "extends": [
-        "standard"
+        "standard",
+        "plugin:react/recommended"
     ],
     "globals": {
         "Atomics": "readonly",

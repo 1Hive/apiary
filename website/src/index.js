@@ -94,7 +94,6 @@ const Tag = styled(Badge)`
   color: white;
 `
 
-
 const fetchDaos = () =>
   fetch(process.env.API_URL || 'https://daolist.1hive.org').then(res => res.json())
 
@@ -105,7 +104,7 @@ class App extends React.Component {
     this.state = { daos: null }
   }
 
-  componentWillMount () {
+  componentDidMount () {
     fetchDaos().then(daos => this.setState({ daos }))
   }
 
