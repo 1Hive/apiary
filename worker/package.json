@@ -6,6 +6,7 @@
   "scripts": {
     "start": "node --no-deprecation dist/index.js",
     "build": "rollup src/index.js -o dist/index.js --format cjs",
+    "lint": "eslint src",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

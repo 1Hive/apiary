@@ -1,6 +1,6 @@
 version: 2
 jobs:
-  install:
+  lint:
     docker:
       - image: circleci/node:10.15.3
     steps:
@@ -14,21 +14,15 @@ jobs:
       - run:
           name: Install dependencies in api
           command: cd api && npm i
-
-  lint:
-    docker:
-      - image: circleci/node:10.15.3
-    steps:
-      - checkout
       - run:
           name: Run lint on worker
-          command: cd worker && npx eslint
+          command: cd worker && npm run lint
       - run:
           name: Run lint on website
-          command: cd website && npx eslint
+          command: cd website && npm run lint
       - run:
           name: Run lint on api
-          command: cd api && npx eslint
+          command: cd api && npm run lint
 
 workflows:
   version: 2
