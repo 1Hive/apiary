@@ -6,7 +6,7 @@ export default function * transactionFetcher () {
       payload: { transactions }
     } = yield take('daolist/eth/BLOCK')
 
-    for (let transaction of transactions) {
+    for (const transaction of transactions) {
       yield put({
         type: 'daolist/eth/TRANSACTION',
         payload: transaction

@@ -1,4 +1,4 @@
-import { getContext, takeEvery, fork } from 'redux-saga/effects'
+import { getContext, takeEvery } from 'redux-saga/effects'
 import abi from 'web3-eth-abi'
 import got from 'got'
 import path from 'path'

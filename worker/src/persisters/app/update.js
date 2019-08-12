@@ -1,8 +1,6 @@
-import { getContext, takeEvery, fork } from 'redux-saga/effects'
-import ENS from 'ethjs-ens'
+import { getContext, takeEvery } from 'redux-saga/effects'
 
 export default function * () {
-  const web3 = yield getContext('web3')
   const db = yield getContext('db')
   const log = yield getContext('log')
 

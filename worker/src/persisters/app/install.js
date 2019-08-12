@@ -1,5 +1,4 @@
-import { getContext, takeEvery, fork } from 'redux-saga/effects'
-import ENS from 'ethjs-ens'
+import { getContext, takeEvery } from 'redux-saga/effects'
 import { safeUpsert, getKernelAddress } from '../../utils/index'
 
 export default function * () {

@@ -1,35 +1,34 @@
-# Javascript Node CircleCI 2.0 configuration file
-#
-# Check https://circleci.com/docs/2.0/language-javascript/ for more details
-#
 version: 2
 jobs:
+  install:
+    docker:
+      - image: circleci/node:10.15.3
+    steps:
+      - checkout
+      - run:
+          name: Install dependencies in worker
+          command: cd worker && npm i
+      - run:
+          name: Install dependencies in website
+          command: cd website && npm i
+      - run:
+          name: Install dependencies in api
+          command: cd api && npm i
 
   lint:
     docker:
-      # specify the version you desire here
       - image: circleci/node:10.15.3
-
-      # Specify service dependencies here if necessary
-      # CircleCI maintains a library of pre-built images
-      # documented at https://circleci.com/docs/2.0/circleci-images/
-      # - image: circleci/mongo:3.4.4
-
-    working_directory: ~/repo
-
     steps:
       - checkout
       - run:
           name: Run lint on worker
-          command: npx eslint worker/src/**/*.js
-
+          command: cd worker && npx eslint
       - run:
           name: Run lint on website
-          Command: npx eslint website/src/*.js
-
+          command: cd website && npx eslint
       - run:
           name: Run lint on api
-          Command: npx eslint api/src/*.js
+          command: cd api && npx eslint
 
 workflows:
   version: 2
