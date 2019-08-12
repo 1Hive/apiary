@@ -9,12 +9,12 @@ export function * chunks (min, max, chunkSize) {
 
 const FETCH_CHUNK_SIZE = 50
 export function * catchUpFromBlock ({ web3, log, cache }, cursor) {
-  let latestBlock = yield web3.eth.getBlockNumber()
+  const latestBlock = yield web3.eth.getBlockNumber()
   if (latestBlock <= cursor) {
     return cursor
   }
 
-  for (let chunk of chunks(cursor, latestBlock, FETCH_CHUNK_SIZE)) {
+  for (const chunk of chunks(cursor, latestBlock, FETCH_CHUNK_SIZE)) {
     const blocks = yield all(chunk.map(block => web3.eth.getBlock(block, true)))
 
     // If any of the blocks were null then we have to retry

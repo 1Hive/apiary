@@ -1,12 +1,8 @@
-import { getContext, takeEvery, put } from 'redux-saga/effects'
+import { takeEvery, put } from 'redux-saga/effects'
 import abi from 'web3-eth-abi'
 import topics from '../data/topics'
 
 export default function * () {
-  const web3 = yield getContext('web3')
-  const log = yield getContext('log')
-
-  const topicHashes = Object.values(topics)
   yield takeEvery('daolist/eth/LOG', function * ({ payload: event }) {
     switch (event.topics[0]) {
       case topics.NEW_APP_PROXY:
