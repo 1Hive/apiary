@@ -123,12 +123,6 @@ class App extends React.Component {
       )
     }
 
-    const daos = this.state.daos.sort((a, b) => {
-      if (a.block > b.block) return -1
-      if (a.block < b.block) return 1
-      return 0
-    })
-
     return (
       <AppView title='Apiary Explorer'>
         <Wrapper publicUrl="/">
@@ -139,7 +133,7 @@ class App extends React.Component {
             </StatsCard>
           </Stats>
           <DaoGrid>
-            {daos.map(this.renderDao.bind(this))}
+            {this.state.daos.map(this.renderDao.bind(this))}
           </DaoGrid>
         </Wrapper>
       </AppView>
