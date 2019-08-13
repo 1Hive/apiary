@@ -1,4 +1,4 @@
-> ⚠ If you are looking for the Apiary paper, it has been moved to the [apiary-paper](https://github.com/1hive/apiary-paper) repo.
+> ⚠️ If you are looking for the Apiary paper, it has been moved to the [apiary-paper](https://github.com/1hive/apiary-paper) repo.
 
 # Apiary Explorer
 
