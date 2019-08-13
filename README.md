@@ -1,3 +1,5 @@
+> ⚠ If you are looking for the Apiary paper, it has been moved to the [apiary-paper](https://github.com/1hive/apiary-paper) repo.
+
 # Apiary Explorer
 
 The goal of Apiary Explorer is to provide a way for users to discover, explore, and more effectively participate in Aragon organizations.
