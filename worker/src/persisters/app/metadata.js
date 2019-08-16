@@ -140,12 +140,14 @@ export default function * () {
     payload: newVersion
   }) {
     log.info('New version for app', newVersion)
-
-    const versionMeta = yield retry(3, 3000, fetchVersion, [
+    const versionMeta = yield retry(
+      3,
+      3000,
+      fetchVersion,
       web3,
       newVersion.repository,
       newVersion.id
-    ])
+    )
 
     if (versionMeta === null) {
       return

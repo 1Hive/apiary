@@ -12,7 +12,7 @@ export default function * () {
 
     log.info('DAO name set', { dao })
 
-    const address = yield retry(3, 3000, web3.eth.ens.getAddress, [dao.name])
+    const address = yield retry(3, 3000, web3.eth.ens.getAddress, dao.name)
     dao.address = address
 
     yield safeUpsert(
