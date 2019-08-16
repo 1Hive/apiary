@@ -1,4 +1,4 @@
-import { getContext, takeEvery } from 'redux-saga/effects'
+import { getContext, takeEvery, retry } from 'redux-saga/effects'
 import abi from 'web3-eth-abi'
 import got from 'got'
 import path from 'path'
@@ -34,6 +34,8 @@ const KNOWN_APPS_BY_URI = {
     author: 'Aragon Association'
   }
 }
+
+const NULL_ADDRESS = '0x0000000000000000000000000000000000000000'
 
 export async function fetchVersion (web3, repository, versionId) {
   const call = abi.encodeFunctionCall(
@@ -73,8 +75,15 @@ export async function fetchVersion (web3, repository, versionId) {
     result
   )
 
-  const [type, uri] = web3.utils.hexToAscii(contentURI).split(':')
+  const content = web3.utils.hexToAscii(contentURI)
+  if (!content.includes(':') && contractAddress === NULL_ADDRESS) {
+    // If the content URI is malformed and there is no implementation address,
+    // then we skip this app as it is possibly another type of content published
+    // over APM.
+    return null
+  }
 
+  const [type, uri] = content.split(':')
   const isKnownApp = !!KNOWN_APPS_BY_URI[uri]
 
   let manifest = {}
@@ -132,19 +141,23 @@ export default function * () {
   }) {
     log.info('New version for app', newVersion)
 
-    const { app, version } = yield fetchVersion(
+    const versionMeta = yield retry(3, 3000, fetchVersion, [
       web3,
       newVersion.repository,
       newVersion.id
-    )
+    ])
+
+    if (versionMeta === null) {
+      return
+    }
 
     // Add app to org
     yield apps.updateOne(
       { address: newVersion.repository },
       {
-        $set: app,
+        $set: versionMeta.app,
         $addToSet: {
-          versions: version
+          versions: versionMeta.version
         }
       },
       { upsert: true }

@@ -1,4 +1,4 @@
-import { getContext, take } from 'redux-saga/effects'
+import { getContext, take, retry } from 'redux-saga/effects'
 import { safeUpsert } from '../../utils/index'
 
 export default function * () {
@@ -12,7 +12,7 @@ export default function * () {
 
     log.info('DAO name set', { dao })
 
-    const address = yield web3.eth.ens.getAddress(dao.name)
+    const address = yield retry(3, 3000, web3.eth.ens.getAddress, [dao.name])
     dao.address = address
 
     yield safeUpsert(orgs, { address }, { $set: dao })
