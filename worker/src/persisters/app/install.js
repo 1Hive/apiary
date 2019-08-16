@@ -1,4 +1,4 @@
-import { getContext, takeEvery } from 'redux-saga/effects'
+import { getContext, takeEvery, retry } from 'redux-saga/effects'
 import { safeUpsert, getKernelAddress } from '../../utils/index'
 
 export default function * () {
@@ -10,7 +10,7 @@ export default function * () {
   yield takeEvery('daolist/dao/APP_INSTALLED', function * ({
     payload: appInstall
   }) {
-    const address = yield getKernelAddress(web3, appInstall.proxy)
+    const address = yield retry(3, 3000, getKernelAddress, web3, appInstall.proxy)
     log.info('App installed', {
       appId: appInstall.appId,
       proxy: appInstall.proxy,
