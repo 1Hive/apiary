@@ -4,6 +4,7 @@ import topics from '../data/topics'
 
 export default function * () {
   yield takeEvery('daolist/eth/LOG', function * ({ payload: event }) {
+    const timestamp = event.timestamp
     switch (event.topics[0]) {
       case topics.NEW_APP_PROXY:
         const { proxy, appId } = abi.decodeLog(
@@ -27,7 +28,8 @@ export default function * () {
 
         const appInstall = {
           proxy,
-          appId
+          appId,
+          timestamp
         }
 
         yield put({
@@ -55,7 +57,8 @@ export default function * () {
         const newVersion = {
           id: versionId,
           semantic: semanticVersion,
-          repository: event.address
+          repository: event.address,
+          timestamp
         }
 
         yield put({

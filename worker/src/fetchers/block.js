@@ -1,5 +1,4 @@
-import { delay } from 'redux-saga'
-import { getContext, put, all } from 'redux-saga/effects'
+import { getContext, put, all, delay } from 'redux-saga/effects'
 import _ from 'lodash'
 import { promisify } from 'util'
 

@@ -8,6 +8,7 @@ export default function * () {
     const { logs } = yield web3.eth.getTransactionReceipt(transaction.hash)
 
     for (const log of logs) {
+      log.timestamp = transaction.timestamp
       yield put({
         type: 'daolist/eth/LOG',
         payload: log

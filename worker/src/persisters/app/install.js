@@ -27,6 +27,9 @@ export default function * () {
             id: appInstall.appId,
             address: appInstall.proxy
           }
+        },
+        $min: {
+          created_at: appInstall.timestamp
         }
       }
     )
