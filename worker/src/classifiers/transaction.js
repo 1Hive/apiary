@@ -48,7 +48,8 @@ export default function * () {
         kit: transaction.to,
         creator: transaction.from,
         transaction: transaction.hash,
-        name: `${name}.aragonid.eth`
+        name: `${name}.aragonid.eth`,
+        timestamp: transaction.timestamp
       }
     })
   }

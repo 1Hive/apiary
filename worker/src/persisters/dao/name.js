@@ -15,6 +15,15 @@ export default function * () {
     const address = yield retry(3, 3000, web3.eth.ens.getAddress, [dao.name])
     dao.address = address
 
-    yield safeUpsert(orgs, { address }, { $set: dao })
+    yield safeUpsert(
+      orgs,
+      { address },
+      {
+        $set: dao,
+        $min: {
+          created_at: dao.timestamp
+        }
+      }
+    )
   }
 }
