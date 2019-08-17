@@ -44,7 +44,6 @@ export default function * () {
     yield put({
       type: 'daolist/dao/DAO_CREATED',
       payload: {
-        block: transaction.blockNumber,
         kit: transaction.to,
         creator: transaction.from,
         transaction: transaction.hash,
