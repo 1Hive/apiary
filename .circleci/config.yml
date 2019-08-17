@@ -5,25 +5,28 @@ jobs:
       - image: circleci/node:10.15.3
     steps:
       - checkout
+      - restore_cache:
+          keys:
+            - deps-{{ checksum "worker/package-lock.json" }}-{{ checksum "website/package-lock.json" }}-{{ checksum "api/package-lock.json" }}
       - run:
-          name: Install dependencies in worker
-          command: cd worker && npm i
+          name: Dependencies
+          command: |
+            npm --prefix worker i
+            npm --prefix website i
+            npm --prefix api i
+      - save_cache:
+          name: Save Cache
+          paths:
+            - ./worker/node_modules
+            - ./website/node_modules
+            - ./api/node_modules
+          key: deps-{{ checksum "worker/package-lock.json" }}-{{ checksum "website/package-lock.json" }}-{{ checksum "api/package-lock.json" }}
       - run:
-          name: Install dependencies in website
-          command: cd website && npm i
-      - run:
-          name: Install dependencies in api
-          command: cd api && npm i
-      - run:
-          name: Run lint on worker
-          command: cd worker && npm run lint
-      - run:
-          name: Run lint on website
-          command: cd website && npm run lint
-      - run:
-          name: Run lint on api
-          command: cd api && npm run lint
-
+          name: Lint
+          command: |
+            npm --prefix worker run lint
+            npm --prefix website run lint
+            npm --prefix api run lint
 workflows:
   version: 2
   lint:
