@@ -5,16 +5,18 @@
   "main": "index.js",
   "scripts": {
     "start": "node dist/index.js",
-    "build": "rollup src/index.js -o dist/index.js --format cjs",
     "lint": "eslint src",
+    "build": "rollup -c",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "micro": "^9.3.3",
-    "micro-cors": "^0.1.1",
+    "base64-url": "^2.3.2",
+    "graphql": "^14.4.2",
+    "graphql-yoga": "^1.18.1",
+    "merge-graphql-schemas": "^1.7.0",
     "mongodb": "^3.1.9"
   },
   "devDependencies": {
@@ -25,6 +27,7 @@
     "eslint-plugin-node": "^9.1.0",
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.0",
-    "rollup": "^0.67.3"
+    "rollup": "^0.67.3",
+    "rollup-plugin-graphql": "^0.1.0"
   }
 }
