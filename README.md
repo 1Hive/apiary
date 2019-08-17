@@ -37,7 +37,7 @@ This pattern is built around the concept that Ethereum is basically one huge eve
 
 ### [api](/api)
 
-This API simply presents the state that the worker has built.
+A GraphQL API. Interactive documentation for the API is available if you visit the endpoint in the browser.
 
 #### Configuration
 
