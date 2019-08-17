@@ -1,11 +1,16 @@
-import micro from 'micro'
-import cors from 'micro-cors'
+import { GraphQLServer } from 'graphql-yoga'
 import setupDb from './db'
-
-const server = (db) => micro(cors()(async () => {
-  return db.collection('orgs').find().sort({ _id: -1 }).toArray()
-}))
+import typeDefs from './schema'
+import resolvers from './resolvers'
 
 setupDb()
-  .then((db) => server(db))
-  .then((server) => server.listen(process.env.PORT || 3000))
+  .then((db) => {
+    return new GraphQLServer({
+      typeDefs,
+      resolvers,
+      context: { db }
+    })
+  })
+  .then((server) => {
+    server.start({ port: process.env.PORT || 3000 })
+  })
