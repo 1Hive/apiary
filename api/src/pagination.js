@@ -1,3 +1,5 @@
+import { ObjectId } from 'mongodb'
+
 export async function makeConnection (
   query, {
     take,
@@ -154,7 +156,7 @@ export function cursorQueryConstraints (
           $eq: cursor[0]
         },
         _id: {
-          [comparisonOp]: cursor[1]
+          [comparisonOp]: ObjectId(cursor[1])
         }
       }]
     }
@@ -162,7 +164,7 @@ export function cursorQueryConstraints (
 
   return {
     [sortField]: {
-      [comparisonOp]: cursor
+      [comparisonOp]: ObjectId(cursor[0])
     }
   }
 }
