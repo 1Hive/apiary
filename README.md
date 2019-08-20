@@ -6,7 +6,7 @@
 
 The goal of Apiary Explorer is to provide a way for users to discover, explore, and more effectively participate in Aragon organizations.
 
-It is an evolution of the now defunct daolist.io and site developed and maintained by [@onbjerg](https://github.com/onbjerg) and the Apiary curation market proposal described [here](https://github.com/1hive/apiary-paper) that has since been partially implemented as Aragon Fundraising. The project has been adopted under the 1Hive umbrella to continue our goal of helping open source communities thrive by making it easier for patrons to support promising open source projects and open source projects to attract and reward contributors. 
+It is an evolution of the now defunct daolist.io and site developed and maintained by [@onbjerg](https://github.com/onbjerg) and the Apiary curation market proposal described [here](https://github.com/1hive/apiary-paper) that has since been partially implemented as Aragon Fundraising. The project has been adopted under the 1Hive umbrella to continue our goal of helping open source communities thrive by making it easier for patrons to support promising open source projects and open source projects to attract and reward contributors.
 
 Apiary is designed to be user-centric rather than organization centric, enabling users to explore and participate in many organizations. Emphasis is placed on curation and discovery. Organizations can be sorted and filter based on usage statistics (which apps are installed, activity level, amount of funding, or user profiles). We also plan to offer a user curated tagging system.
 
@@ -59,8 +59,8 @@ The explorer front-end itself, built in React with Aragon UI.
 
 ```bash
 # Clone the repository
-git clone git@github.com:onbjerg/daolist
-cd daolist
+git clone git@github.com:1Hive/apiary
+cd apiary
 
 # Install the dependencies
 for dir in ./*; do (cd "$dir" && npm i); done
