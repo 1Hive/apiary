@@ -1,13 +1,13 @@
 version: 2
 jobs:
-  lint:
+  deps:
     docker:
       - image: circleci/node:10.15.3
     steps:
       - checkout
       - restore_cache:
           keys:
-            - deps-{{ checksum "worker/package-lock.json" }}-{{ checksum "website/package-lock.json" }}-{{ checksum "api/package-lock.json" }}
+            - deps-{{ checksum "worker/package.json" }}-{{ checksum "website/package.json" }}-{{ checksum "api/package.json" }}
       - run:
           name: Dependencies
           command: |
@@ -20,15 +20,80 @@ jobs:
             - ./worker/node_modules
             - ./website/node_modules
             - ./api/node_modules
-          key: deps-{{ checksum "worker/package-lock.json" }}-{{ checksum "website/package-lock.json" }}-{{ checksum "api/package-lock.json" }}
+          key: deps-{{ checksum "worker/package.json" }}-{{ checksum "website/package.json" }}-{{ checksum "api/package.json" }}
+  worker_lint:
+    docker:
+      - image: circleci/node:10.15.3
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - deps-{{ checksum "worker/package.json" }}-{{ checksum "website/package.json" }}-{{ checksum "api/package.json" }}
       - run:
           name: Lint
-          command: |
-            npm --prefix worker run lint
-            npm --prefix website run lint
-            npm --prefix api run lint
+          command: npm --prefix worker run lint
+  website_lint:
+    docker:
+      - image: circleci/node:10.15.3
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - deps-{{ checksum "worker/package.json" }}-{{ checksum "website/package.json" }}-{{ checksum "api/package.json" }}
+      - run:
+          name: Lint
+          command: npm --prefix website run lint
+  api_lint:
+    docker:
+      - image: circleci/node:10.15.3
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - deps-{{ checksum "worker/package.json" }}-{{ checksum "website/package.json" }}-{{ checksum "api/package.json" }}
+      - run:
+          name: Lint
+          command: npm --prefix api run lint
+  worker_test:
+    docker:
+      - image: circleci/node:10.15.3
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - deps-{{ checksum "worker/package.json" }}-{{ checksum "website/package.json" }}-{{ checksum "api/package.json" }}
+      - run:
+          name: Test
+          command: npm --prefix worker test
+  api_test:
+    docker:
+      - image: circleci/node:10.15.3
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - deps-{{ checksum "worker/package.json" }}-{{ checksum "website/package.json" }}-{{ checksum "api/package.json" }}
+      - run:
+          name: Test
+          command: npm --prefix api test
+
 workflows:
   version: 2
-  lint:
+  build_and_test:
     jobs:
-      - lint
+      - deps
+      - worker_lint:
+          requires:
+            - deps
+      - website_lint:
+          requires:
+            - deps
+      - api_lint:
+          requires:
+            - deps
+      - api_test:
+          requires:
+            - api_lint
+      - worker_test:
+          requires:
+            - worker_lint
