@@ -30,6 +30,7 @@ services:
       context: ./worker
       dockerfile: Dockerfile.worker
     environment:
+     - LOG_LEVEL=debug
      - MONGODB_URI=mongodb://mongo:27017
      - ETH_NODE=wss://mainnet.eth.aragon.network/ws
      - REDIS_URL=redis://redis:6379
