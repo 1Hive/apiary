@@ -3,8 +3,11 @@ jobs:
   deps:
     docker:
       - image: circleci/node:10.15.3
+    working_directory: /tmp/workspace
     steps:
       - checkout
+      - attach_workspace:
+          at: /tmp/workspace
       - restore_cache:
           keys:
             - deps-{{ checksum "worker/package.json" }}-{{ checksum "website/package.json" }}-{{ checksum "api/package.json" }}
@@ -17,51 +20,57 @@ jobs:
       - save_cache:
           name: Save Cache
           paths:
-            - ./worker/node_modules
-            - ./website/node_modules
-            - ./api/node_modules
+            - /tmp/workspace/worker/node_modules
+            - /tmp/workspace/website/node_modules
+            - /tmp/workspace/api/node_modules
           key: deps-{{ checksum "worker/package.json" }}-{{ checksum "website/package.json" }}-{{ checksum "api/package.json" }}
+      - persist_to_workspace:
+          root: .
+          paths:
+            - worker/node_modules
+            - website/node_modules
+            - api/node_modules
   worker_lint:
     docker:
       - image: circleci/node:10.15.3
+    working_directory: /tmp/workspace
     steps:
       - checkout
-      - restore_cache:
-          keys:
-            - deps-{{ checksum "worker/package.json" }}-{{ checksum "website/package.json" }}-{{ checksum "api/package.json" }}
+      - attach_workspace:
+          at: /tmp/workspace
       - run:
           name: Lint
           command: npm --prefix worker run lint
   website_lint:
     docker:
       - image: circleci/node:10.15.3
+    working_directory: /tmp/workspace
     steps:
       - checkout
-      - restore_cache:
-          keys:
-            - deps-{{ checksum "worker/package.json" }}-{{ checksum "website/package.json" }}-{{ checksum "api/package.json" }}
+      - attach_workspace:
+          at: /tmp/workspace
       - run:
           name: Lint
           command: npm --prefix website run lint
   api_lint:
     docker:
       - image: circleci/node:10.15.3
+    working_directory: /tmp/workspace
     steps:
       - checkout
-      - restore_cache:
-          keys:
-            - deps-{{ checksum "worker/package.json" }}-{{ checksum "website/package.json" }}-{{ checksum "api/package.json" }}
+      - attach_workspace:
+          at: /tmp/workspace
       - run:
           name: Lint
           command: npm --prefix api run lint
   worker_test:
     docker:
       - image: circleci/node:10.15.3
+    working_directory: /tmp/workspace
     steps:
       - checkout
-      - restore_cache:
-          keys:
-            - deps-{{ checksum "worker/package.json" }}-{{ checksum "website/package.json" }}-{{ checksum "api/package.json" }}
+      - attach_workspace:
+          at: /tmp/workspace
       - run:
           name: Test
           command: npm --prefix worker test
@@ -70,11 +79,11 @@ jobs:
   api_test:
     docker:
       - image: circleci/node:10.15.3
+    working_directory: /tmp/workspace
     steps:
       - checkout
-      - restore_cache:
-          keys:
-            - deps-{{ checksum "worker/package.json" }}-{{ checksum "website/package.json" }}-{{ checksum "api/package.json" }}
+      - attach_workspace:
+          at: /tmp/workspace
       - run:
           name: Test
           command: npm --prefix api test
