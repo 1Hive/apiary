@@ -1,5 +1,6 @@
 import { makeConnection } from '../pagination'
 import {
+  transformStringFilter,
   transformDateFilter
 } from '../filter'
 import {
@@ -8,6 +9,12 @@ import {
 
 export function getApps (db, args) {
   const filter = {}
+
+  if (args.filter && args.filter.name) {
+    filter['name'] = transformStringFilter(
+      args.filter.name
+    )
+  }
 
   if (args.filter && args.filter.createdAt) {
     filter['created_at'] = transformDateFilter(
