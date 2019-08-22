@@ -1,64 +1,85 @@
-import {
-  setContext,
-  all
-} from 'redux-saga/effects'
-import Web3 from 'web3'
-import * as winston from 'winston'
-import createDb from './db'
-import createCache from './cache'
+import { call, all } from 'cofx'
+import { Stopwatch } from './utils/stopwatch'
+import * as eth from './eth'
+import * as app from './app'
+import * as org from './org'
 
-// Sagas
-import blockFetcher from './fetchers/block'
-import transactionFetcher from './fetchers/transaction'
-import logsFetcher from './fetchers/logs'
-import transactionClassifier from './classifiers/transaction'
-import eventClassifier from './classifiers/event'
-import appPersister from './persisters/app/index'
-import daoPersister from './persisters/dao/index'
+export const CHECKPOINT_DURATION = 10 * 1000
+export function * root (
+  ctx
+) {
+  const stopwatch = new Stopwatch()
+  const startBlock = process.env.START_BLOCK
+    || (yield call(ctx.cache.get, 'checkpoint'))
+    || 6592900
+  const targetBlock = process.env.TARGET_BLOCK || 'latest'
+  let block = yield call(eth.fetchBlockUntil,
+    ctx,
+    startBlock,
+    targetBlock
+  )
 
-export async function createIndexes (db) {
-  await db.createIndex('orgs', 'address', { unique: true })
-  await db.createIndex('apps', 'address', { unique: true })
-}
+  ctx.log.info({
+    startBlock,
+    targetBlock
+  }, 'Worker started.')
 
-export default function * main () {
-  // Create context
-  const context = {
-    db: yield createDb(),
-    cache: yield createCache(),
-    web3: new Web3(
-      new Web3.providers.WebsocketProvider(
-        process.env.ETH_NODE || 'wss://mainnet.infura.io/ws', {
-          clientConfig: {
-            maxReceivedFrameSize: 100000000,
-            maxReceivedMessageSize: 100000000
-          }
-        })
-    ),
-    log: winston.createLogger({
-      level: process.env.LOG_LEVEL || 'info',
-      transports: [
-        new winston.transports.Console({
-          format: process.env.NODE_ENV === 'production'
-            ? winston.format.json()
-            : winston.format.cli()
-        })
-      ]
-    })
+  while (block) {
+    const processingStart = process.hrtime.bigint()
+    ctx.log.debug({
+      block: block.number
+    }, `Processing block #${block.number}`)
+
+    // Fetch transactions and logs
+    const transactions = yield call(eth.fetchTransactions, ctx, block)
+    const logs = (yield all(
+      transactions.map((tx) => call(eth.fetchLogs, ctx, tx)
+    ))).flat()
+
+    // Persist app installs
+    yield eth.processLogs(
+      ctx,
+      app.LOG_APP_INSTALLED,
+      logs,
+      app.persistInstall
+    )
+
+    // Persist published app versions
+    yield eth.processLogs(
+      ctx,
+      app.LOG_APP_VERSION_PUBLISHED,
+      logs,
+      app.persistVersion
+    )
+
+    // Persist organisation names
+    yield eth.processTransactions(
+      ctx,
+      org.KIT_SIGNATURES,
+      org.KIT_ADDRESSES,
+      transactions,
+      org.persistName
+    )
+
+    // Set checkpoint if some specific time has elapsed
+    if (stopwatch.elapsed() >= CHECKPOINT_DURATION) {
+      ctx.log.info({
+        block: block.number
+      }, `Set checkpoint @ ${block.number}`)
+
+      yield call(ctx.cache.set, 'checkpoint', block.number)
+      yield call([stopwatch, 'reset'])
+    }
+
+    const processingTime = (process.hrtime.bigint() - processingStart) / BigInt(1000000)
+    ctx.log.debug({
+      block: block.number,
+      elapsed: processingTime.toString()
+    }, `Processed block #${block.number}`)
+    block = yield call(eth.fetchBlockUntil,
+      ctx,
+      block.number + 1,
+      targetBlock
+    )
   }
-  yield setContext(context)
-  yield createIndexes(context.db)
-
-  // Start sagas
-  yield all([
-    blockFetcher(),
-    transactionFetcher(),
-    logsFetcher(),
-
-    eventClassifier(),
-    transactionClassifier(),
-
-    daoPersister(),
-    appPersister()
-  ])
 }

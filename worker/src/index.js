@@ -1,18 +1,35 @@
-import EventEmitter from 'events'
-import { runSaga, stdChannel } from 'redux-saga'
-import main from './root'
+import { task } from 'cofx'
+import Web3 from 'web3'
+import createDb, { createIndexes } from './db'
+import createCache from './cache'
+import createLogger from 'pino'
+import createProvider from './provider'
+import { root } from './root'
 
-const emitter = new EventEmitter()
-const channel = stdChannel()
-
-emitter.on('action', channel.put)
-
-runSaga({
-  channel,
-  dispatch (output) {
-    emitter.emit('action', output)
-  },
-  getState () {
-    return {}
+(async () => {
+  // Create context
+  const context = {
+    db: await createDb(),
+    cache: await createCache(),
+    log: createLogger(
+      { level: process.env.LOG_LEVEL || 'info' }
+    ),
+    web3: new Web3(createProvider())
   }
-}, main)
+
+  // Ensure database indexes are present
+  await createIndexes(context.db)
+
+  // Run the worker
+  try {
+    await task({
+      fn: root,
+      args: [context]
+    })
+  } catch (error) {
+    context.log.fatal({ error: error.stack }, 'Worker crashed.')
+    process.exit(1)
+  }
+
+  context.log.info('Worker finished.')
+})()
