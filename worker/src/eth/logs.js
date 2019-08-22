@@ -25,7 +25,6 @@ export function processLogs (
       .filter(({ topics }) => topics[0] === signature)
       .map((log) => {
         log.parameters = abi.decodeLog(jsonInterface, log.data)
-        log.timestamp = log.timestamp
 
         return log
       })

@@ -1,5 +1,5 @@
 import { call } from 'cofx'
-import { safeUpsert } from '../db'
+import { safeUpsert } from '../db'
 
 export function getKernelAddress (web3, address) {
   const data = web3.eth.abi.encodeFunctionCall({
@@ -14,7 +14,7 @@ export function getKernelAddress (web3, address) {
   }).then((ret) => web3.eth.abi.decodeParameter('address', ret))
 }
 
-export function * persistInstall(
+export function * persistInstall (
   ctx,
   log
 ) {

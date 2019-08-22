@@ -9,9 +9,9 @@ export function * root (
   ctx
 ) {
   const stopwatch = new Stopwatch()
-  const startBlock = process.env.START_BLOCK
-    || (yield call(ctx.cache.get, 'checkpoint'))
-    || 6592900
+  const startBlock = process.env.START_BLOCK ||
+    (yield call(ctx.cache.get, 'checkpoint')) ||
+    6592900
   const targetBlock = process.env.TARGET_BLOCK || 'latest'
   let block = yield call(eth.fetchBlockUntil,
     ctx,
@@ -33,8 +33,8 @@ export function * root (
     // Fetch transactions and logs
     const transactions = yield call(eth.fetchTransactions, ctx, block)
     const logs = (yield all(
-      transactions.map((tx) => call(eth.fetchLogs, ctx, tx)
-    ))).flat()
+      transactions.map((tx) => call(eth.fetchLogs, ctx, tx))
+    )).flat()
 
     // Persist app installs
     yield eth.processLogs(

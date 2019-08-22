@@ -30,7 +30,7 @@ test('fetchLogs: returns timestamped logs for transaction', () => {
 
   expect(
     actual[1].every(({ timestamp }) => timestamp === tx.timestamp)
-  )
+  ).toBe(true)
   expect(actual).toEqual(expected)
 })
 

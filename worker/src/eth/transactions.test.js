@@ -17,7 +17,7 @@ test('fetchTransactions: returns timestamped transactions for block', () => {
   expect(actual).toEqual(block.transactions)
   expect(
     actual.every(({ timestamp }) => timestamp === block.timestamp)
-  )
+  ).toBe(true)
 })
 
 test('processTransactions: only processes transactions with known address and method id', () => {
