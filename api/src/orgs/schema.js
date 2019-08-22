@@ -3,7 +3,7 @@ export default `
   type Organisation implements Node {
     id: ID!
     # The ENS name of the organisation.
-    name: String
+    ens: String
     # The address of the organisation.
     address: String
     # The date and time when this organisation was created.
