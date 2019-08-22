@@ -5,7 +5,7 @@ export default `
     # The hash of the app name (also known as the app ID)
     hash: String
     # The address of the app's repository.
-    address: String!
+    repository: String!
     # The ENS name of this app.
     ens: String
 
@@ -48,6 +48,7 @@ export default `
   }
 
   input AppConnectionFilter {
+    name: StringOperators
     createdAt: DateOperators
   }
 
