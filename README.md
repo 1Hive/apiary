@@ -22,20 +22,36 @@ The worker then emits events internally, where different internal components rea
 
 This pattern is built around the concept that Ethereum is basically one huge event sourcing mechanism, and that Daolist is just a read model.
 
+#### Logging
+
+The worker outputs logs in JSONL format. To make the logs readable you can run the worker like this:
+
+```sh
+npm start | npx pino-pretty-min
+```
+
+If you're running Apiary using Docker Compose, you can do the same thing by running:
+
+```sh
+docker logs -f (docker-compose ps -q worker) | npx pino-pretty-min
+```
+
 #### Configuration
 
-| Environment Variable | Description                                     | Default                       |
-|----------------------|-------------------------------------------------|-------------------------------|
-| **Database**         |                                                 |                               |
-| `MONGODB_URI`        | The URI of the MongoDB instance to connect to   | `mongodb://localhost:27017`   |
-| **Ethereum**         |                                                 |                               |
-| `ETH_NODE`           | The URI of the Parity node to connect to        | `wss://mainnet.daolist.io/ws` |
-| **Cache**            |                                                 |                               |
-| `REDIS_URL`          | The URL of the Redis instance to connect to     | `redis://localhost:6379`      |
-| **IPFS**             |                                                 |                               |
-| `IPFS_URL`           | The URL of the IPFS gateway to fetch files from |                               |
-| **Misc**             |                                                 |                               |
-| `LOG_LEVEL`          | The log level                                   | `info`                        |
+| Environment Variable | Description                                     																						 | Default                       |
+|----------------------|---------------------------------------------------------------------------------------------|-------------------------------|
+| **Database**         |                                                 																						 |                               |
+| `MONGODB_URI`        | The URI of the MongoDB instance to connect to   																						 | `mongodb://localhost:27017`   |
+| **Ethereum**         |                                                 																						 |                               |
+| `ETH_NODE`           | The URI of the Ethereum node to connect to      																						 | `wss://mainnet.daolist.io/ws` |
+| `START_BLOCK`        | The block to start working from.                																						 | `6592900`                     |
+| `TARGET_BLOCK`       | The block to stop working after. If you specify `latest`, the worker will run indefinitely. | `latest`                      |
+| **Cache**            |                                                 																						 |                               |
+| `REDIS_URL`          | The URL of the Redis instance to connect to     																						 | `redis://localhost:6379`      |
+| **IPFS**             |                                                 																						 |                               |
+| `IPFS_URL`           | The URL of the IPFS gateway to fetch files from 																						 |                               |
+| **Misc**             |                                                 																						 |                               |
+| `LOG_LEVEL`          | The log level                                   																						 | `info`                        |
 
 ### [api](/api)
 
