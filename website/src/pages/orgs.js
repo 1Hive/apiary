@@ -56,19 +56,19 @@ const ORGANISATIONS_QUERY = `
 
 // 1Hive curated list of Good Apps™️
 const APPS = [{
-  name: 'Token Manager',
+  label: 'Token Manager',
   value: '0x6b20a3010614eeebf2138ccec99f028a61c811b3b1a3343b6ff635985c75c91f'
 }, {
-  name: 'Vault',
+  label: 'Vault',
   value: '0x7e852e0fcfce6551c13800f1e7476f982525c2b5277ba14b24339c68416336d1'
 }, {
-  name: 'Agent',
+  label: 'Agent',
   value: '0x9ac98dc5f995bf0211ed589ef022719d1487e5cb2bab505676f0d084c07cf89a'
 }, {
-  name: 'Finance',
+  label: 'Finance',
   value: '0xbf8491150dafc5dcaee5b861414dca922de09ccffa344964ae167212e8c673ae'
 }, {
-  name: 'Voting',
+  label: 'Voting',
   value: '0x9fa3927f639745e587912d4b0fea7ef9013bf93fb907d29faeab57417ba6e1d4'
 }]
 
@@ -129,11 +129,13 @@ export default () => {
           <DataView
             fields={[
               <SortHeader
+                key='sort-org'
                 label='Organisation'
                 onClick={() => sortBy('ens')}
                 sortOrder={sort[0] === 'ens' && sort[1]}
               />,
               <SortHeader
+                key='sort-created'
                 label='Created'
                 onClick={() => sortBy('createdAt')}
                 sortOrder={sort[0] === 'createdAt' && sort[1]}
@@ -141,11 +143,12 @@ export default () => {
             ]}
             entries={data.organisations.nodes}
             renderEntry={({ address, ens, createdAt }) => [
-              <IdentityBadge entity={address} customLabel={ens} />,
-              format(new Date(createdAt), 'dd/MM/y')
+              <IdentityBadge key='org-addr' entity={address} customLabel={ens} />,
+              <div key='org-created-at'>{format(new Date(createdAt), 'dd/MM/y')}</div>
             ]}
             renderEntryActions={({ address, ens }) => [
               <Button
+                key='open-org'
                 size='small'
                 mode='strong'
                 onClick={() => openSafe(`https://mainnet.aragon.org/#/${ens || address}`)}

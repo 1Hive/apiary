@@ -5,7 +5,7 @@ import { Layout, Sidebar, Content } from '../components/Layout'
 import { Logo } from '../components/Logo'
 import Organisations from './orgs'
 
-export default () =>
+const App = () =>
   <Main layout={false}>
     <Layout>
       <Sidebar>
@@ -21,3 +21,5 @@ export default () =>
       </Content>
     </Layout>
   </Main>
+
+export default App

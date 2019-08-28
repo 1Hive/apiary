@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import {
   IconDown,
   IconUp,
@@ -8,7 +9,7 @@ import {
 export function SortHeader ({
   onClick,
   label,
-  sortOrder = 'none'
+  sortOrder = 'NONE'
 }) {
   return (
     <span
@@ -25,4 +26,14 @@ export function SortHeader ({
       {sortOrder === 'ASC' && <IconUp size="tiny" />}
     </span>
   )
+}
+
+SortHeader.propTypes = {
+  onClick: PropTypes.func.isRequired,
+  label: PropTypes.string.isRequired,
+  sortOrder: PropTypes.oneOf([
+    'ASC',
+    'DESC',
+    'NONE'
+  ])
 }

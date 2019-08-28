@@ -1,6 +1,8 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { Button } from '@aragon/ui'
 
+// eslint-disable-next-line react/display-name
 export const WindowedPagination = React.memo(({
   onPage,
   pageInfo = {}
@@ -38,3 +40,13 @@ export const WindowedPagination = React.memo(({
     </Button>
   </div>
 })
+
+WindowedPagination.propTypes = {
+  onPage: PropTypes.func.isRequired,
+  pageInfo: PropTypes.shape({
+    hasPreviousPage: PropTypes.bool,
+    hasNextPage: PropTypes.bool,
+    startCursor: PropTypes.string,
+    endCursor: PropTypes.string
+  })
+}

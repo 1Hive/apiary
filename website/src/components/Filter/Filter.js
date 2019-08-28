@@ -1,4 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react'
+import PropTypes from 'prop-types'
 import { Box, Button, GU } from '@aragon/ui'
 import { FILTER_TYPE_DATE_RANGE, DateRangeFilter } from './DateRangeFilter'
 import { FILTER_TYPE_LIST, ListFilter } from './ListFilter'
@@ -70,4 +71,15 @@ export function Filter ({
       }
     </div>
   </Box>
+}
+
+Filter.propTypes = {
+  filters: PropTypes.arrayOf(PropTypes.shape({
+    type: PropTypes.oneOf([
+      FILTER_TYPE_LIST,
+      FILTER_TYPE_DATE_RANGE
+    ]).isRequired,
+    name: PropTypes.string.isRequired
+  })),
+  onChange: PropTypes.func.isRequired
 }
