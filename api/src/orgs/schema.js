@@ -30,7 +30,7 @@ export default `
   }
 
   input OrganisationConnectionSort {
-    name: SortOrder
+    ens: SortOrder
     createdAt: SortOrder
   }
 
