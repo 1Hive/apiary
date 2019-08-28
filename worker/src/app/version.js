@@ -15,7 +15,8 @@ export function fetchIpfsAsset (uri, file) {
   }
 
   return got(url.toString(), {
-    json: extension === 'json'
+    json: extension === 'json',
+    timeout: 7500
   }).then(({ body }) => body, () => null)
 }
 
