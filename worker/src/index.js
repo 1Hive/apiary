@@ -17,9 +17,6 @@ import { root } from './root'
     web3: new Web3(createProvider())
   }
 
-  // Ensure database indexes are present
-  await createIndexes(context.db)
-
   // Run the worker
   try {
     await task({
