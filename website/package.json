@@ -9,7 +9,7 @@
     "now-build": "npm run build"
   },
   "dependencies": {
-    "@aragon/ui": "^1.0.0-alpha.15",
+    "@aragon/ui": "^1.0.0-alpha.19",
     "date-fns": "^2.0.1",
     "graphql-hooks": "^3.6.1",
     "prop-types": "^15.7.2",
