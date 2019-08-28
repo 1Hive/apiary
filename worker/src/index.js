@@ -1,6 +1,6 @@
 import { task } from 'cofx'
 import Web3 from 'web3'
-import createDb, { createIndexes } from './db'
+import createDb from './db'
 import createCache from './cache'
 import createLogger from 'pino'
 import createProvider from './provider'
@@ -16,9 +16,6 @@ import { root } from './root'
     ),
     web3: new Web3(createProvider())
   }
-
-  // Ensure database indexes are present
-  await createIndexes(context.db)
 
   // Run the worker
   try {

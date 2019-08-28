@@ -16,11 +16,6 @@ export default function createDb () {
   })
 }
 
-export async function createIndexes (db) {
-  await db.createIndex('orgs', 'address', { unique: true })
-  await db.createIndex('apps', 'repository', { unique: true })
-}
-
 export function safeUpsert (collection, filter, update) {
   return collection
     .updateOne(filter, update, { upsert: true })
