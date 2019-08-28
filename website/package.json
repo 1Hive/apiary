@@ -3,22 +3,27 @@
   "version": "1.0.0",
   "main": "index.html",
   "scripts": {
-    "start": "parcel src/index.html --open",
-    "build": "parcel build src/index.html && cp src/dao.svg dist",
-    "now-build": "npm run build",
-    "lint": "eslint src"
+    "start": "parcel src/index.html --open && npx copy-aragon-ui-assets dist",
+    "build": "parcel build src/index.html && npx copy-aragon-ui-assets dist",
+    "lint": "eslint src",
+    "now-build": "npm run build"
   },
   "dependencies": {
-    "@aragon/ui": "0.27.0",
-    "react": "16.6.1",
-    "react-dom": "16.6.1",
-    "styled-components": "3.4.10"
+    "@aragon/ui": "^1.0.0-alpha.19",
+    "date-fns": "^2.0.1",
+    "graphql-hooks": "^3.6.1",
+    "prop-types": "^15.7.2",
+    "qs": "^6.8.0",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
+    "react-router": "^5.0.1",
+    "react-router-dom": "^5.0.1",
+    "styled-components": "^4.3.2"
   },
   "devDependencies": {
-    "@types/react": "16.7.2",
-    "@types/react-dom": "16.0.9",
-    "@types/styled-components": "4.0.3",
+    "@babel/core": "^7.5.5",
     "babel-eslint": "^10.0.2",
+    "babel-plugin-styled-components": "^1.10.6",
     "eslint": "^6.1.0",
     "eslint-config-standard": "^13.0.1",
     "eslint-plugin-import": "^2.18.2",
@@ -27,5 +32,10 @@
     "eslint-plugin-react": "^7.14.3",
     "eslint-plugin-standard": "^4.0.0",
     "parcel-bundler": "^1.6.1"
+  },
+  "babel": {
+    "plugins": [
+      "babel-plugin-styled-components"
+    ]
   }
 }
