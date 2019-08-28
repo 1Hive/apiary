@@ -54,6 +54,24 @@ const ORGANISATIONS_QUERY = `
   }
 `
 
+// 1Hive curated list of Good Apps™️
+const APPS = [{
+  name: 'Token Manager',
+  value: '0x6b20a3010614eeebf2138ccec99f028a61c811b3b1a3343b6ff635985c75c91f'
+}, {
+  name: 'Vault',
+  value: '0x7e852e0fcfce6551c13800f1e7476f982525c2b5277ba14b24339c68416336d1'
+}, {
+  name: 'Agent',
+  value: '0x9ac98dc5f995bf0211ed589ef022719d1487e5cb2bab505676f0d084c07cf89a'
+}, {
+  name: 'Finance',
+  value: '0xbf8491150dafc5dcaee5b861414dca922de09ccffa344964ae167212e8c673ae'
+}, {
+  name: 'Voting',
+  value: '0x9fa3927f639745e587912d4b0fea7ef9013bf93fb907d29faeab57417ba6e1d4'
+}]
+
 export default () => {
   const [sort, sortBy] = useSort('createdAt', 'DESC')
   const [pagination, setPagination] = useState(['after'])
@@ -98,7 +116,7 @@ export default () => {
         type: FILTER_TYPE_LIST,
         name: 'app',
         placeholder: 'Apps',
-        items: []
+        items: APPS
       }, {
         type: FILTER_TYPE_DATE_RANGE,
         name: 'createdAt'
