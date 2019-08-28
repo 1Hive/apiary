@@ -1,6 +1,6 @@
 import { task } from 'cofx'
 import Web3 from 'web3'
-import createDb, { createIndexes } from './db'
+import createDb from './db'
 import createCache from './cache'
 import createLogger from 'pino'
 import createProvider from './provider'
