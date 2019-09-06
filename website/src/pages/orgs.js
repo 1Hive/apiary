@@ -143,8 +143,15 @@ export default () => {
             ]}
             entries={data.organisations.nodes}
             renderEntry={({ address, ens, createdAt }) => [
-              <IdentityBadge key='org-addr' entity={address} customLabel={ens} />,
-              <div key='org-created-at'>{format(new Date(createdAt), 'dd/MM/y')}</div>
+              <IdentityBadge
+                key='org-addr'
+                entity={address}
+                customLabel={ens}
+                popoverTitle={ens}
+              />,
+              <div key='org-created-at'>
+                {format(new Date(createdAt), 'dd/MM/y')}
+              </div>
             ]}
             renderEntryActions={({ address, ens }) => [
               <Button
