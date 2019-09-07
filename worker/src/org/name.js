@@ -18,7 +18,10 @@ export function * persistName (
     ctx.db.collection('orgs'),
     { address },
     {
-      $set: { ens: ensName },
+      $set: {
+        ens: ensName,
+        kit: tx.to
+      },
       $min: {
         created_at: tx.timestamp
       }
