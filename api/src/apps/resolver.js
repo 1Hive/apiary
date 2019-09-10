@@ -19,6 +19,9 @@ export default {
     },
     changelogUrl (app) {
       return app.changelog_url
+    },
+    installations (app) {
+      return app.installations || 0
     }
   },
 

@@ -22,6 +22,9 @@ export default `
     # The changelog of the app.
     changelogUrl: String
 
+    # The number of installations of the app.
+    installations: Int!
+
     # Versions of this app.
     versions: [AppVersion]
   }
@@ -55,6 +58,7 @@ export default `
   input AppConnectionSort {
     id: SortOrder
     name: SortOrder
+    installations: SortOrder
   }
 
   type Query {
