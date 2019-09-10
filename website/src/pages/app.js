@@ -1,15 +1,20 @@
 import React from 'react'
-import { Route, NavLink } from 'react-router-dom'
+import { Redirect, Route, NavLink } from 'react-router-dom'
 import { Main, IconSearch } from '@aragon/ui'
 import { Layout, Sidebar, Content } from '../components/Layout'
 import { Logo } from '../components/Logo'
 import Organisations from './orgs'
+import Apps from './apps'
 
 const App = () =>
   <Main layout={false}>
     <Layout>
       <Sidebar>
-        <NavLink exact to='/'>
+        <NavLink
+          to='/'
+          exact
+          isActive={(_, { pathname }) => ['/orgs', '/apps'].includes(pathname)}
+        >
           <IconSearch />
         </NavLink>
         <div className='logo'>
@@ -17,7 +22,9 @@ const App = () =>
         </div>
       </Sidebar>
       <Content>
-        <Route path={['/', '/orgs']} exact component={Organisations} />
+        <Route path='/' exact render={() => <Redirect to='/orgs' />} />
+        <Route path='/orgs' exact component={Organisations} />
+        <Route path='/apps' exact component={Apps} />
       </Content>
     </Layout>
   </Main>
