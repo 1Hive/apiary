@@ -35,6 +35,9 @@ const APPS_QUERY = `
     ) {
       nodes {
         repository
+        icons {
+          src
+        }
         name
         description
         installations
@@ -51,6 +54,31 @@ const APPS_QUERY = `
     }
   }
 `
+
+function renderAppEntry ({
+  icons,
+  repository,
+  name,
+  description,
+  installations
+}) {
+  let iconSrc
+  if (icons.length) {
+    iconSrc = icons[0].src
+  }
+
+  return [
+    <AppBadge
+      key='app-addr'
+      iconSrc={iconSrc}
+      appAddress={repository}
+      label={name || `Unknown (${shortenAddress(repository)})`}
+      popoverTitle={name ? `${name}'s repository` : 'Repository'}
+    />,
+    <div key='app-description'>{description}</div>,
+    <div key='app-installations'>{installations}</div>
+  ]
+}
 
 export default () => {
   const [sort, sortBy] = useSort('installations', 'DESC')
@@ -118,16 +146,7 @@ export default () => {
               />
             ]}
             entries={data.apps.nodes}
-            renderEntry={({ repository, name, description, installations }) => [
-              <AppBadge
-                key='app-addr'
-                appAddress={repository}
-                label={name || `Unknown (${shortenAddress(repository)})`}
-                popoverTitle={name ? `${name}'s repository` : 'Repository'}
-              />,
-              <div key='app-description'>{description}</div>,
-              <div key='app-installations'>{installations}</div>
-            ]}
+            renderEntry={renderAppEntry}
             renderEntryActions={({ sourceUrl, changelogUrl }) => [
               <ContextMenu
                 key='open-org'
