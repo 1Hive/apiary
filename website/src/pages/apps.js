@@ -8,7 +8,7 @@ import {
   Text,
 
   DataView,
-  IdentityBadge,
+  AppBadge,
   ContextMenu,
   ContextMenuItem,
 
@@ -116,10 +116,10 @@ export default () => {
             ]}
             entries={data.apps.nodes}
             renderEntry={({ repository, name, description, installations }) => [
-              <IdentityBadge
+              <AppBadge
                 key='app-addr'
-                entity={repository}
-                customLabel={name}
+                appAddress={repository}
+                label={name}
                 popoverTitle={name ? `${name}'s repository` : 'Repository'}
               />,
               <div key='app-description'>{description}</div>,
