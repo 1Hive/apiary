@@ -82,7 +82,8 @@ export async function fetchVersion (web3, repository, versionId) {
       details,
       source_url: manifest.source_url,
       changelog_url: manifest.changelog_url,
-      screenshots: manifest.screenshots
+      screenshots: manifest.screenshots || [],
+      icons: manifest.icons || []
     },
     version: {
       id: versionId,
