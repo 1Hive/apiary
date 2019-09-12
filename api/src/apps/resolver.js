@@ -24,7 +24,7 @@ export default {
       return app.changelog_url
     },
     versions (app) {
-      return app.versions || []
+      return app.versions || []
     },
     installations (app) {
       return app.installations || 0
