@@ -12,7 +12,9 @@ import {
   ContextMenu,
   ContextMenuItem,
 
-  SyncIndicator
+  SyncIndicator,
+
+  shortenAddress
 } from '@aragon/ui'
 import { WindowedPagination } from '../components/WindowedPagination'
 import { SortHeader } from '../components/SortHeader'
@@ -120,7 +122,7 @@ export default () => {
               <AppBadge
                 key='app-addr'
                 appAddress={repository}
-                label={name}
+                label={name || `Unknown (${shortenAddress(repository)})`}
                 popoverTitle={name ? `${name}'s repository` : 'Repository'}
               />,
               <div key='app-description'>{description}</div>,
