@@ -17,6 +17,7 @@ import {
 import { WindowedPagination } from '../components/WindowedPagination'
 import { SortHeader } from '../components/SortHeader'
 import { NavTabs } from '../components/NavTabs/NavTabs'
+import openSafe from '../utils/open-safe'
 import useSort from '../hooks/sort'
 
 const APPS_QUERY = `
@@ -130,8 +131,12 @@ export default () => {
                 key='open-org'
                 disabled={!sourceUrl && !changelogUrl}
               >
-                {sourceUrl && <ContextMenuItem>Source</ContextMenuItem>}
-                {changelogUrl && <ContextMenuItem>Changelog</ContextMenuItem>}
+                {sourceUrl && (
+                  <ContextMenuItem onClick={() => openSafe(sourceUrl)}>Source</ContextMenuItem>
+                )}
+                {changelogUrl && (
+                  <ContextMenuItem onClick={() => openSafe(changelogUrl)}>Changelog</ContextMenuItem>
+                )}
               </ContextMenu>
             ]}
           />
