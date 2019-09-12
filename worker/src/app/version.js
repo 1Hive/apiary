@@ -7,8 +7,6 @@ import { safeUpsert } from '../db'
 export const NULL_ADDRESS = '0x0000000000000000000000000000000000000000'
 
 export function getAbsoluteIpfsAssetUrl (uri, file) {
-  const extension = file.split('.').pop()
-
   let url = file
   if (!url.includes('http')) {
     url = new URL(path.join('ipfs', uri, file), process.env.IPFS_URI)
@@ -18,6 +16,8 @@ export function getAbsoluteIpfsAssetUrl (uri, file) {
 }
 
 export function fetchIpfsAsset (uri, file) {
+  const extension = file.split('.').pop()
+
   return got(getAbsoluteIpfsAssetUrl(uri, file), {
     json: extension === 'json',
     timeout: 7500
@@ -81,7 +81,7 @@ export async function fetchVersion (web3, repository, versionId) {
   )
 
   // Ensure screenshot URLs are absolute
-  const screenshots = (manifest.screenshots || []).map(
+  const screenshots = (manifest.screenshots || []).map(
     (screenshot) => ({
       src: getAbsoluteIpfsAssetUrl(uri, screenshot.src)
     })
