@@ -6,15 +6,19 @@ import { safeUpsert } from '../db'
 
 export const NULL_ADDRESS = '0x0000000000000000000000000000000000000000'
 
-export function fetchIpfsAsset (uri, file) {
-  const extension = file.split('.').pop()
-
+export function getAbsoluteIpfsAssetUrl (uri, file) {
   let url = file
   if (!url.includes('http')) {
     url = new URL(path.join('ipfs', uri, file), process.env.IPFS_URI)
   }
 
-  return got(url.toString(), {
+  return url.toString()
+}
+
+export function fetchIpfsAsset (uri, file) {
+  const extension = file.split('.').pop()
+
+  return got(getAbsoluteIpfsAssetUrl(uri, file), {
     json: extension === 'json',
     timeout: 7500
   }).then(({ body }) => body, () => null)
@@ -68,6 +72,21 @@ export async function fetchVersion (web3, repository, versionId) {
     details = await fetchIpfsAsset(uri, manifest.details_url)
   }
 
+  // Ensure icon URLs are absolute
+  const icons = (manifest.icons || []).map(
+    (icon) => ({
+      src: getAbsoluteIpfsAssetUrl(uri, icon.src),
+      sizes: icon.sizes
+    })
+  )
+
+  // Ensure screenshot URLs are absolute
+  const screenshots = (manifest.screenshots || []).map(
+    (screenshot) => ({
+      src: getAbsoluteIpfsAssetUrl(uri, screenshot.src)
+    })
+  )
+
   return {
     app: {
       // Technical stuff
@@ -82,7 +101,8 @@ export async function fetchVersion (web3, repository, versionId) {
       details,
       source_url: manifest.source_url,
       changelog_url: manifest.changelog_url,
-      screenshots: manifest.screenshots
+      screenshots,
+      icons
     },
     version: {
       id: versionId,

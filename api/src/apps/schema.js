@@ -1,4 +1,12 @@
 export default `
+  # An icon for an app.
+  type AppIcon {
+    # The absolute URL to the icon.
+    src: String!
+    # The size of this icon.
+    sizes: String!
+  }
+
   # An Aragon app.
   type App implements Node {
     id: ID!
@@ -17,13 +25,18 @@ export default `
     description: String
     # The long-form description of this app.
     details: String
+    # The icons of this app.
+    icons: [AppIcon]!
     # The source code of the app.
     sourceUrl: String
     # The changelog of the app.
     changelogUrl: String
 
+    # The number of installations of the app.
+    installations: Int!
+
     # Versions of this app.
-    versions: [AppVersion]
+    versions: [AppVersion]!
   }
 
   # An edge in a connection.
@@ -55,6 +68,7 @@ export default `
   input AppConnectionSort {
     id: SortOrder
     name: SortOrder
+    installations: SortOrder
   }
 
   type Query {

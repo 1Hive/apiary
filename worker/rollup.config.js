@@ -1,3 +1,4 @@
+import json from 'rollup-plugin-json'
 import resolve from 'rollup-plugin-node-resolve'
 import cjs from 'rollup-plugin-commonjs'
 import babel from 'rollup-plugin-babel'
@@ -9,6 +10,7 @@ export default {
     format: 'cjs'
   },
   plugins: [
+    json(),
     babel({
       exclude: /node_modules/
     }),

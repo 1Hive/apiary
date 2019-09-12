@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect } from 'react'
 import PropTypes from 'prop-types'
-import { Box, Button, GU } from '@aragon/ui'
+import { Button, GU } from '@aragon/ui'
 import { FILTER_TYPE_DATE_RANGE, DateRangeFilter } from './DateRangeFilter'
 import { FILTER_TYPE_LIST, ListFilter } from './ListFilter'
 import { breakpoint } from '../../utils/breakpoint'
@@ -32,45 +32,43 @@ export function Filter ({
     12
   )
 
-  return <Box css={`margin-bottom: ${2 * GU}px`}>
-    <div css={`
-      display: grid;
-      grid-gap: ${1 * GU}px;
-      grid-template-columns: 1fr;
+  return <div css={`
+    display: grid;
+    grid-gap: ${1 * GU}px;
+    grid-template-columns: 1fr;
 
-      ${breakpoint('medium')`
-        grid-template-columns: repeat(${columns}, 1fr);
-        grid-template-rows: auto;
-      `}
-    `}>
-      {filters.map((filter) => {
-        switch (filter.type) {
-          case FILTER_TYPE_LIST:
-            return <ListFilter
-              name={filter.name}
-              onChange={setFilterValue}
-              items={filter.items}
-              placeholder={filter.placeholder}
-            />
-          case FILTER_TYPE_DATE_RANGE:
-            return <DateRangeFilter
-              name={filter.name}
-              onChange={setFilterValue}
-            />
-          default:
-            throw new Error(`Unknown filter type ${filter.type}`)
-        }
-      })}
-      {hasFilter &&
-        <Button
-          css={breakpoint('medium')`grid-column: ${columns};`}
-          onClick={clearFilter}
-        >
-          Clear
-        </Button>
+    ${breakpoint('medium')`
+      grid-template-columns: repeat(${columns}, 1fr);
+      grid-template-rows: auto;
+    `}
+  `}>
+    {filters.map((filter) => {
+      switch (filter.type) {
+        case FILTER_TYPE_LIST:
+          return <ListFilter
+            name={filter.name}
+            onChange={setFilterValue}
+            items={filter.items}
+            placeholder={filter.placeholder}
+          />
+        case FILTER_TYPE_DATE_RANGE:
+          return <DateRangeFilter
+            name={filter.name}
+            onChange={setFilterValue}
+          />
+        default:
+          throw new Error(`Unknown filter type ${filter.type}`)
       }
-    </div>
-  </Box>
+    })}
+    {hasFilter &&
+      <Button
+        css={breakpoint('medium')`grid-column: ${columns};`}
+        onClick={clearFilter}
+      >
+        Clear
+      </Button>
+    }
+  </div>
 }
 
 Filter.propTypes = {

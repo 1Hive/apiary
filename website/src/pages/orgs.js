@@ -21,6 +21,7 @@ import {
   FILTER_TYPE_DATE_RANGE,
   FILTER_TYPE_LIST
 } from '../components/Filter'
+import { NavTabs } from '../components/NavTabs/NavTabs'
 import useSort from '../hooks/sort'
 import openSafe from '../utils/open-safe'
 
@@ -111,22 +112,31 @@ export default () => {
 
   const firstFetch = loading && !data
   return <div>
-    <Filter
-      filters={[{
-        type: FILTER_TYPE_LIST,
-        name: 'app',
-        placeholder: 'Apps',
-        items: APPS
+    <NavTabs
+      items={[{
+        label: 'Organisations',
+        path: '/orgs'
       }, {
-        type: FILTER_TYPE_DATE_RANGE,
-        name: 'createdAt'
+        label: 'Apps',
+        path: '/apps'
       }]}
-      onChange={setFilter}
     />
     <Split
       primary={<div>
         {!firstFetch && (
           <DataView
+            heading={<Filter
+              filters={[{
+                type: FILTER_TYPE_LIST,
+                name: 'app',
+                placeholder: 'Apps',
+                items: APPS
+              }, {
+                type: FILTER_TYPE_DATE_RANGE,
+                name: 'createdAt'
+              }]}
+              onChange={setFilter}
+            />}
             fields={[
               <SortHeader
                 key='sort-org'

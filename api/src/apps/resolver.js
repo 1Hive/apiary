@@ -14,11 +14,20 @@ export default {
     id (app) {
       return app._id
     },
+    icons (app) {
+      return app.icons || []
+    },
     sourceUrl (app) {
       return app.source_url
     },
     changelogUrl (app) {
       return app.changelog_url
+    },
+    versions (app) {
+      return app.versions || []
+    },
+    installations (app) {
+      return app.installations || 0
     }
   },
 
