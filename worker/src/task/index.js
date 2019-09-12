@@ -24,7 +24,7 @@ export function appInstalls (ctx) {
       }
     }])
 
-    for await (let appInstalls of installsPerApp) {
+    for await (const appInstalls of installsPerApp) {
       await apps.updateOne({
         _id: appInstalls._id
       }, {

@@ -21,7 +21,7 @@ export default {
       return app.changelog_url
     },
     installations (app) {
-      return app.installations || 0
+      return app.installations || 0
     }
   },
 

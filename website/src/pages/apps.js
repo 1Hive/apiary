@@ -106,7 +106,7 @@ export default () => {
                 onClick={() => sortBy('name')}
                 sortOrder={sort[0] === 'name' && sort[1]}
               />,
-              <div>Description</div>,
+              <div key='sort-description'>Description</div>,
               <SortHeader
                 key='sort-installations'
                 label='Installations'
@@ -122,8 +122,8 @@ export default () => {
                 customLabel={name}
                 popoverTitle={name ? `${name}'s repository` : 'Repository'}
               />,
-              <div>{description}</div>,
-              <div>{installations}</div>
+              <div key='app-description'>{description}</div>,
+              <div key='app-installations'>{installations}</div>
             ]}
             renderEntryActions={({ sourceUrl, changelogUrl }) => [
               <ContextMenu

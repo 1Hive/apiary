@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { useLayout } from '@aragon/ui'
 
@@ -15,4 +16,8 @@ export const Content = ({
   return <ContentContainer compact={layout === 'small'}>
     {children}
   </ContentContainer>
+}
+
+Content.propTypes = {
+  children: PropTypes.node
 }
