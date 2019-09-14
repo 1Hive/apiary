@@ -11,7 +11,7 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "GPLv3",
   "dependencies": {
     "cofx": "^2.2.0",
     "got": "^9.6.0",
