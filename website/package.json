@@ -2,6 +2,7 @@
   "name": "daolist-io",
   "version": "1.0.0",
   "main": "index.html",
+  "license": "GPLv3",
   "scripts": {
     "start": "parcel src/index.html --open && npx copy-aragon-ui-assets dist",
     "build": "parcel build src/index.html && npx copy-aragon-ui-assets dist",
