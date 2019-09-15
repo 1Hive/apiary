@@ -21,5 +21,9 @@ export function DateRangeFilter ({
 
 DateRangeFilter.propTypes = {
   name: PropTypes.string.isRequired,
+  value: PropTypes.shape({
+    start: PropTypes.string,
+    end: PropTypes.string
+  }),
   onChange: PropTypes.func.isRequired
 }

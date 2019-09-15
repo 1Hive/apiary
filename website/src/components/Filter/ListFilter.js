@@ -29,6 +29,7 @@ export function ListFilter ({
 
 ListFilter.propTypes = {
   name: PropTypes.string.isRequired,
+  value: PropTypes.string,
   onChange: PropTypes.func.isRequired,
   items: PropTypes.arrayOf(PropTypes.shape({
     label: PropTypes.string.isRequired,
