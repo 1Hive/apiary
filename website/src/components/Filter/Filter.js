@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useMemo, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import qs from 'qs'
-import { Box, Button, GU } from '@aragon/ui'
+import { Button, GU } from '@aragon/ui'
 import { FILTER_TYPE_DATE_RANGE, DateRangeFilter } from './DateRangeFilter'
 import { FILTER_TYPE_LIST, ListFilter } from './ListFilter'
 import { useLocation } from '../../hooks/router'
@@ -85,34 +85,34 @@ export function Filter ({
       grid-template-rows: auto;
     `}
   `}>
-      {filters.map((filter) => {
-        switch (filter.type) {
-          case FILTER_TYPE_LIST:
-            return <ListFilter
-              name={filter.name}
-              value={filterState[filter.name]}
-              onChange={setFilterValue}
-              items={filter.items}
-              placeholder={filter.placeholder}
-            />
-          case FILTER_TYPE_DATE_RANGE:
-            return <DateRangeFilter
-              name={filter.name}
-              value={filterState[filter.name]}
-              onChange={setFilterValue}
-            />
-          default:
-            throw new Error(`Unknown filter type ${filter.type}`)
-        }
-      })}
-      {isFilterNotEmpty &&
-        <Button
-          css={breakpoint('medium')`grid-column: ${columns};`}
-          onClick={clearFilter}
-        >
-          Clear
-        </Button>
+    {filters.map((filter) => {
+      switch (filter.type) {
+        case FILTER_TYPE_LIST:
+          return <ListFilter
+            name={filter.name}
+            value={filterState[filter.name]}
+            onChange={setFilterValue}
+            items={filter.items}
+            placeholder={filter.placeholder}
+          />
+        case FILTER_TYPE_DATE_RANGE:
+          return <DateRangeFilter
+            name={filter.name}
+            value={filterState[filter.name]}
+            onChange={setFilterValue}
+          />
+        default:
+          throw new Error(`Unknown filter type ${filter.type}`)
       }
+    })}
+    {isFilterNotEmpty &&
+      <Button
+        css={breakpoint('medium')`grid-column: ${columns};`}
+        onClick={clearFilter}
+      >
+        Clear
+      </Button>
+    }
   </div>
 }
 
