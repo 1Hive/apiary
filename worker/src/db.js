@@ -5,7 +5,8 @@ export default function createDb () {
   return new Promise((resolve) => {
     // Create a new MongoClient
     const client = new MongoClient(
-      process.env.MONGODB_URI || 'mongodb://localhost:27017'
+      process.env.MONGODB_URI || 'mongodb://localhost:27017',
+      { ignoreUndefined: true }
     )
 
     // Use connect method to connect to the Server
