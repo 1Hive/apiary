@@ -100,6 +100,13 @@ The API will be available at localhost:3000 and the website will be available at
 - The API can be found at https://daolist.1hive.org
 - The website can be found at https://apiary.1hive.org
 
+## Contributing
+
+Please review the [code of conduct](CODE_OF_CONDUCT.md)
+
+For answers to common questions about this code of conduct, see
+https://www.contributor-covenant.org/faq
+
 ## License
 
 GPLv3
