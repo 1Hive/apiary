@@ -21,7 +21,10 @@ export const KIT_ADDRESSES = new Set([
   '0x67430642C0c3B5E6538049B9E9eE719f2a4BeE7c',
 
   // Reputation (0.8)
-  '0x3a06A6544e48708142508D9042f94DDdA769d04F'
+  '0x3a06A6544e48708142508D9042f94DDdA769d04F',
+
+  // Open Enterprise (0.8.4)
+  '0xc54c5dB63aB0E79FBb9555373B969093dEb17859'
 ])
 
 export const KIT_SIGNATURES = new Map([
@@ -230,5 +233,29 @@ export const KIT_SIGNATURES = new Map([
   }, {
     name: 'payrollSettings',
     type: 'uint256[4]'
+  }]],
+
+  // Open Enterprise (0.8.4)
+  ['0xa0f6918d', [{
+    name: 'tokenName',
+    type: 'string'
+  }, {
+    name: 'tokenSymbol',
+    type: 'string'
+  }, {
+    name: 'name',
+    type: 'string'
+  }, {
+    name: 'members',
+    type: 'address[]'
+  }, {
+    name: 'stakes',
+    type: 'uint256[]'
+  }, {
+    name: 'votingSettings',
+    type: 'uint64[3]'
+  }, {
+    name: 'financePeriod',
+    type: 'uint64'
   }]]
 ])
