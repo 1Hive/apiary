@@ -17,6 +17,12 @@ function transformFilterValue (
         between: filterValue
       }
     case FILTER_TYPE_LIST:
+      if (filterValue instanceof Array) {
+        return {
+          in: filterValue
+        }
+      }
+
       return {
         eq: filterValue
       }
