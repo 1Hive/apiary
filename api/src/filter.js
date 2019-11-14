@@ -7,6 +7,10 @@ export function transformStringFilter (op) {
     return { $regex: op.contains }
   }
 
+  if (op.in) {
+    return { $in: op.in }
+  }
+
   return {}
 }
 
