@@ -18,6 +18,12 @@ export function getOrganisations (
     )
   }
 
+  if (args.filter && args.filter.kit) {
+    filter['kit'] = transformStringFilter(
+      args.filter.kit
+    )
+  }
+
   if (args.filter && args.filter.createdAt) {
     filter['created_at'] = transformDateFilter(
       args.filter.createdAt

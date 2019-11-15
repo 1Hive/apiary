@@ -42,6 +42,7 @@ const ORGANISATIONS_QUERY = `
         id
         address
         ens
+        kit
         createdAt
       }
       pageInfo {
@@ -72,6 +73,29 @@ const APPS = [{
   label: 'Voting',
   value: '0x9fa3927f639745e587912d4b0fea7ef9013bf93fb907d29faeab57417ba6e1d4'
 }]
+
+const KITS = [
+  {
+    label: 'Company',
+    value: ['0x705Cd9a00b87Bb019a87beEB9a50334219aC4444', '0x7f3ed10366826a1227025445D4f4e3e14BBfc91d', '0xd737632caC4d039C9B0EEcc94C12267407a271b5']
+  },
+  {
+    label: 'Company Board',
+    value: ['0x4d1A892f42c947fa952b57bc6939b27A96215CfA']
+  },
+  {
+    label: 'Multisig',
+    value: ['0x41bbaf498226b68415f1C78ED541c45A18fd7696', '0x87aa2980dde7d2D4e57191f16BB57cF80bf6E5A6']
+  },
+  {
+    label: 'Membership',
+    value: ['0x67430642C0c3B5E6538049B9E9eE719f2a4BeE7c']
+  },
+  {
+    label: 'Reputation',
+    value: ['0x3a06A6544e48708142508D9042f94DDdA769d04F']
+  }
+]
 
 export default () => {
   const [sort, sortBy] = useSort('createdAt', 'DESC')
@@ -131,6 +155,11 @@ export default () => {
                 name: 'app',
                 placeholder: 'Apps',
                 items: APPS
+              }, {
+                type: FILTER_TYPE_LIST,
+                name: 'kit',
+                placeholder: 'Templates',
+                items: KITS
               }, {
                 type: FILTER_TYPE_DATE_RANGE,
                 name: 'createdAt'

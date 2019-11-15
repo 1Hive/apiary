@@ -21,6 +21,7 @@ export default `
   input StringOperators {
     eq: String
     contains: String
+    in: [String]
   }
 
   input BooleanOperators {

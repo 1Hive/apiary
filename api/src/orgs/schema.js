@@ -6,6 +6,8 @@ export default `
     ens: String
     # The address of the organisation.
     address: String
+    # The kit of the organisation.
+    kit: String
     # The date and time when this organisation was created.
     createdAt: DateTime
   }
@@ -26,6 +28,7 @@ export default `
 
   input OrganisationConnectionFilter {
     app: StringOperators
+    kit: StringOperators
     createdAt: DateOperators
   }
 
