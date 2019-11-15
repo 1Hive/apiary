@@ -1,6 +1,10 @@
 {
     "version": 2,
     "builds": [
-        { "src": "package.json", "use": "@now/static-build" }
+       { "src": "package.json", "use": "@now/static-build" }
+    ],
+    "routes": [
+       { "handle": "filesystem" },
+       { "src": "/.*", "dest": "/index.html" }
     ]
 }
