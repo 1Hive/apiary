@@ -81,7 +81,7 @@ const KITS = [
   },
   {
     label: 'Company Board',
-    value: '0x4d1A892f42c947fa952b57bc6939b27A96215CfA'
+    value: ['0x4d1A892f42c947fa952b57bc6939b27A96215CfA']
   },
   {
     label: 'Multisig',
@@ -89,11 +89,11 @@ const KITS = [
   },
   {
     label: 'Membership',
-    value: '0x67430642C0c3B5E6538049B9E9eE719f2a4BeE7c'
+    value: ['0x67430642C0c3B5E6538049B9E9eE719f2a4BeE7c']
   },
   {
     label: 'Reputation',
-    value: '0x3a06A6544e48708142508D9042f94DDdA769d04F'
+    value: ['0x3a06A6544e48708142508D9042f94DDdA769d04F']
   }
 ]
 
@@ -155,14 +155,12 @@ export default () => {
                 name: 'app',
                 placeholder: 'Apps',
                 items: APPS
-              },
-              {
+              }, {
                 type: FILTER_TYPE_LIST,
                 name: 'kit',
                 placeholder: 'Templates',
                 items: KITS
-              },
-              {
+              }, {
                 type: FILTER_TYPE_DATE_RANGE,
                 name: 'createdAt'
               }]}
