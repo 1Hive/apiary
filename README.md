@@ -16,7 +16,7 @@ There are three components in Daolist:
 
 ### [worker](/worker)
 
-![Worker Build Status](https://github.com/1hive/apiary/workflows/.github/workflows/worker.yml/badge.svg)
+![Worker Build Status](https://github.com/1Hive/apiary/workflows/Worker%20CI/badge.svg)
 
 The worker scrapes every transaction in every block to see if any transaction interacts with an official Aragon smart contract.
 
@@ -57,7 +57,7 @@ docker logs -f (docker-compose ps -q worker) | npx pino-pretty-min
 
 ### [api](/api)
 
-![API Build Status](https://github.com/1hive/apiary/workflows/.github/workflows/api.yml/badge.svg)
+![API Build Status](https://github.com/1Hive/apiary/workflows/API%20CI/badge.svg)
 
 A GraphQL API. Interactive documentation for the API is available if you visit the endpoint in the browser.
 
@@ -73,7 +73,7 @@ A GraphQL API. Interactive documentation for the API is available if you visit t
 
 ### [website](/website)
 
-![Website Build Status](https://github.com/1hive/apiary/workflows/.github/workflows/website.yml/badge.svg)
+![Website Build Status](https://github.com/1Hive/apiary/workflows/Website%20CI/badge.svg)
 
 The explorer front-end itself, built in React with Aragon UI.
 
