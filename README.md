@@ -40,20 +40,20 @@ docker logs -f (docker-compose ps -q worker) | npx pino-pretty-min
 
 #### Configuration
 
-| Environment Variable | Description                                     																						 | Default                       |
-|----------------------|---------------------------------------------------------------------------------------------|-------------------------------|
-| **Database**         |                                                 																						 |                               |
-| `MONGODB_URI`        | The URI of the MongoDB instance to connect to   																						 | `mongodb://localhost:27017`   |
-| **Ethereum**         |                                                 																						 |                               |
-| `ETH_NODE`           | The URI of the Ethereum node to connect to      																						 | `wss://mainnet.daolist.io/ws` |
-| `START_BLOCK`        | The block to start working from.                																						 | `6592900`                     |
+| Environment Variable | Description                                                                                 | Default                       |
+| -------------------- | ------------------------------------------------------------------------------------------- | ----------------------------- |
+| **Database**         |                                                                                             |                               |
+| `MONGODB_URI`        | The URI of the MongoDB instance to connect to                                               | `mongodb://localhost:27017`   |
+| **Ethereum**         |                                                                                             |                               |
+| `ETH_NODE`           | The URI of the Ethereum node to connect to                                                  | `wss://mainnet.daolist.io/ws` |
+| `START_BLOCK`        | The block to start working from.                                                            | `6592900`                     |
 | `TARGET_BLOCK`       | The block to stop working after. If you specify `latest`, the worker will run indefinitely. | `latest`                      |
-| **Cache**            |                                                 																						 |                               |
-| `REDIS_URL`          | The URL of the Redis instance to connect to     																						 | `redis://localhost:6379`      |
-| **IPFS**             |                                                 																						 |                               |
-| `IPFS_URL`           | The URL of the IPFS gateway to fetch files from 																						 |                               |
-| **Misc**             |                                                 																						 |                               |
-| `LOG_LEVEL`          | The log level                                   																						 | `info`                        |
+| **Cache**            |                                                                                             |                               |
+| `REDIS_URL`          | The URL of the Redis instance to connect to                                                 | `redis://localhost:6379`      |
+| **IPFS**             |                                                                                             |                               |
+| `IPFS_URL`           | The URL of the IPFS gateway to fetch files from                                             |                               |
+| **Misc**             |                                                                                             |                               |
+| `LOG_LEVEL`          | The log level                                                                               | `info`                        |
 
 ### [api](/api)
 
@@ -62,7 +62,7 @@ A GraphQL API. Interactive documentation for the API is available if you visit t
 #### Configuration
 
 | Environment Variable | Description                                   | Default                     |
-|----------------------|-----------------------------------------------|-----------------------------|
+| -------------------- | --------------------------------------------- | --------------------------- |
 | **Database**         |                                               |                             |
 | `MONGODB_URI`        | The URI of the MongoDB instance to connect to | `mongodb://localhost:27017` |
 | **Misc**             |                                               |                             |
@@ -99,6 +99,10 @@ The API will be available at localhost:3000 and the website will be available at
 
 - The API can be found at https://daolist.1hive.org
 - The website can be found at https://apiary.1hive.org
+
+## Contributing
+
+Please review the [code of conduct](./.github/CODE_OF_CONDUCT.md)
 
 ## License
 
