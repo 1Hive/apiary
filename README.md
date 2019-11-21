@@ -12,7 +12,7 @@ Apiary is designed to be user-centric rather than organization centric, enabling
 
 ## Design
 
-There are three components in Daolist:
+There are three components in Apiary:
 
 ### [worker](/worker)
 
@@ -22,7 +22,7 @@ The worker scrapes every transaction in every block to see if any transaction in
 
 The worker then emits events internally, where different internal components react to them. An example would be an internal component that saves DAO information to the database
 
-This pattern is built around the concept that Ethereum is basically one huge event sourcing mechanism, and that Daolist is just a read model.
+This pattern is built around the concept that Ethereum is basically one huge event sourcing mechanism, and that Apiary is just a read model.
 
 #### Logging
 
@@ -45,7 +45,7 @@ docker logs -f (docker-compose ps -q worker) | npx pino-pretty-min
 | **Database**         |                                                                                             |                               |
 | `MONGODB_URI`        | The URI of the MongoDB instance to connect to                                               | `mongodb://localhost:27017`   |
 | **Ethereum**         |                                                                                             |                               |
-| `ETH_NODE`           | The URI of the Ethereum node to connect to                                                  | `wss://mainnet.daolist.io/ws` |
+| `ETH_NODE`           | The URI of the Ethereum node to connect to                                                  | `wss://mainnet.eth.aragon.network/ws` |
 | `START_BLOCK`        | The block to start working from.                                                            | `6592900`                     |
 | `TARGET_BLOCK`       | The block to stop working after. If you specify `latest`, the worker will run indefinitely. | `latest`                      |
 | **Cache**            |                                                                                             |                               |
