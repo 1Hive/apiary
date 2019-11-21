@@ -4,8 +4,6 @@
 
 # Apiary Explorer
 
-![CircleCI](https://img.shields.io/circleci/build/gh/1Hive/apiary)
-
 The goal of Apiary Explorer is to provide a way for users to discover, explore, and more effectively participate in Aragon organizations.
 
 It is an evolution of the now defunct daolist.io and site developed and maintained by [@onbjerg](https://github.com/onbjerg) and the Apiary curation market proposal described [here](https://github.com/1hive/apiary-paper) that has since been partially implemented as Aragon Fundraising. The project has been adopted under the 1Hive umbrella to continue our goal of helping open source communities thrive by making it easier for patrons to support promising open source projects and open source projects to attract and reward contributors.
@@ -17,6 +15,8 @@ Apiary is designed to be user-centric rather than organization centric, enabling
 There are three components in Daolist:
 
 ### [worker](/worker)
+
+![Worker Build Status](https://github.com/1Hive/apiary/workflows/Worker%20CI/badge.svg)
 
 The worker scrapes every transaction in every block to see if any transaction interacts with an official Aragon smart contract.
 
@@ -57,6 +57,8 @@ docker logs -f (docker-compose ps -q worker) | npx pino-pretty-min
 
 ### [api](/api)
 
+![API Build Status](https://github.com/1Hive/apiary/workflows/API%20CI/badge.svg)
+
 A GraphQL API. Interactive documentation for the API is available if you visit the endpoint in the browser.
 
 #### Configuration
@@ -70,6 +72,8 @@ A GraphQL API. Interactive documentation for the API is available if you visit t
 | `LOG_LEVEL`          | The log level                                 | `info`                      |
 
 ### [website](/website)
+
+![Website Build Status](https://github.com/1Hive/apiary/workflows/Website%20CI/badge.svg)
 
 The explorer front-end itself, built in React with Aragon UI.
 
