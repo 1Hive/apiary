@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react'
 import PropTypes from 'prop-types'
-import { _DateRange as DateRange } from '@aragon/ui'
+import { DateRangePicker } from '@aragon/ui'
 
 export const FILTER_TYPE_DATE_RANGE = Symbol('FILTER_TYPE_DATE_RANGE')
 export function DateRangeFilter ({
@@ -12,7 +12,7 @@ export function DateRangeFilter ({
     onChange(name, dateRange)
   }, [name])
 
-  return <DateRange
+  return <DateRangePicker
     onChange={setDateRange}
     startDate={value.start}
     endDate={value.end}
