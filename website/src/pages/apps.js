@@ -20,6 +20,7 @@ import { WindowedPagination } from '../components/WindowedPagination'
 import { SortHeader } from '../components/SortHeader'
 import { NavTabs } from '../components/NavTabs/NavTabs'
 import openSafe from '../utils/open-safe'
+import formatNumber from '../utils/numbers'
 import useSort from '../hooks/sort'
 
 const APPS_QUERY = `
@@ -76,7 +77,7 @@ function renderAppEntry ({
       popoverTitle={name ? `${name}'s repository` : 'Repository'}
     />,
     <div key='app-description'>{description}</div>,
-    <div key='app-installations'>{installations}</div>
+    <div key='app-installations'>{formatNumber(installations)}</div>
   ]
 }
 
@@ -172,7 +173,7 @@ export default () => {
       </div>}
       secondary={<div>
         <Box>
-          <Text.Block size='xlarge'>{firstFetch ? '-' : data.apps.totalCount}</Text.Block>
+          <Text.Block size='xlarge'>{firstFetch ? '-' : formatNumber(data.apps.totalCount)}</Text.Block>
           <Text>apps</Text>
         </Box>
       </div>}
