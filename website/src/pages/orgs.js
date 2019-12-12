@@ -24,7 +24,7 @@ import {
 import { NavTabs } from '../components/NavTabs/NavTabs'
 import useSort from '../hooks/sort'
 import openSafe from '../utils/open-safe'
-import formatNumber from '../utils/numbers'
+import { formatNumber } from '../utils/numbers'
 
 const ORGANISATIONS_QUERY = `
   query(

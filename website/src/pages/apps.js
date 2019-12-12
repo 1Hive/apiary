@@ -20,7 +20,7 @@ import { WindowedPagination } from '../components/WindowedPagination'
 import { SortHeader } from '../components/SortHeader'
 import { NavTabs } from '../components/NavTabs/NavTabs'
 import openSafe from '../utils/open-safe'
-import formatNumber from '../utils/numbers'
+import { formatNumber } from '../utils/numbers'
 import useSort from '../hooks/sort'
 
 const APPS_QUERY = `
