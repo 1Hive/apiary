@@ -63,6 +63,7 @@ export default `
   input AppConnectionFilter {
     name: StringOperators
     createdAt: DateOperators
+    installations: NumberOperators
   }
 
   input AppConnectionSort {

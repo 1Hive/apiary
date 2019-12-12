@@ -28,11 +28,13 @@ const APPS_QUERY = `
     $before: Cursor
     $after: Cursor
     $sort: AppConnectionSort
+    $filter: AppConnectionFilter
   ) {
     apps(
       before: $before,
       after: $after,
-      sort: $sort
+      sort: $sort,
+      filter: $filter
     ) {
       nodes {
         repository
@@ -102,6 +104,11 @@ export default () => {
     variables: {
       sort: {
         [sort[0]]: sort[1]
+      },
+      filter: {
+        installations: {
+          gt: 0
+        }
       },
       [pagination[0]]: pagination[1]
     },
