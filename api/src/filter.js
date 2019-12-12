@@ -33,3 +33,31 @@ export function transformDateFilter (op) {
 
   return {}
 }
+
+export function transformNumberFilter (op) {
+  if ('eq' in op) {
+    return { $eq: op.eq }
+  }
+
+  if ('lt' in op) {
+    return { $lt: op.lt }
+  }
+
+  if ('lte' in op) {
+    return { $lte: op.lte }
+  }
+
+  if ('gt' in op) {
+    return { $gt: op.gt }
+  }
+
+  if ('gte' in op) {
+    return { $gte: op.gte }
+  }
+
+  if (op.between && 'start' in op.between && 'end' in op.between) {
+    return { $gt: op.between.start, $lt: op.between.end }
+  }
+
+  return {}
+}

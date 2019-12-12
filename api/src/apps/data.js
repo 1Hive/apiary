@@ -1,7 +1,8 @@
 import { makeConnection } from '../pagination'
 import {
   transformStringFilter,
-  transformDateFilter
+  transformDateFilter,
+  transformNumberFilter
 } from '../filter'
 import {
   camelToSnakeCaseKeys
@@ -19,6 +20,12 @@ export function getApps (db, args) {
   if (args.filter && args.filter.createdAt) {
     filter['created_at'] = transformDateFilter(
       args.filter.createdAt
+    )
+  }
+
+  if (args.filter && args.filter.installations) {
+    filter['installations'] = transformNumberFilter(
+      args.filter.installations
     )
   }
 
