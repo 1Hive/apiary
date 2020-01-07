@@ -95,7 +95,7 @@ const KITS = [
   {
     label: 'Open Enterprise',
     value: ['0xc54c5dB63aB0E79FBb9555373B969093dEb17859']
-  },  
+  },
   {
     label: 'Reputation',
     value: ['0x3a06A6544e48708142508D9042f94DDdA769d04F']
