@@ -46,6 +46,7 @@ const APPS_QUERY = `
         installations
         sourceUrl
         changelogUrl
+        hash
       }
       pageInfo {
         startCursor
@@ -155,16 +156,19 @@ export default () => {
             ]}
             entries={data.apps.nodes}
             renderEntry={renderAppEntry}
-            renderEntryActions={({ sourceUrl, changelogUrl }) => [
+            renderEntryActions={({ sourceUrl, changelogUrl, hash }) => [
               <ContextMenu
                 key='open-org'
-                disabled={!sourceUrl && !changelogUrl}
+                disabled={!sourceUrl && !changelogUrl && !hash}
               >
                 {sourceUrl && (
                   <ContextMenuItem onClick={() => openSafe(sourceUrl)}>Source</ContextMenuItem>
                 )}
                 {changelogUrl && (
                   <ContextMenuItem onClick={() => openSafe(changelogUrl)}>Changelog</ContextMenuItem>
+                )}
+                {hash && (
+                  <ContextMenuItem onClick={() => openSafe(`/orgs?app=${hash}`)}>Organizations</ContextMenuItem>
                 )}
               </ContextMenu>
             ]}

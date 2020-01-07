@@ -73,6 +73,21 @@ const APPS = [{
 }, {
   label: 'Voting',
   value: '0x9fa3927f639745e587912d4b0fea7ef9013bf93fb907d29faeab57417ba6e1d4'
+}, {
+  label: 'Address Book',
+  value: '0x32ec8cc9f3136797e0ae30e7bf3740905b0417b81ff6d4a74f6100f9037425de'
+}, {
+  label: 'Allocations',
+  value: '0x370ef8036e8769f293a3d9c1362d0e21bdfa4e0465d2cd9cf196ebd4ba75aa8b'
+}, {
+  label: 'Dot Voting',
+  value: '0x6bf2b7dbfbb51844d0d6fdc211b014638011261157487ccfef5c2e4fb26b1d7e'
+}, {
+  label: 'Projects',
+  value: '0xac5c7cc8f4ed07bb3543b5a4152c4f1a045e1be68bd86e2cf6720b680d1d14f3'
+}, {
+  label: 'Rewards',
+  value: '0x3ca69801a60916e9222ceb2fa3089b3f66b4e1b3fc49f4a562043d9ec1e5a00b'
 }]
 
 const KITS = [
