@@ -81,10 +81,6 @@ const KITS = [
     value: ['0x705Cd9a00b87Bb019a87beEB9a50334219aC4444', '0x7f3ed10366826a1227025445D4f4e3e14BBfc91d', '0xd737632caC4d039C9B0EEcc94C12267407a271b5']
   },
   {
-    label: 'Company Board',
-    value: ['0x4d1A892f42c947fa952b57bc6939b27A96215CfA']
-  },
-  {
     label: 'Multisig',
     value: ['0x41bbaf498226b68415f1C78ED541c45A18fd7696', '0x87aa2980dde7d2D4e57191f16BB57cF80bf6E5A6']
   },
