@@ -9,6 +9,9 @@
     "lint": "eslint src",
     "now-build": "npm run build"
   },
+  "engines": {
+    "node": "12.x"
+  },
   "dependencies": {
     "@aragon/ui": "^1.0.0",
     "date-fns": "^2.0.1",
