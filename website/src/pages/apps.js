@@ -156,7 +156,7 @@ export default () => {
             ]}
             entries={data.apps.nodes}
             renderEntry={renderAppEntry}
-            renderEntryActions={({ sourceUrl, changelogUrl, hash}) => [
+            renderEntryActions={({ sourceUrl, changelogUrl, hash }) => [
               <ContextMenu
                 key='open-org'
                 disabled={!sourceUrl && !changelogUrl && !hash}
