@@ -1,4 +1,4 @@
-FROM node:11 as react-build
+FROM node:12 as react-build
 
 ARG API_URL=https://daolist.1hive.org
 ENV API_URL="${API_URL}"
