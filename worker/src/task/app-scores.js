@@ -75,8 +75,8 @@ export function appScores (ctx) {
     // Fetch balances for all installed apps
     ctx.log.info('Fetching all balances...')
     const balances = Promise.all(apps.map(async (app) => {
-      let result = []
-      for([token, tokenAddress] of TOKEN_ADRESSES.entries()) {
+      const result = []
+      for (const [token, tokenAddress] of TOKEN_ADRESSES.entries()) {
         ctx.log.info({
           app: app.address,
           token: tokenAddress
@@ -158,7 +158,7 @@ export function appScores (ctx) {
 
       scores[app.appId] += orgScores[app.organization] / orgAppCounts[app.organization]
       ctx.log.debug({
-        appId: org.appId,
+        appId: app.appId,
         organization: app.organization,
         orgAppCounts: orgAppCounts[app.organization],
         orgScore: orgScores[app.organization]
@@ -169,7 +169,7 @@ export function appScores (ctx) {
 
     // Persist app scores in database
     const bulk = ctx.db.collection('apps').initializeUnorderedBulkOp()
-    for (let appId in appScores) {
+    for (const appId in appScores) {
       const score = appScores[appId]
 
       bulk.find({
