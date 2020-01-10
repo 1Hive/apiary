@@ -3,6 +3,7 @@ import { Stopwatch } from './utils/stopwatch'
 import * as eth from './eth'
 import * as app from './app'
 import * as org from './org'
+import * as activity from './activity'
 
 export const CHECKPOINT_DURATION = 10 * 1000
 export function * root (
@@ -51,6 +52,17 @@ export function * root (
       logs,
       app.persistVersion
     )
+
+    // Persist organisation activity
+    const activityTrackingEnabled = process.env.ETH_EVENTS_URL && process.env.ETH_EVENTS_TOKEN
+    if (activityTrackingEnabled) {
+      const traces = yield eth.fetchTraces(ctx, transactions.map((tx) => tx.hash))
+      yield eth.processTraces(
+        ctx,
+        traces,
+        activity.persist
+      )
+    }
 
     // Persist organisation names
     yield eth.processTransactions(
