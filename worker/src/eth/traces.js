@@ -1,5 +1,5 @@
 import { call, all } from 'cofx'
-import abi from 'web3-eth-abi'
+import got from 'got'
 
 export function fetchTracesFromEthEvents (transactionHashes) {
   return got.post(`${process.env.ETH_EVENTS_URL}/trace/search/`, {
@@ -29,7 +29,7 @@ export function * fetchTraces (
   ctx,
   transactionHashes
 ) {
-  return yield call([fetchTraceFromEthEvents, transactionHashes])
+  return yield call([fetchTracesFromEthEvents, transactionHashes])
 }
 
 export function processTraces (
