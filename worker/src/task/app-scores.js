@@ -74,9 +74,10 @@ export function appScores (ctx) {
 
     // Fetch balances for all installed apps
     ctx.log.info('Fetching all balances...')
-    const balances = Promise.all(apps.map(async (app) => {
+    const balances = await Promise.all(apps.map(async (app) => {
       const result = []
-      for (const [token, tokenAddress] of TOKEN_ADRESSES.entries()) {
+      for (const token in TOKEN_ADRESSES) {
+        const tokenAddress = TOKEN_ADRESSES[token]
         ctx.log.info({
           app: app.address,
           token: tokenAddress
@@ -89,7 +90,9 @@ export function appScores (ctx) {
       }
 
       return result
-    })).flat()
+    })).then(
+      (res) => res.flat()
+    )
 
     // Fetch all activity for the current period
     ctx.log.info('Fetching all activity for current period...')
