@@ -101,12 +101,12 @@ export function appScores (ctx) {
     // Calculate totals for each KPI
     const totalAntHeld = balances.filter(
       (balance) => balance.token === Symbol('ANT')
-    ).reduce(0, (acc, { balance }) => {
+    ).reduce((acc, { balance }) => {
       return acc + balance
-    })
-    const totalAum = balances.reduce(0, (acc, { balance }) => {
+    }, 0)
+    const totalAum = balances.reduce((acc, { balance }) => {
       return acc + balance
-    })
+    }, 0)
     const totalActivity = activity.length
     ctx.log.info({
       totalAntHeld,
@@ -116,19 +116,19 @@ export function appScores (ctx) {
 
     // Calculate normalized organization scores
     ctx.log.info('Calculating org scores...')
-    const orgScores = orgs.reduce({}, (scores, org) => {
+    const orgScores = orgs.reduce((scores, org) => {
       const antHeld = balances.filter(
         ({ token }) => token === Symbol('ANT')
       ).filter(
         ({ organization }) => organization === org.address
-      ).reduce(0, (acc, { balance }) => {
+      ).reduce((acc, { balance }) => {
         return acc + balance
-      })
+      }, 0)
       const aum = balances.filter(
         ({ organization }) => organization === org.address
-      ).reduce(0, (acc, { balance }) => {
+      ).reduce((acc, { balance }) => {
         return acc + balance
-      })
+      }, 0)
       const orgActivity = activity.filter(
         ({ organization }) => organization === org.address
       )
@@ -142,19 +142,19 @@ export function appScores (ctx) {
       }, 'Calculated organization score.')
 
       return scores
-    })
+    }, {})
 
     // Calculate app scores
     ctx.log.info('Calculating app scores...')
-    const orgAppCounts = apps.reduce({}, (appCounts, app) => {
+    const orgAppCounts = apps.reduce((appCounts, app) => {
       if (!appCounts[app.organization]) {
         appCounts[app.organization] = 0
       }
 
       appCounts[app.organization]++
       return appCounts
-    })
-    const appScores = apps.reduce({}, (scores, app) => {
+    }, {})
+    const appScores = apps.reduce((scores, app) => {
       if (!scores[app.appId]) {
         scores[app.appId] = 0
       }
@@ -168,7 +168,7 @@ export function appScores (ctx) {
       }, 'Increased app score.')
 
       return scores
-    })
+    }, {})
 
     // Persist app scores in database
     const appBulk = ctx.db.collection('apps').initializeUnorderedBulkOp()
