@@ -37,6 +37,11 @@ export function * persist (
     actions
   }
 
+  ctx.log.info({
+    transactionHash: activity.transactionHash,
+    timestamp: activity.timestamp
+  }, 'Activity logged.')
+
   // Persist activity
   yield call(
     safeUpsert,
