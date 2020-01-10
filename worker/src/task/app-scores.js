@@ -101,12 +101,12 @@ export function appScores (ctx) {
     // Calculate totals for each KPI
     const totalAntHeld = balances.filter(
       (balance) => balance.token === Symbol('ANT')
-    ).reduce(0, (acc, { balance }) => {
+    ).reduce((acc, { balance }) => {
       return acc + balance
-    })
-    const totalAum = balances.reduce(0, (acc, { balance }) => {
+    }, 0)
+    const totalAum = balances.reduce((acc, { balance }) => {
       return acc + balance
-    })
+    }, 0)
     const totalActivity = activity.length
     ctx.log.info({
       totalAntHeld,
@@ -121,14 +121,14 @@ export function appScores (ctx) {
         ({ token }) => token === Symbol('ANT')
       ).filter(
         ({ organization }) => organization === org.address
-      ).reduce(0, (acc, { balance }) => {
+      ).reduce((acc, { balance }) => {
         return acc + balance
-      })
+      }, 0)
       const aum = balances.filter(
         ({ organization }) => organization === org.address
-      ).reduce(0, (acc, { balance }) => {
+      ).reduce((acc, { balance }) => {
         return acc + balance
-      })
+      }, 0)
       const orgActivity = activity.filter(
         ({ organization }) => organization === org.address
       )
