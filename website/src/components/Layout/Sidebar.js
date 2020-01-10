@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
-import { useTheme } from '@aragon/ui'
+import { useTheme, useThemeMode } from '@aragon/ui'
 import { breakpoint } from '../../utils/breakpoint'
 
 const SidebarOuter = styled.div`
@@ -13,13 +13,14 @@ const SidebarOuter = styled.div`
 
 export function Sidebar ({ children }) {
   const theme = useTheme()
+  const themeMode = useThemeMode()
   return <SidebarOuter>
     <div
       css={`
         display: flex;
         align-items: center;
         padding: 16px;
-        background-color: ${theme.surface};
+        background-color: ${themeMode.mode === 'dark' ? theme.surface : 'rgb(224, 230, 240)'};
         justify-content: space-between;
 
         ${breakpoint('medium')`
