@@ -199,5 +199,7 @@ export function appScores (ctx) {
         }
       })
     }
+    await orgBulk.execute()
+    ctx.log.info('Updated org scores')
   }
 }
