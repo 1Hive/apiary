@@ -20,7 +20,8 @@ import * as tasks from './task'
   }
 
   const metricTasks = [
-    ['*/5 * * * *', tasks.appInstalls]
+    ['*/5 * * * *', tasks.appInstalls],
+    ['0 * * * *', tasks.appScores]
   ]
 
   // Run metric tasks on start up
