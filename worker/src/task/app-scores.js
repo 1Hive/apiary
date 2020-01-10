@@ -168,11 +168,11 @@ export function appScores (ctx) {
     })
 
     // Persist app scores in database
-    const bulk = ctx.db.collection('apps').initializeUnorderedBulkOp()
+    const appBulk = ctx.db.collection('apps').initializeUnorderedBulkOp()
     for (const appId in appScores) {
       const score = appScores[appId]
 
-      bulk.find({
+      appBulk.find({
         hash: appId
       }).updateOne({
         $set: {
@@ -180,7 +180,21 @@ export function appScores (ctx) {
         }
       })
     }
-    await bulk.execute()
+    await appBulk.execute()
     ctx.log.info('Updated app scores')
+
+    // Persist organization scores in database
+    const orgBulk = ctx.db.collection('orgs').initializeUnorderedBulkOp()
+    for (const orgAddress in orgScores) {
+      const score = orgScores[orgAddress]
+
+      orgBulk.find({
+        address: orgAddress
+      }).updateOne({
+        $set: {
+          score
+        }
+      })
+    }
   }
 }
