@@ -40,20 +40,23 @@ docker logs -f (docker-compose ps -q worker) | npx pino-pretty-min
 
 #### Configuration
 
-| Environment Variable | Description                                                                                 | Default                       |
-| -------------------- | ------------------------------------------------------------------------------------------- | ----------------------------- |
-| **Database**         |                                                                                             |                               |
-| `MONGODB_URI`        | The URI of the MongoDB instance to connect to                                               | `mongodb://localhost:27017`   |
-| **Ethereum**         |                                                                                             |                               |
-| `ETH_NODE`           | The URI of the Ethereum node to connect to                                                  | `wss://mainnet.eth.aragon.network/ws` |
-| `START_BLOCK`        | The block to start working from.                                                            | `6592900`                     |
-| `TARGET_BLOCK`       | The block to stop working after. If you specify `latest`, the worker will run indefinitely. | `latest`                      |
-| **Cache**            |                                                                                             |                               |
-| `REDIS_URL`          | The URL of the Redis instance to connect to                                                 | `redis://localhost:6379`      |
-| **IPFS**             |                                                                                             |                               |
-| `IPFS_URL`           | The URL of the IPFS gateway to fetch files from                                             |                               |
-| **Misc**             |                                                                                             |                               |
-| `LOG_LEVEL`          | The log level                                                                               | `info`                        |
+| Environment Variable | Description                                                                                    | Default                       |
+| -------------------- | ---------------------------------------------------------------------------------------------- | ----------------------------- |
+| **Database**         |                                                                                                |                               |
+| `MONGODB_URI`        | The URI of the MongoDB instance to connect to                                                  | `mongodb://localhost:27017`   |
+| **Ethereum**         |                                                                                                |                               |
+| `ETH_NODE`           | The URI of the Ethereum node to connect to                                                     | `wss://mainnet.eth.aragon.network/ws` |
+| `START_BLOCK`        | The block to start working from.                                                               | `6592900`                     |
+| `TARGET_BLOCK`       | The block to stop working after. If you specify `latest`, the worker will run indefinitely.    | `latest`                      |
+| **Cache**            |                                                                                                |                               |
+| `REDIS_URL`          | The URL of the Redis instance to connect to                                                    | `redis://localhost:6379`      |
+| **IPFS**             |                                                                                                |                               |
+| `IPFS_URL`           | The URL of the IPFS gateway to fetch files from                                                |                               |
+| **IPFS**             |                                                                                                |                               |
+| `ETH_EVENTS_URL`     | The base URL for the eth.events ES API. Activity tracking is disabled if this is not provided. |                               |
+| `ETH_EVENTS_TOKEN`   | The API token for eth.events. Activity tracking is disabled if this is not provided.           |                               |
+| **Misc**             |                                                                                                |                               |
+| `LOG_LEVEL`          | The log level                                                                                  | `info`                        |
 
 ### [api](/api)
 
