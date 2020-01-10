@@ -4,6 +4,8 @@
 
 # Apiary Explorer
 
+![Screenshot of Apiary](.github/screenshot.png)
+
 The goal of Apiary Explorer is to provide a way for users to discover, explore, and more effectively participate in Aragon organizations.
 
 It is an evolution of the now defunct daolist.io and site developed and maintained by [@onbjerg](https://github.com/onbjerg) and the Apiary curation market proposal described [here](https://github.com/1hive/apiary-paper) that has since been partially implemented as Aragon Fundraising. The project has been adopted under the 1Hive umbrella to continue our goal of helping open source communities thrive by making it easier for patrons to support promising open source projects and open source projects to attract and reward contributors.
