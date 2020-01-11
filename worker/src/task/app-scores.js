@@ -114,11 +114,11 @@ export function appScores (ctx) {
       (balance) => balance.token === 'ANT'
     ).reduce((acc, { balance }) => {
       return acc + balance
-    }, 0)
+    }, 0) || 1
     const totalAum = balances.reduce((acc, { balance }) => {
       return acc + balance
-    }, 0)
-    const totalActivity = activity.length
+    }, 0) || 1
+    const totalActivity = activity.length || 1
     ctx.log.info({
       totalAntHeld,
       totalAum,
