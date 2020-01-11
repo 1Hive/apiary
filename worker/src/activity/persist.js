@@ -15,9 +15,9 @@ export function * persist (
   }
 
   // Find every app and organization mentioned in this trace
-  const appsInTrace = yield all(trace.trace.map(
+  const appsInTrace = (yield all(trace.trace.map(
     ({ action }) => call(getApp, action.to)
-  )).filter((res) => res !== null)
+  ))).filter((res) => res !== null)
 
   // Find actions in the trace that are to known apps
   const actions = trace.trace.filter((action, index) => {
