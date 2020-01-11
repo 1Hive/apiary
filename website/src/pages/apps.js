@@ -2,7 +2,6 @@ import React, { useState, useCallback, useEffect } from 'react'
 import { useQuery } from 'graphql-hooks'
 import {
   Info,
-  Link,
 
   Split,
   Box,
