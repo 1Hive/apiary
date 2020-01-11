@@ -8,7 +8,7 @@ export function * persist (
   const getApp = (address) => {
     return ctx.db.collection('orgs')
       .find({
-        'apps.address': address
+        'apps.address': ctx.web3.utils.toChecksumAddress(address)
       })
       .limit(1)
       .next()
