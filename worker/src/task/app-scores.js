@@ -78,7 +78,7 @@ export function appScores (ctx) {
       const result = []
       for (const token in TOKEN_ADRESSES) {
         const tokenAddress = TOKEN_ADRESSES[token]
-        ctx.log.info({
+        ctx.log.debug({
           app: app.address,
           token: tokenAddress
         }, 'Fetching balance for app')
