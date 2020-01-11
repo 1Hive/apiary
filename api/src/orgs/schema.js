@@ -8,6 +8,8 @@ export default `
     address: String
     # The kit of the organisation.
     kit: String
+    # The pinion organisation score of the organisation.
+    score: Float
     # The date and time when this organisation was created.
     createdAt: DateTime
   }
@@ -35,6 +37,7 @@ export default `
   input OrganisationConnectionSort {
     ens: SortOrder
     createdAt: SortOrder
+    score: SortOrder
   }
 
   type Query {
