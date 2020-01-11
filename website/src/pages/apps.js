@@ -2,6 +2,7 @@ import React, { useState, useCallback, useEffect } from 'react'
 import { useQuery } from 'graphql-hooks'
 import {
   Info,
+  Link,
 
   Split,
   Box,
@@ -168,7 +169,7 @@ export default () => {
                   <ContextMenuItem onClick={() => openSafe(changelogUrl)}>Changelog</ContextMenuItem>
                 )}
                 {hash && (
-                  <ContextMenuItem onClick={() => openSafe(`/orgs?app=${hash}`)}>Organizations</ContextMenuItem>
+                  <ContextMenuItem onClick={() => window.location = `/orgs?app=${hash}` }>Organizations</ContextMenuItem>
                 )}
               </ContextMenu>
             ]}
