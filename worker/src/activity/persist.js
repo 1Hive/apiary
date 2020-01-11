@@ -20,11 +20,11 @@ export function * persist (
   ))).filter((res) => res !== null)
 
   // Find actions in the trace that are to known apps
-  const actions = trace.trace.filter((action, index) => {
+  const actions = trace.trace.filter(({ action }, index) => {
     return !!appsInTrace.find(
       (app) => app.address === action.to
     )
-  }).map((action) => ({
+  }).map(({ action }) => ({
     from: action.from,
     to: action.to,
     data: action.input
