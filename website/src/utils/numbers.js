@@ -8,7 +8,11 @@ const SI_SYMBOLS = [
   'E'
 ]
 
-export function formatNumber (num) {
+export function formatNumber (num, cutoff = 10000) {
+  if (num < cutoff) {
+    return num.toLocaleString()
+  }
+
   const abs = Math.abs(num)
   const tier = Math.log10(abs) / 3 | 0
 
