@@ -29,7 +29,7 @@ export function * fetchTraces (
   ctx,
   transactionHashes
 ) {
-  return yield call([fetchTracesFromEthEvents, transactionHashes])
+  return yield call(fetchTracesFromEthEvents, transactionHashes)
 }
 
 export function processTraces (
