@@ -1,8 +1,8 @@
 const TOKEN_ADRESSES = {
-  [Symbol('ETH')]: '0x0000000000000000000000000000000000000000',
-  [Symbol('ANT')]: '0x960b236A07cf122663c4303350609A66A7B288C0',
-  [Symbol('DAI')]: '0x6b175474e89094c44da98b954eedeac495271d0f',
-  [Symbol('USDC')]: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48'
+  ETH: '0x0000000000000000000000000000000000000000',
+  ANT: '0x960b236A07cf122663c4303350609A66A7B288C0',
+  DAI: '0x6b175474e89094c44da98b954eedeac495271d0f',
+  USDC: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48'
 }
 
 function fetchTokenBalance (
@@ -10,7 +10,7 @@ function fetchTokenBalance (
   tokenAddress,
   accountAddress
 ) {
-  if (tokenAddress === TOKEN_ADRESSES[Symbol('ETH')]) {
+  if (tokenAddress === TOKEN_ADRESSES['ETH']) {
     return ctx.web3.eth.getBalance(accountAddress)
   }
 
@@ -100,7 +100,7 @@ export function appScores (ctx) {
 
     // Calculate totals for each KPI
     const totalAntHeld = balances.filter(
-      (balance) => balance.token === Symbol('ANT')
+      (balance) => balance.token === 'ANT'
     ).reduce((acc, { balance }) => {
       return acc + balance
     }, 0)
@@ -118,7 +118,7 @@ export function appScores (ctx) {
     ctx.log.info('Calculating org scores...')
     const orgScores = orgs.reduce((scores, org) => {
       const antHeld = balances.filter(
-        ({ token }) => token === Symbol('ANT')
+        ({ token }) => token === 'ANT'
       ).filter(
         ({ organization }) => organization === org.address
       ).reduce((acc, { balance }) => {
@@ -138,7 +138,8 @@ export function appScores (ctx) {
         organization: org.address,
         antHeld,
         aum,
-        activity: orgActivity
+        activity: orgActivity.length,
+        score: scores[org.address]
       }, 'Calculated organization score.')
 
       return scores
