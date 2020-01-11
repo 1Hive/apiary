@@ -30,6 +30,9 @@ export function * persist (
     data: action.input
   }))
 
+  // This was not a transaction sent to an app
+  if (actions.length === 0) return
+
   // Parse trace actions
   const activity = {
     transactionHash: trace.transactionHash,
