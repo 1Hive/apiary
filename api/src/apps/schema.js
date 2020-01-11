@@ -36,7 +36,7 @@ export default `
     installations: Int!
 
     # The pinion app score of the app, if available.
-    score: Int
+    score: Float
 
     # Versions of this app.
     versions: [AppVersion]!
