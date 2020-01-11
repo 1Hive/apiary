@@ -1,8 +1,14 @@
 const TOKEN_ADRESSES = {
-  ETH: '0x0000000000000000000000000000000000000000',
-  ANT: '0x960b236A07cf122663c4303350609A66A7B288C0',
-  DAI: '0x6b175474e89094c44da98b954eedeac495271d0f',
-  USDC: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48'
+  ETH: '0x0000000000000000000000000000000000000000', // 18
+  ANT: '0x960b236A07cf122663c4303350609A66A7B288C0', // 18
+  DAI: '0x6b175474e89094c44da98b954eedeac495271d0f', // 18
+  USDC: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48' // 6
+}
+const TOKEN_DECIMALS = {
+  ETH: 18,
+  ANT: 18,
+  DAI: 18,
+  USDC: 6
 }
 
 function fetchTokenBalance (
@@ -80,13 +86,18 @@ export function appScores (ctx) {
         const tokenAddress = TOKEN_ADRESSES[token]
         ctx.log.debug({
           app: app.address,
-          token: tokenAddress
+          token
         }, 'Fetching balance for app')
         result.push({
           token,
-          balance: await fetchTokenBalance(ctx, tokenAddress, app.address),
+          balance: (await fetchTokenBalance(ctx, tokenAddress, app.address)) / Math.pow(10, TOKEN_DECIMALS[token]),
           ...app
         })
+        ctx.log.debug({
+          app: app.address,
+          token,
+          balance: result[result.length - 1]
+        }, 'Fetched balance for app')
       }
 
       return result
