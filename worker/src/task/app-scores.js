@@ -133,7 +133,7 @@ export function appScores (ctx) {
         ({ organization }) => organization === org.address
       )
 
-      scores[org.address] = (antHeld / totalAntHeld) * 0.25 + (aum / totalAum) * 0.25 + (orgActivity / totalActivity) * 0.5
+      scores[org.address] = (antHeld / totalAntHeld) * 0.25 + (aum / totalAum) * 0.25 + (orgActivity.length / totalActivity) * 0.5
       ctx.log.debug({
         organization: org.address,
         antHeld,
