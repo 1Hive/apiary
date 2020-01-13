@@ -1,8 +1,8 @@
 import { MongoClient } from 'mongodb'
-import { Client } from 'pg'
+import pg from 'pg'
 import assert from 'assert'
 
-export default function createDb (connectionString, database) {
+export function createMongo (connectionString, database) {
   return new Promise((resolve) => {
     // Create a new MongoClient
     const client = new MongoClient(
@@ -19,7 +19,7 @@ export default function createDb (connectionString, database) {
 }
 
 export async function createPostgres (connectionString) {
-  const client = new Client({
+  const client = new pg.Client({
     connectionString
   })
   await client.connect()

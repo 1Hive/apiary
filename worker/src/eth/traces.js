@@ -1,4 +1,5 @@
 import { call, all } from 'cofx'
+import { sql } from 'sqliterally'
 
 export async function fetchTracesFromEthEvents (ctx, blockNumber) {
   const q = sql`
