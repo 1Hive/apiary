@@ -1,35 +1,36 @@
 import { call, all } from 'cofx'
-import got from 'got'
 
-export function fetchTracesFromEthEvents (transactionHashes) {
-  return got.post(`${process.env.ETH_EVENTS_URL}/trace/search/`, {
-    headers: {
-      Authorization: `Bearer ${process.env.ETH_EVENTS_TOKEN}`,
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      query: {
-        bool: {
-          filter: {
-            terms: {
-              transactionHash: transactionHashes
-            }
-          }
-        }
-      }
+export async function fetchTracesFromEthEvents (ctx, blockNumber) {
+  const q = sql`
+    select timestamp, transaction_hash, traces
+    from trace
+    where block_number = ${blockNumber}
+  `
+
+  const { rows } = await ctx.traces.query(q)
+
+  const traces = rows.map((row) => {
+    const actions = row.traces.map((action) => {
+      to: action.action_to
+      from: action.action_from
+      input: action.action_input
     })
+
+    return {
+      transactionHash: row.transaction_hash,
+      timestamp: row.timestamp,
+      actions
+    }
   })
-    .then(({ body }) => JSON.parse(body))
-    .then(({ hits }) => {
-      return hits.hits.map((hit) => hit._source)
-    })
+
+  return traces
 }
 
-export function * fetchTraces (
+export function fetchTraces (
   ctx,
-  transactionHashes
+  blockNumber
 ) {
-  return yield call(fetchTracesFromEthEvents, transactionHashes)
+  return call(fetchTracesFromEthEvents, ctx, blockNumber)
 }
 
 export function processTraces (

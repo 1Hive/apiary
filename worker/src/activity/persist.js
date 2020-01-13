@@ -11,20 +11,21 @@ export function * persist (
         'apps.address': ctx.web3.utils.toChecksumAddress(address)
       })
       .limit(1)
+      .map(({ apps }) => apps)
       .next()
   }
 
   // Find every app and organization mentioned in this trace
-  const appsInTrace = (yield all(trace.trace.map(
-    ({ action }) => call(getApp, action.to)
+  const appsInTrace = (yield all(trace.actions.map(
+    (action) => call(getApp, action.to)
   ))).filter((res) => res !== null)
 
   // Find actions in the trace that are to known apps
-  const actions = trace.trace.filter(({ action }, index) => {
+  const actions = trace.actions.filter((action) => {
     return !!appsInTrace.find(
       (app) => app.address === action.to
     )
-  }).map(({ action }) => ({
+  }).map((action) => ({
     from: action.from,
     to: action.to,
     data: action.input

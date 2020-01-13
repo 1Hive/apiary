@@ -1,11 +1,11 @@
 import redis from 'redis'
 import { promisify } from 'util'
 
-export default function createCache () {
+export default function createCache (url) {
   return new Promise((resolve) => {
     // Create a new Redis client
     const client = redis.createClient({
-      url: process.env.REDIS_URL || 'redis://localhost:6379'
+      url
     })
 
     const get = promisify(client.get).bind(client)

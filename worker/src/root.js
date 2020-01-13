@@ -54,9 +54,8 @@ export function * root (
     )
 
     // Persist organisation activity
-    const activityTrackingEnabled = process.env.ETH_EVENTS_URL && process.env.ETH_EVENTS_TOKEN
-    if (activityTrackingEnabled) {
-      const traces = yield eth.fetchTraces(ctx, transactions.map((tx) => tx.hash))
+    if (ctx.traces) {
+      const traces = yield eth.fetchTraces(ctx, block.number)
       yield eth.processTraces(
         ctx,
         traces,

@@ -1,7 +1,7 @@
 import { task } from 'cofx'
 import Web3 from 'web3'
 import schedule from 'node-schedule'
-import createDb from './db'
+import { createMongo, createPostgres } from './db'
 import createCache from './cache'
 import createLogger from 'pino'
 import createProvider from './provider'
@@ -11,12 +11,24 @@ import * as tasks from './task'
 (async () => {
   // Create context
   const context = {
-    db: await createDb(),
-    cache: await createCache(),
-    log: createLogger(
-      { level: process.env.LOG_LEVEL || 'info' }
+    db: await createMongo(
+      process.env.MONGODB_URI || 'mongodb://localhost:27017',
+      process.env.MONGODB_NAME || 'daolist'
     ),
+    cache: await createCache(
+      process.env.REDIS_URL || 'redis://localhost:6379'
+    ),
+    log: createLogger({
+      level: process.env.LOG_LEVEL || 'info'
+    }),
     web3: new Web3(createProvider())
+  }
+
+  // Add trace provider if enabled
+  if (process.env.ETH_EVENTS_URI) {
+    context.traces = await createPostgres(
+      process.env.ETH_EVENTS_URI
+    )
   }
 
   const metricTasks = [
