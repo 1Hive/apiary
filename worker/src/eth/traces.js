@@ -1,4 +1,4 @@
-import { call, all } from 'cofx'
+import { call } from 'cofx'
 import { sql } from 'sqliterally'
 
 export async function fetchTracesFromEthEvents (ctx, blockNumber) {
@@ -39,7 +39,7 @@ export function * processTraces (
   traces,
   fn
 ) {
-  for (let trace of traces) {
+  for (const trace of traces) {
     yield call(fn, ctx, trace)
   }
 }

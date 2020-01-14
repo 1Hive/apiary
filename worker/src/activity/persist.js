@@ -1,4 +1,4 @@
-import { call, all } from 'cofx'
+import { call } from 'cofx'
 import { safeUpsert } from '../db'
 
 export async function appExists (ctx, address) {
@@ -15,7 +15,7 @@ export function * persist (
 ) {
   // Find actions in the trace that are to known apps
   const actions = []
-  for (let action of trace.actions) {
+  for (const action of trace.actions) {
     const exists = yield call(appExists, ctx, action.to)
 
     if (exists) actions.push(action)
