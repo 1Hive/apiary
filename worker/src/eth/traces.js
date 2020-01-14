@@ -11,11 +11,11 @@ export async function fetchTracesFromEthEvents (ctx, blockNumber) {
   const { rows } = await ctx.traces.query(q)
 
   const traces = rows.map((row) => {
-    const actions = row.traces.map((action) => {
-      to: action.action_to
-      from: action.action_from
+    const actions = row.traces.map((action) => ({
+      to: action.action_to,
+      from: action.action_from,
       input: action.action_input
-    })
+    }))
 
     return {
       transactionHash: row.transaction_hash,
