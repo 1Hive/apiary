@@ -34,12 +34,12 @@ export function fetchTraces (
   return call(fetchTracesFromEthEvents, ctx, blockNumber)
 }
 
-export function processTraces (
+export function * processTraces (
   ctx,
   traces,
   fn
 ) {
-  return all(
-    traces.map((trace) => call(fn, ctx, trace))
-  )
+  for (let trace of traces) {
+    yield call(fn, ctx, trace)
+  }
 }
