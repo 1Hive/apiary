@@ -45,17 +45,17 @@ docker logs -f (docker-compose ps -q worker) | npx pino-pretty-min
 | Environment Variable | Description                                                                                      | Default                       |
 | -------------------- | ------------------------------------------------------------------------------------------------ | ----------------------------- |
 | **Database**         |                                                                                                  |                               |
-| `MONGODB_URI`        | The URI of the MongoDB instance to connect to                                                    | `mongodb://localhost:27017`   |
+| `MONGODB_URI`        | **Required**. The URI of the MongoDB instance to connect to                                      | `mongodb://localhost:27017`   |
 | **Ethereum**         |                                                                                                  |                               |
-| `ETH_NODE`           | The URI of the Ethereum node to connect to                                                       | `wss://mainnet.eth.aragon.network/ws` |
+| `ETH_NODE`           | **Required**. The URI of the Ethereum node to connect to                                         | `wss://mainnet.eth.aragon.network/ws` |
 | `START_BLOCK`        | The block to start working from.                                                                 | `6592900`                     |
 | `TARGET_BLOCK`       | The block to stop working after. If you specify `latest`, the worker will run indefinitely.      | `latest`                      |
 | **Cache**            |                                                                                                  |                               |
-| `REDIS_URL`          | The URL of the Redis instance to connect to                                                      | `redis://localhost:6379`      |
+| `REDIS_URL`          | **Required**. The URL of the Redis instance to connect to                                        | `redis://localhost:6379`      |
 | **IPFS**             |                                                                                                  |                               |
-| `IPFS_URL`           | The URL of the IPFS gateway to fetch files from                                                  |                               |
+| `IPFS_URL`           | **Required**. The URL of the IPFS gateway to fetch files from                                    |                               |
 | **IPFS**             |                                                                                                  |                               |
-| `ETH_EVENTS_URI`     | The URI of the eth.events database to connect to. Activity tracking is disabled if not provided. |                               |
+| `ETH_EVENTS_URI`     | **Required**. The URI of the eth.events database to connect to.                                  |                                |
 | **Misc**             |                                                                                                  |                               |
 | `LOG_LEVEL`          | The log level                                                                                    | `info`                        |
 
@@ -67,13 +67,13 @@ A GraphQL API. Interactive documentation for the API is available if you visit t
 
 #### Configuration
 
-| Environment Variable | Description                                   | Default                     |
-| -------------------- | --------------------------------------------- | --------------------------- |
-| **Database**         |                                               |                             |
-| `MONGODB_URI`        | The URI of the MongoDB instance to connect to | `mongodb://localhost:27017` |
-| **Misc**             |                                               |                             |
-| `PORT`               | The port to listen for requests on            | `3000`                      |
-| `LOG_LEVEL`          | The log level                                 | `info`                      |
+| Environment Variable | Description                                                 | Default                     |
+| -------------------- | ----------------------------------------------------------- | --------------------------- |
+| **Database**         |                                                             |                             |
+| `MONGODB_URI`        | **Required**. The URI of the MongoDB instance to connect to | `mongodb://localhost:27017` |
+| **Misc**             |                                                             |                             |
+| `PORT`               | The port to listen for requests on                          | `3000`                      |
+| `LOG_LEVEL`          | The log level                                               | `info`                      |
 
 ### [website](/website)
 

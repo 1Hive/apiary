@@ -1,5 +1,4 @@
-export { fetchBlockUntil } from './blocks'
-export { fetchTransactions } from './transactions'
+export { fetchDataAtBlock } from './data'
 export { processTransactions } from './transactions'
-export { fetchLogs, processLogs } from './logs'
+export { processLogs } from './logs'
 export { fetchTraces, processTraces } from './traces'

@@ -15,6 +15,9 @@ import * as tasks from './task'
       process.env.MONGODB_URI || 'mongodb://localhost:27017',
       process.env.MONGODB_NAME || 'daolist'
     ),
+    ethstore: await createPostgres(
+      process.env.ETH_EVENTS_URI
+    ),
     cache: await createCache(
       process.env.REDIS_URL || 'redis://localhost:6379'
     ),
@@ -22,13 +25,6 @@ import * as tasks from './task'
       level: process.env.LOG_LEVEL || 'info'
     }),
     web3: new Web3(createProvider())
-  }
-
-  // Add trace provider if enabled
-  if (process.env.ETH_EVENTS_URI) {
-    context.traces = await createPostgres(
-      process.env.ETH_EVENTS_URI
-    )
   }
 
   const metricTasks = [

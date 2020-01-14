@@ -1,4 +1,4 @@
-import { call, all } from 'cofx'
+import { call } from 'cofx'
 import { Stopwatch } from './utils/stopwatch'
 import * as eth from './eth'
 import * as app from './app'
@@ -14,10 +14,15 @@ export function * root (
     (yield call(ctx.cache.get, 'checkpoint')) ||
     6592900
   const targetBlock = process.env.TARGET_BLOCK || 'latest'
-  let block = yield call(eth.fetchBlockUntil,
+
+  // Fetch data for block
+  let {
+    block,
+    transactions,
+    logs
+  } = yield call(eth.fetchDataAtBlock,
     ctx,
-    startBlock,
-    targetBlock
+    startBlock
   )
 
   ctx.log.info({
@@ -25,17 +30,14 @@ export function * root (
     targetBlock
   }, 'Worker started.')
 
-  while (block) {
+  while (
+    // eslint-disable-next-line no-unmodified-loop-condition
+    block.number <= targetBlock || targetBlock === 'latest'
+  ) {
     const processingStart = process.hrtime.bigint()
     ctx.log.debug({
       block: block.number
     }, `Processing block #${block.number}`)
-
-    // Fetch transactions and logs
-    const transactions = yield call(eth.fetchTransactions, ctx, block)
-    const logs = (yield all(
-      transactions.map((tx) => call(eth.fetchLogs, ctx, tx))
-    )).flat()
 
     // Persist app installs
     yield eth.processLogs(
@@ -54,14 +56,12 @@ export function * root (
     )
 
     // Persist organisation activity
-    if (ctx.traces) {
-      const traces = yield eth.fetchTraces(ctx, block.number)
-      yield eth.processTraces(
-        ctx,
-        traces,
-        activity.persist
-      )
-    }
+    const traces = yield eth.fetchTraces(ctx, block.number)
+    yield eth.processTraces(
+      ctx,
+      traces,
+      activity.persist
+    )
 
     // Persist organisation names
     yield eth.processTransactions(
@@ -86,11 +86,17 @@ export function * root (
     ctx.log.debug({
       block: block.number,
       elapsed: processingTime.toString()
-    }, `Processed block #${block.number}`)
-    block = yield call(eth.fetchBlockUntil,
+    }, `Processed block #${block.number}`);
+
+    // Fetch data for next block
+    ({
+      block,
+      transactions,
+      logs
+    } = yield call(
+      eth.fetchDataAtBlock,
       ctx,
-      block.number + 1,
-      targetBlock
-    )
+      block.number + 1
+    ))
   }
 }

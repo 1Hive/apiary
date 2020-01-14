@@ -8,7 +8,7 @@ export async function fetchTracesFromEthEvents (ctx, blockNumber) {
     where block_number = ${blockNumber}
   `
 
-  const { rows } = await ctx.traces.query(q)
+  const { rows } = await ctx.ethstore.query(q)
 
   const traces = rows.map((row) => {
     const actions = row.traces.map((action) => ({
