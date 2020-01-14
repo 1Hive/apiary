@@ -1,27 +1,25 @@
 import { call, all } from 'cofx'
 import { safeUpsert } from '../db'
 
+export async function appExists (ctx, address) {
+  const exists = await ctx.db.collection('orgs').find({
+    'apps.address': ctx.web3.utils.toChecksumAddress(address)
+  }).limit(1).hasNext()
+
+  return exists
+}
+
 export function * persist (
   ctx,
   trace
 ) {
-  const getApp = async (address) => {
-    const exists = await ctx.db.collection('orgs').find({
-      'apps.address': ctx.web3.utils.toChecksumAddress(address)
-    }).limit(1).hasNext()
-
-    return exists ? address : null
-  }
-
-  // Find every app and organization mentioned in this trace
-  const appsInTrace = (yield all(trace.actions.map(
-    (action) => call(getApp, action.to)
-  ))).filter((res) => res !== null)
-
   // Find actions in the trace that are to known apps
-  const actions = trace.actions.filter((action) => {
-    return appsInTrace.includes(action.to)
-  })
+  const actions = []
+  for (let action of trace.actions) {
+    const exists = yield call(appExists, ctx, action.to)
+
+    if (exists) actions.push(action)
+  }
 
   // This was not a transaction sent to an app
   if (actions.length === 0) return
