@@ -65,6 +65,15 @@ function fetchActivity (ctx) {
   }]).toArray()
 }
 
+const processSerially = (set, transform) => {
+  let current = Promise.resolve()
+
+  return Promise.all(set.map((item) => {
+    current = current.then(() => transform(item))
+    return current
+  }))
+}
+
 // TODO This task does not support "time travelling" since it
 // always gets the balances of accounts at the highest block
 // available on the node.
@@ -80,7 +89,7 @@ export function appScores (ctx) {
 
     // Fetch balances for all installed apps
     ctx.log.info('Fetching all balances...')
-    const balances = await Promise.all(apps.map(async (app) => {
+    const balances = await processSerially(apps, async (app) => {
       const result = []
       for (const token in TOKEN_ADRESSES) {
         const tokenAddress = TOKEN_ADRESSES[token]
@@ -101,9 +110,7 @@ export function appScores (ctx) {
       }
 
       return result
-    })).then(
-      (res) => res.flat()
-    )
+    }).then((balances) => balances.flat())
 
     // Fetch all activity for the current period
     ctx.log.info('Fetching all activity for current period...')
