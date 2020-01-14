@@ -14,10 +14,23 @@ export default {
     babel({
       exclude: /node_modules/
     }),
-    resolve(),
+    resolve({
+      preferBuiltins: true
+    }),
     cjs({
-      include: /node_modules/
+      include: /node_modules/,
+      ignore: ['pg-native', './native']
     })
   ],
-  external: ['cofx', 'pino', 'web3', 'web3-eth-abi', 'got', 'mongodb', 'redis']
+  external: [
+    'cofx',
+    'pino',
+    'web3',
+    'web3-eth-abi',
+    'got',
+    'mongodb',
+    'redis',
+    'pg',
+    'pg-native'
+  ]
 }
