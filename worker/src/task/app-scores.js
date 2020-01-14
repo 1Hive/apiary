@@ -140,9 +140,14 @@ export function appScores (ctx) {
       ).reduce((acc, { balance }) => {
         return acc + balance
       }, 0)
-      const orgActivity = activity.filter(
-        ({ organization }) => organization === org.address
-      )
+      const orgActivity = activity.filter(({ to }) => {
+        const app = apps.find((app) => app.address === to)
+        if (!app) {
+          return false
+        }
+
+        return app.organization === org.address
+      })
 
       scores[org.address] = (antHeld / totalAntHeld) * 0.25 + (aum / totalAum) * 0.25 + (orgActivity.length / totalActivity) * 0.5
       ctx.log.debug({
