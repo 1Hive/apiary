@@ -21,7 +21,11 @@ export function * fetchDataAtBlock (
     left join log on log.transaction_hash = tx.hash
     where tx.status = true and tx.block_number = ${blockNumber}
   `
-  const result = yield call([ctx.ethstore, 'query', q])
+  const result = yield call([ctx.ethstore, 'query', {
+    name: 'get-block-data',
+    text: q.text,
+    values: q.values
+  }])
 
   if (result.rowCount === 0) {
     ctx.log.warn({
