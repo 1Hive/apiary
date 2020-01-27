@@ -1,0 +1,26 @@
+{
+    "parser": "babel-eslint",
+    "env": {
+        "es6": true,
+        "node": true,
+        "jest/globals": true
+    },
+    "extends": [
+        "standard",
+        "plugin:jest/recommended"
+    ],
+    "plugins": [
+        "jest"
+    ],
+    "globals": {
+        "BigInt": true,
+        "Atomics": "readonly",
+        "SharedArrayBuffer": "readonly"
+    },
+    "parserOptions": {
+        "ecmaVersion": 2018,
+        "sourceType": "module"
+    },
+    "rules": {
+    }
+}
