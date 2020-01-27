@@ -1,24 +1,5 @@
 import { call, all } from 'cofx'
-import { fetchTransactions, processTransactions } from './transactions'
-
-test('fetchTransactions: returns timestamped transactions for block', () => {
-  const context = {}
-  const block = {
-    timestamp: 1234,
-    transactions: [{
-      to: '0x1'
-    }, {
-      to: '0x2'
-    }]
-  }
-
-  const actual = fetchTransactions(context, block)
-
-  expect(actual).toEqual(block.transactions)
-  expect(
-    actual.every(({ timestamp }) => timestamp === block.timestamp)
-  ).toBe(true)
-})
+import { processTransactions } from './transactions'
 
 test('processTransactions: only processes transactions with known address and method id', () => {
   const context = 'ctx'
