@@ -7,7 +7,7 @@
     "start": "node dist/index.js",
     "build": "rollup -c",
     "lint": "eslint src",
-    "test": "jest --coverage --collectCoverageFrom=src/**/*.js"
+    "test": "jest --coverage --collectCoverageFrom=src/**/*.js --passWithNoTests"
   },
   "keywords": [],
   "author": "",
