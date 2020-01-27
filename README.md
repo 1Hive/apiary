@@ -16,7 +16,6 @@ Apiary is designed to be user-centric rather than organization centric, enabling
 
 There are four components in Apiary:
 
-
 ### [taskmaster](/taskmaster)
 
 ![Taskmaster Build Status](https://github.com/1Hive/apiary/workflows/Taskmaster%20CI/badge.svg)
