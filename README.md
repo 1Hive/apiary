@@ -14,15 +14,41 @@ Apiary is designed to be user-centric rather than organization centric, enabling
 
 ## Design
 
-There are three components in Apiary:
+There are four components in Apiary:
+
+
+### [taskmaster](/taskmaster)
+
+![Taskmaster Build Status](https://github.com/1Hive/apiary/workflows/Taskmaster%20CI/badge.svg)
+
+The taskmaster schedules tasks for a range of Ethereum blocks onto a queue.
+
+Tasks might be dependent on other tasks, forming a hierarchical block processing pipeline.
+
+Tasks are then processed by one or more workers.
+
+#### Configuration
+
+| Environment Variable | Description                                                                                      | Default                       |
+| -------------------- | ------------------------------------------------------------------------------------------------ | ----------------------------- |
+| **Database**         |                                                                                                  |                               |
+| `MONGODB_URI`        | **Required**. The URI of the MongoDB instance to connect to                                      | `mongodb://localhost:27017`   |
+| **Ethereum**         |                                                                                                  |                               |
+| `START_BLOCK`        | The block to start working from.                                                                 | `6592900`                     |
+| `TARGET_BLOCK`       | The block to stop working after. If you specify `latest`, the worker will run indefinitely.      | `latest`                      |
+| **Cache / Queue**    |                                                                                                  |                               |
+| `REDIS_URL`          | **Required**. The URL of the Redis instance to connect to                                        | `redis://localhost:6379`      |
+| **IPFS**             |                                                                                                  |                               |
+| `ETH_EVENTS_URI`     | **Required**. The URI of the eth.events database to connect to.                                  |                               |
+| **Misc**             |                                                                                                  |                               |
+| `LOG_LEVEL`          | The log level                                                                                    | `info`                        |
+| `DELAY`              | A delay in milliseconds between scheduling tasks for a block. This is useful if the taskmaster is scheduling blocks faster than the workers can process them, as that might make Redis run out of memory. | None (no delay)                        |
 
 ### [worker](/worker)
 
 ![Worker Build Status](https://github.com/1Hive/apiary/workflows/Worker%20CI/badge.svg)
 
-The worker scrapes every transaction in every block to see if any transaction interacts with an official Aragon smart contract.
-
-The worker then emits events internally, where different internal components react to them. An example would be an internal component that saves DAO information to the database
+The worker pulls tasks from a queue and transforms blocks, logs, transactions and traces in to explorable data.
 
 This pattern is built around the concept that Ethereum is basically one huge event sourcing mechanism, and that Apiary is just a read model.
 
@@ -48,16 +74,15 @@ docker logs -f (docker-compose ps -q worker) | npx pino-pretty-min
 | `MONGODB_URI`        | **Required**. The URI of the MongoDB instance to connect to                                      | `mongodb://localhost:27017`   |
 | **Ethereum**         |                                                                                                  |                               |
 | `ETH_NODE`           | **Required**. The URI of the Ethereum node to connect to                                         | `wss://mainnet.eth.aragon.network/ws` |
-| `START_BLOCK`        | The block to start working from.                                                                 | `6592900`                     |
-| `TARGET_BLOCK`       | The block to stop working after. If you specify `latest`, the worker will run indefinitely.      | `latest`                      |
-| **Cache**            |                                                                                                  |                               |
+| **Cache / Queue**    |                                                                                                  |                               |
 | `REDIS_URL`          | **Required**. The URL of the Redis instance to connect to                                        | `redis://localhost:6379`      |
 | **IPFS**             |                                                                                                  |                               |
 | `IPFS_URL`           | **Required**. The URL of the IPFS gateway to fetch files from                                    |                               |
 | **IPFS**             |                                                                                                  |                               |
-| `ETH_EVENTS_URI`     | **Required**. The URI of the eth.events database to connect to.                                  |                                |
+| `ETH_EVENTS_URI`     | **Required**. The URI of the eth.events database to connect to.                                  |                               |
 | **Misc**             |                                                                                                  |                               |
 | `LOG_LEVEL`          | The log level                                                                                    | `info`                        |
+| `CONCURRENCY`        | The maximum number of tasks a worker can process concurrently.                                   | `5`                           |
 
 ### [api](/api)
 
