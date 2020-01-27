@@ -1,5 +1,4 @@
 import pg from 'pg'
-import assert from 'assert'
 import redis from 'redis'
 import { promisify } from 'util'
 

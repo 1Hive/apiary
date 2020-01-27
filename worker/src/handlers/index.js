@@ -20,13 +20,13 @@ export const HANDLERS = {
   [APP_VERSIONS]: app.persistVersion,
 
   // Activity indexing
-	[PERSIST_ACTIVITY]: activity.persist,
+  [PERSIST_ACTIVITY]: activity.persist,
 
   // Checkpointing
   [CHECKPOINT]: checkpoint.checkpoint,
 
   // Periodic tasks
-	[METRIC_SCORES]: metric.scores
+  [METRIC_SCORES]: metric.scores
 }
 
 export function handleTask (ctx, handlers) {

@@ -56,7 +56,7 @@ function fetchApps (ctx) {
   }]).toArray()
 }
 
-const THIRTY_DAYS = 30 * 24 * 60 *60 * 1000
+const THIRTY_DAYS = 30 * 24 * 60 * 60 * 1000
 function fetchActivity (ctx) {
   return ctx.db.collection('activity').aggregate([{
     $match: {

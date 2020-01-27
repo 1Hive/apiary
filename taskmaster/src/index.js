@@ -107,7 +107,10 @@ export function * run (ctx) {
 
   let currentBlock = startBlock
   let previousBlockHandle = null
-  while (currentBlock <= targetBlock || targetBlock === 'latest') {
+  while (
+    // eslint-disable-next-line no-unmodified-loop-condition
+    currentBlock <= targetBlock || targetBlock === 'latest'
+  ) {
     previousBlockHandle = yield call(scheduleBlock, ctx, currentBlock, previousBlockHandle)
     ctx.log.info({
       block: currentBlock
@@ -191,6 +194,6 @@ export function * run (ctx) {
     process.exit(1)
   }
 
-  ctx.log.info('Taskmaster finished.')
+  context.log.info('Taskmaster finished.')
   process.exit(0)
 })()
