@@ -35,6 +35,9 @@ export default `
     # The number of installations of the app.
     installations: Int!
 
+    # The pinion app score of the app, if available.
+    score: Float
+
     # Versions of this app.
     versions: [AppVersion]!
   }
@@ -70,6 +73,7 @@ export default `
     id: SortOrder
     name: SortOrder
     installations: SortOrder
+    score: SortOrder
   }
 
   type Query {
