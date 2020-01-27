@@ -25,13 +25,9 @@ export default {
   external: [
     'cofx',
     'pino',
-    'web3',
-    'web3-eth-abi',
-    'got',
-    'mongodb',
-    'redis',
     'pg',
     'pg-native',
+    'redis',
     'bee-queue'
   ]
 }

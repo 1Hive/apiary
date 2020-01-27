@@ -31,7 +31,6 @@ export function * fetchDataAtBlock (
     ctx.log.warn({
       block: blockNumber
     }, 'Block was empty, skipping to next block.')
-    return yield call(fetchDataAtBlock, ctx, blockNumber + 1)
   }
 
   const transactionFields = _.partialRight(_.pick, [
@@ -50,7 +49,7 @@ export function * fetchDataAtBlock (
   const uniqueTransactions = _.partialRight(_.uniqBy, 'hash')
   return {
     block: {
-      number: +result.rows[0].block_number
+      number: blockNumber
     },
     transactions: result.rows
       .filter(uniqueTransactions)

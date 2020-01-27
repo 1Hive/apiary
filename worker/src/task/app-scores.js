@@ -1,8 +1,10 @@
+import _ from 'lodash'
+
 const TOKEN_ADRESSES = {
-  ETH: '0x0000000000000000000000000000000000000000', // 18
-  ANT: '0x960b236A07cf122663c4303350609A66A7B288C0', // 18
-  DAI: '0x6b175474e89094c44da98b954eedeac495271d0f', // 18
-  USDC: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48' // 6
+  ETH: '0x0000000000000000000000000000000000000000',
+  ANT: '0x960b236A07cf122663c4303350609A66A7B288C0',
+  DAI: '0x6b175474e89094c44da98b954eedeac495271d0f',
+  USDC: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48'
 }
 const TOKEN_DECIMALS = {
   ETH: 18,
@@ -54,12 +56,18 @@ function fetchApps (ctx) {
   }]).toArray()
 }
 
+const THIRTY_DAYS = 30 * 24 * 60 * 60 * 1000
 function fetchActivity (ctx) {
   return ctx.db.collection('activity').aggregate([{
+    $match: {
+      timestamp: {
+        $gte: new Date(new Date().getTime() - THIRTY_DAYS)
+      }
+    }
+  }, {
     $unwind: '$actions'
   }, {
     $project: {
-      timestamp: '$timestamp',
       to: '$actions.to'
     }
   }]).toArray()
@@ -117,14 +125,13 @@ export function appScores (ctx) {
     const activity = await fetchActivity(ctx)
 
     // Calculate totals for each KPI
-    const totalAntHeld = balances.filter(
-      (balance) => balance.token === 'ANT'
-    ).reduce((acc, { balance }) => {
-      return acc + balance
-    }, 0) || 1
-    const totalAum = balances.reduce((acc, { balance }) => {
-      return acc + balance
-    }, 0) || 1
+    const totalAntHeld = _.chain(balances)
+      .filter({ token: 'ANT' })
+      .sumBy('balance')
+      .value() || 1
+    const totalAum = _.chain(balances)
+      .sumBy('balance')
+      .value() || 1
     const totalActivity = activity.length || 1
     ctx.log.info({
       totalAntHeld,
@@ -132,31 +139,37 @@ export function appScores (ctx) {
       totalActivity
     }, 'KPI totals calculated.')
 
+    // Calculate KPIs for each organization just once
+    const antHeldByOrganization = _.chain(balances)
+      .filter({ token: 'ANT' })
+      .groupBy('organization')
+      .mapValues((balances) => _.sumBy(balances, 'balance'))
+      .value()
+    const aumByOrganization = _.chain(balances)
+      .groupBy('organization')
+      .mapValues((balances) => _.sumBy(balances, 'balance'))
+      .value()
+    const activityByOrganization = _.chain(activity)
+      .groupBy(({ to }) => {
+        const app = apps.find((app) => app.address === to)
+        if (!app) return 'NO_ORGANIZATION'
+        return app.organization
+      })
+      .mapValues((activity) => activity.length)
+      .value()
+    const orgAppCounts = _.chain(apps)
+      .groupBy('organization')
+      .mapValues((apps) => apps.length)
+      .value()
+
     // Calculate normalized organization scores
     ctx.log.info('Calculating org scores...')
     const orgScores = orgs.reduce((scores, org) => {
-      const antHeld = balances.filter(
-        ({ token }) => token === 'ANT'
-      ).filter(
-        ({ organization }) => organization === org.address
-      ).reduce((acc, { balance }) => {
-        return acc + balance
-      }, 0)
-      const aum = balances.filter(
-        ({ organization }) => organization === org.address
-      ).reduce((acc, { balance }) => {
-        return acc + balance
-      }, 0)
-      const orgActivity = activity.filter(({ to }) => {
-        const app = apps.find((app) => app.address === to)
-        if (!app) {
-          return false
-        }
+      const antHeld = antHeldByOrganization[org.address]
+      const aum = aumByOrganization[org.address]
+      const orgActivity = activityByOrganization[org.address]
 
-        return app.organization === org.address
-      })
-
-      scores[org.address] = (antHeld / totalAntHeld) * 0.25 + (aum / totalAum) * 0.25 + (orgActivity.length / totalActivity) * 0.5
+      scores[org.address] = (antHeld / totalAntHeld) * 0.25 + (aum / totalAum) * 0.25 + (orgActivity / totalActivity) * 0.5
       ctx.log.debug({
         organization: org.address,
         antHeld,
@@ -170,14 +183,6 @@ export function appScores (ctx) {
 
     // Calculate app scores
     ctx.log.info('Calculating app scores...')
-    const orgAppCounts = apps.reduce((appCounts, app) => {
-      if (!appCounts[app.organization]) {
-        appCounts[app.organization] = 0
-      }
-
-      appCounts[app.organization]++
-      return appCounts
-    }, {})
     const appScores = apps.reduce((scores, app) => {
       if (!scores[app.appId]) {
         scores[app.appId] = 0
@@ -210,20 +215,27 @@ export function appScores (ctx) {
     await appBulk.execute()
     ctx.log.info('Updated app scores')
 
-    // Persist organization scores in database
+    // Persist organization scores and other organization metrics in database
     const orgBulk = ctx.db.collection('orgs').initializeUnorderedBulkOp()
     for (const orgAddress in orgScores) {
       const score = orgScores[orgAddress]
+      const aum = aumByOrganization[orgAddress]
+      const ant = antHeldByOrganization[orgAddress]
+      const activity = activityByOrganization[orgAddress]
 
       orgBulk.find({
         address: orgAddress
       }).updateOne({
         $set: {
-          score
+          score,
+          aum,
+          ant,
+          activity
         }
       })
     }
     await orgBulk.execute()
+
     ctx.log.info('Updated org scores')
   }
 }
