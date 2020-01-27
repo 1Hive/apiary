@@ -26,7 +26,8 @@ export const HANDLERS = {
   [CHECKPOINT]: checkpoint.checkpoint,
 
   // Periodic tasks
-  [METRIC_SCORES]: metric.scores
+  [METRIC_SCORES]: metric.scores,
+  [METRIC_INSTALLS]: metric.installs
 }
 
 export function handleTask (ctx, handlers) {

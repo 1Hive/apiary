@@ -182,6 +182,12 @@ export function * run (ctx) {
       dependencies: []
     }).save()
   )
+  schedule.scheduleJob('*/5 * * * *', () =>
+    context.queue.createJob({
+      type: METRIC_INSTALLS,
+      dependencies: []
+    }).save()
+  )
 
   // Run the taskmaster
   try {
