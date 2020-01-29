@@ -117,7 +117,7 @@ const KITS = [
 ]
 
 export default () => {
-  const [sort, sortBy] = useSort('createdAt', 'DESC')
+  const [sort, sortBy] = useSort('score', 'DESC')
   const [pagination, setPagination] = useState(['after'])
   const [filter, setFilter] = useState()
 

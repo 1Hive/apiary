@@ -88,7 +88,7 @@ function renderAppEntry ({
 }
 
 export default () => {
-  const [sort, sortBy] = useSort('installations', 'DESC')
+  const [sort, sortBy] = useSort('score', 'DESC')
   const [pagination, setPagination] = useState(['after'])
 
   const page = useCallback(
