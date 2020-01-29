@@ -93,28 +93,25 @@ const APPS = [{
   value: '0x3ca69801a60916e9222ceb2fa3089b3f66b4e1b3fc49f4a562043d9ec1e5a00b'
 }]
 
-const KITS = [
-  {
-    label: 'Company',
-    value: ['0x705Cd9a00b87Bb019a87beEB9a50334219aC4444', '0x7f3ed10366826a1227025445D4f4e3e14BBfc91d', '0xd737632caC4d039C9B0EEcc94C12267407a271b5']
-  },
-  {
-    label: 'Multisig',
-    value: ['0x41bbaf498226b68415f1C78ED541c45A18fd7696', '0x87aa2980dde7d2D4e57191f16BB57cF80bf6E5A6']
-  },
-  {
-    label: 'Membership',
-    value: ['0x67430642C0c3B5E6538049B9E9eE719f2a4BeE7c']
-  },
-  {
-    label: 'Open Enterprise',
-    value: ['0xc54c5dB63aB0E79FBb9555373B969093dEb17859']
-  },
-  {
-    label: 'Reputation',
-    value: ['0x3a06A6544e48708142508D9042f94DDdA769d04F']
-  }
-]
+const KITS = [{
+  label: 'Company',
+  value: ['0x705Cd9a00b87Bb019a87beEB9a50334219aC4444', '0x7f3ed10366826a1227025445D4f4e3e14BBfc91d', '0xd737632caC4d039C9B0EEcc94C12267407a271b5']
+}, {
+  label: 'Multisig',
+  value: ['0x41bbaf498226b68415f1C78ED541c45A18fd7696', '0x87aa2980dde7d2D4e57191f16BB57cF80bf6E5A6']
+}, {
+  label: 'Membership',
+  value: ['0x67430642C0c3B5E6538049B9E9eE719f2a4BeE7c']
+}, {
+  label: 'Open Enterprise',
+  value: ['0xc54c5dB63aB0E79FBb9555373B969093dEb17859']
+}, {
+  label: 'Reputation',
+  value: ['0x3a06A6544e48708142508D9042f94DDdA769d04F']
+}, {
+  label: 'Fundraising',
+  value: ['0xd4bc1aFD46e744F1834cad01B2262d095DCB6C9B']
+}]
 
 export default () => {
   const [sort, sortBy] = useSort('score', 'DESC')
