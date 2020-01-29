@@ -1,15 +1,21 @@
 import _ from 'lodash'
+import {
+  getTokenReserves,
+  getMarketDetails
+} from '@uniswap/sdk'
 
 const TOKEN_ADRESSES = {
   ETH: '0x0000000000000000000000000000000000000000',
   ANT: '0x960b236A07cf122663c4303350609A66A7B288C0',
   DAI: '0x6b175474e89094c44da98b954eedeac495271d0f',
+  SAI: '0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359',
   USDC: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48'
 }
 const TOKEN_DECIMALS = {
   ETH: 18,
   ANT: 18,
   DAI: 18,
+  SAI: 18,
   USDC: 6
 }
 
@@ -56,12 +62,12 @@ function fetchApps (ctx) {
   }]).toArray()
 }
 
-const THIRTY_DAYS = 30 * 24 * 60 * 60 * 1000
+const DAY = 24 * 60 * 60 * 1000
 function fetchActivity (ctx) {
   return ctx.db.collection('activity').aggregate([{
     $match: {
       timestamp: {
-        $gte: new Date(new Date().getTime() - THIRTY_DAYS)
+        $gte: new Date(new Date().getTime() - 90 * DAY)
       }
     }
   }, {
@@ -95,6 +101,32 @@ export function appScores (ctx) {
     ctx.log.info('Fetching all apps...')
     const apps = await fetchApps(ctx)
 
+    // Fetch conversion rates
+    ctx.log.info('Fetching conversion rates...')
+    const rates = {}
+    const daiReserves = await getTokenReserves(TOKEN_ADRESSES['DAI'])
+    for (const token in TOKEN_ADRESSES) {
+      const tokenAddress = TOKEN_ADRESSES[token]
+      ctx.log.debug({
+        token
+      }, 'Fetching conversion rate for token')
+
+      let marketDetails
+      if (token === 'ETH') {
+        marketDetails = await getMarketDetails(undefined, daiReserves)
+      } else {
+        const tokenReserves = await getTokenReserves(tokenAddress)
+        marketDetails = await getMarketDetails(tokenReserves, daiReserves)
+      }
+      const rate = marketDetails.marketRate.rate
+
+      rates[tokenAddress] = rate
+      ctx.log.debug({
+        token,
+        rate
+      }, 'Got conversion rate')
+    }
+
     // Fetch balances for all installed apps
     ctx.log.info('Fetching all balances...')
     const balances = await processSerially(apps, async (app) => {
@@ -105,9 +137,11 @@ export function appScores (ctx) {
           app: app.address,
           token
         }, 'Fetching balance for app')
+        const balance = (await fetchTokenBalance(ctx, tokenAddress, app.address)) / Math.pow(10, TOKEN_DECIMALS[token])
         result.push({
           token,
-          balance: (await fetchTokenBalance(ctx, tokenAddress, app.address)) / Math.pow(10, TOKEN_DECIMALS[token]),
+          balanceInDai: balance * rates[tokenAddress],
+          balance: balance,
           ...app
         })
         ctx.log.debug({
@@ -130,7 +164,7 @@ export function appScores (ctx) {
       .sumBy('balance')
       .value() || 1
     const totalAum = _.chain(balances)
-      .sumBy('balance')
+      .sumBy('balanceInDai')
       .value() || 1
     const totalActivity = activity.length || 1
     ctx.log.info({
@@ -147,7 +181,7 @@ export function appScores (ctx) {
       .value()
     const aumByOrganization = _.chain(balances)
       .groupBy('organization')
-      .mapValues((balances) => _.sumBy(balances, 'balance'))
+      .mapValues((balances) => _.sumBy(balances, 'balanceInDai'))
       .value()
     const activityByOrganization = _.chain(activity)
       .groupBy(({ to }) => {

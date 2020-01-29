@@ -32,6 +32,7 @@ export default {
     'redis',
     'pg',
     'pg-native',
-    'bee-queue'
+    'bee-queue',
+    '@uniswap/sdk'
   ]
 }
