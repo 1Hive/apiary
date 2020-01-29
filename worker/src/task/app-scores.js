@@ -1,4 +1,8 @@
 import _ from 'lodash'
+import {
+  getTokenReserves,
+  getMarketDetails
+} from '@uniswap/sdk'
 
 const TOKEN_ADRESSES = {
   ETH: '0x0000000000000000000000000000000000000000',
@@ -97,6 +101,26 @@ export function appScores (ctx) {
     ctx.log.info('Fetching all apps...')
     const apps = await fetchApps(ctx)
 
+    // Fetch conversion rates
+    ctx.log.info('Fetching conversion rates...')
+    const rates = {}
+    const daiReserves = await getTokenReserves(TOKEN_ADRESSES['DAI'])
+    for (const token in TOKEN_ADRESSES) {
+      const tokenAddress = TOKEN_ADRESSES[token]
+      ctx.log.debug({
+        token
+      }, 'Fetching conversion rate for token')
+      const tokenReserves = await getTokenReserves(tokenAddress)
+      const marketDetails = await getMarketDetails(tokenReserves, daiReserves)
+      const rate = marketDetails.marketRate.rate
+
+      rates[tokenAddress] = rate
+      ctx.log.debug({
+        token,
+        rate
+      }, 'Got conversion rate')
+    }
+
     // Fetch balances for all installed apps
     ctx.log.info('Fetching all balances...')
     const balances = await processSerially(apps, async (app) => {
@@ -107,9 +131,10 @@ export function appScores (ctx) {
           app: app.address,
           token
         }, 'Fetching balance for app')
+        const balance = (await fetchTokenBalance(ctx, tokenAddress, app.address)) / Math.pow(10, TOKEN_DECIMALS[token])
         result.push({
           token,
-          balance: (await fetchTokenBalance(ctx, tokenAddress, app.address)) / Math.pow(10, TOKEN_DECIMALS[token]),
+          balance: balance * rates[tokenAddress],
           ...app
         })
         ctx.log.debug({
