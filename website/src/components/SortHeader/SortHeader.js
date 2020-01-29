@@ -3,17 +3,18 @@ import PropTypes from 'prop-types'
 import {
   IconDown,
   IconUp,
+  Help,
   unselectable
 } from '@aragon/ui'
 
 export function SortHeader ({
   onClick,
   label,
-  sortOrder = 'NONE'
+  sortOrder = 'NONE',
+  help
 }) {
   return (
     <span
-      onClick={onClick}
       css={`
         display: inline-flex;
         align-items: center;
@@ -21,9 +22,19 @@ export function SortHeader ({
         ${unselectable};
       `}
     >
-      <span css='margin: 2px 5px 0 0;'>{label}</span>
-      {sortOrder === 'DESC' && <IconDown size="tiny" />}
-      {sortOrder === 'ASC' && <IconUp size="tiny" />}
+      <span
+        onClick={onClick}
+        css='margin: 2px 5px 0 0;'
+      >
+        {label}
+      </span>
+      <span css='margin-right: 2px'>
+        {help && <Help hint={help.hint}>
+          {help.body}
+        </Help>}
+      </span>
+      {sortOrder === 'DESC' && <IconDown size='tiny' />}
+      {sortOrder === 'ASC' && <IconUp size='tiny' />}
     </span>
   )
 }
@@ -35,5 +46,9 @@ SortHeader.propTypes = {
     'ASC',
     'DESC',
     'NONE'
-  ])
+  ]),
+  help: PropTypes.shape({
+    hint: PropTypes.string.isRequired,
+    body: PropTypes.node.isRequired
+  })
 }

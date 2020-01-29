@@ -45,6 +45,9 @@ const ORGANISATIONS_QUERY = `
         ens
         kit
         createdAt
+        aum
+        activity
+        score
       }
       pageInfo {
         startCursor
@@ -111,7 +114,7 @@ const KITS = [{
 }]
 
 export default () => {
-  const [sort, sortBy] = useSort('createdAt', 'DESC')
+  const [sort, sortBy] = useSort('score', 'DESC')
   const [pagination, setPagination] = useState(['after'])
   const [filter, setFilter] = useState()
 
@@ -187,6 +190,36 @@ export default () => {
                 sortOrder={sort[0] === 'ens' && sort[1]}
               />,
               <SortHeader
+                key='sort-aum'
+                label='AUM'
+                onClick={() => sortBy('aum')}
+                help={{
+                  hint: 'What is AUM?',
+                  body: 'AUM (or Assets Under Management) tracks the total DAI value of ANT, ETH, DAI, SAI and USDC held by Apps associated with an Organization.'
+                }}
+                sortOrder={sort[0] === 'aum' && sort[1]}
+              />,
+              <SortHeader
+                key='sort-activity'
+                label='Activity (90 days)'
+                onClick={() => sortBy('activity')}
+                help={{
+                  hint: 'What is Activity?',
+                  body: 'Activity tracks the volume of transactions flowing through Apps associated with an Organization.'
+                }}
+                sortOrder={sort[0] === 'activity' && sort[1]}
+              />,
+              <SortHeader
+                key='sort-score'
+                label='Score'
+                onClick={() => sortBy('score')}
+                help={{
+                  hint: 'What is Organization Score?',
+                  body: 'Organization Score is a relative weighted ranking of organizations derived from AUM, Activity, and ANT held by an organization expressed as a percentage.'
+                }}
+                sortOrder={sort[0] === 'score' && sort[1]}
+              />,
+              <SortHeader
                 key='sort-created'
                 label='Created'
                 onClick={() => sortBy('createdAt')}
@@ -194,13 +227,29 @@ export default () => {
               />
             ]}
             entries={data.organisations.nodes}
-            renderEntry={({ address, ens, createdAt }) => [
+            renderEntry={({
+              address,
+              ens,
+              createdAt,
+              aum,
+              activity,
+              score
+            }) => [
               <IdentityBadge
                 key='org-addr'
                 entity={address}
                 customLabel={ens}
                 popoverTitle={ens}
               />,
+              <div key='org-aum'>
+                ◈ {aum}
+              </div>,
+              <div key='org-activity'>
+                {activity}
+              </div>,
+              <div key='org-score'>
+                {(score * 100).toFixed(2)}
+              </div>,
               <div key='org-created-at'>
                 {format(new Date(createdAt), 'dd/MM/y')}
               </div>

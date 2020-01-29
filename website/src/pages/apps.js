@@ -47,6 +47,7 @@ const APPS_QUERY = `
         sourceUrl
         changelogUrl
         hash
+        score
       }
       pageInfo {
         startCursor
@@ -64,7 +65,8 @@ function renderAppEntry ({
   repository,
   name,
   description,
-  installations
+  installations,
+  score
 }) {
   let iconSrc
   if (icons.length) {
@@ -80,12 +82,13 @@ function renderAppEntry ({
       popoverTitle={name ? `${name}'s repository` : 'Repository'}
     />,
     <div key='app-description'>{description}</div>,
-    <div key='app-installations'>{formatNumber(installations)}</div>
+    <div key='app-installations'>{formatNumber(installations)}</div>,
+    <div key='app-score'>{(score * 100).toFixed(2)}</div>
   ]
 }
 
 export default () => {
-  const [sort, sortBy] = useSort('installations', 'DESC')
+  const [sort, sortBy] = useSort('score', 'DESC')
   const [pagination, setPagination] = useState(['after'])
 
   const page = useCallback(
@@ -152,6 +155,16 @@ export default () => {
                 label='Installations'
                 onClick={() => sortBy('installations')}
                 sortOrder={sort[0] === 'installations' && sort[1]}
+              />,
+              <SortHeader
+                key='sort-score'
+                label='Score'
+                onClick={() => sortBy('score')}
+                sortOrder={sort[0] === 'score' && sort[1]}
+                help={{
+                  hint: 'What is App Score?',
+                  body: 'App Score is a relative weighted ranking of Applications derived from organization scores expressed as a percentage.'
+                }}
               />
             ]}
             entries={data.apps.nodes}

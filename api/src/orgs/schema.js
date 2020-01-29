@@ -8,6 +8,10 @@ export default `
     address: String
     # The kit of the organisation.
     kit: String
+    # The total amount of assets under management (in Dai) for the organisation.
+    aum: Float
+    # The total amount of activity in the last 30 days (rolling) for the organisation.
+    activity: Int
     # The pinion organisation score of the organisation.
     score: Float
     # The date and time when this organisation was created.
@@ -37,6 +41,8 @@ export default `
   input OrganisationConnectionSort {
     ens: SortOrder
     createdAt: SortOrder
+    aum: SortOrder
+    activity: SortOrder
     score: SortOrder
   }
 
