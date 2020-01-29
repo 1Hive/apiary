@@ -195,7 +195,7 @@ export default () => {
                 onClick={() => sortBy('aum')}
                 help={{
                   hint: 'What is AUM?',
-                  body: 'AUM (or Assets Under Management) tracks the total USD value of ANT, ETH, DAI, SAI and USDC held by Apps associated with an Organization.'
+                  body: 'AUM (or Assets Under Management) tracks the total DAI value of ANT, ETH, DAI, SAI and USDC held by Apps associated with an Organization.'
                 }}
                 sortOrder={sort[0] === 'aum' && sort[1]}
               />,
