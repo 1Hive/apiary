@@ -200,7 +200,7 @@ export default () => {
               />,
               <SortHeader
                 key='sort-activity'
-                label='Activity (30 days)'
+                label='Activity (90 days)'
                 onClick={() => sortBy('activity')}
                 sortOrder={sort[0] === 'activity' && sort[1]}
               />,
