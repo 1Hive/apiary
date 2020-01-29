@@ -163,7 +163,7 @@ export default () => {
                 sortOrder={sort[0] === 'score' && sort[1]}
                 help={{
                   hint: 'What is App Score?',
-                  body: 'App Score is a relative weighted ranking of Applications derived from organization scores.'
+                  body: 'App Score is a relative weighted ranking of Applications derived from organization scores expressed as a percentage.'
                 }}
               />
             ]}

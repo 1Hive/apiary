@@ -215,7 +215,7 @@ export default () => {
                 onClick={() => sortBy('score')}
                 help={{
                   hint: 'What is Organization Score?',
-                  body: 'Organization Score is a relative weighted ranking of organizations derived from AUM, Activity, and ANT held by an organization.'
+                  body: 'Organization Score is a relative weighted ranking of organizations derived from AUM, Activity, and ANT held by an organization expressed as a percentage.'
                 }}
                 sortOrder={sort[0] === 'score' && sort[1]}
               />,
