@@ -190,36 +190,52 @@ export default () => {
                 onClick={() => sortBy('ens')}
                 sortOrder={sort[0] === 'ens' && sort[1]}
               />,
-              <SortHeader
-                key='sort-aum'
-                label='AUM'
-                onClick={() => sortBy('aum')}
-                help={{
-                  hint: 'What is AUM?',
-                  body: 'AUM (or Assets Under Management) tracks the total DAI value of ANT, ETH, DAI, SAI and USDC held by Apps associated with an Organization.'
-                }}
-                sortOrder={sort[0] === 'aum' && sort[1]}
-              />,
-              <SortHeader
-                key='sort-activity'
-                label='Activity (90 days)'
-                onClick={() => sortBy('activity')}
-                help={{
-                  hint: 'What is Activity?',
-                  body: 'Activity tracks the volume of transactions flowing through Apps associated with an Organization.'
-                }}
-                sortOrder={sort[0] === 'activity' && sort[1]}
-              />,
-              <SortHeader
-                key='sort-score'
-                label='Score'
-                onClick={() => sortBy('score')}
-                help={{
-                  hint: 'What is Organization Score?',
-                  body: 'Organization Score is a relative weighted ranking of organizations derived from AUM, Activity, and ANT held by an organization expressed as a percentage.'
-                }}
-                sortOrder={sort[0] === 'score' && sort[1]}
-              />,
+              {
+                label: (
+                  <SortHeader
+                    key='sort-aum'
+                    label='AUM'
+                    onClick={() => sortBy('aum')}
+                    help={{
+                      hint: 'What is AUM?',
+                      body: 'AUM (or Assets Under Management) tracks the total DAI value of ANT, ETH, DAI, SAI and USDC held by Apps associated with an Organization.'
+                    }}
+                    sortOrder={sort[0] === 'aum' && sort[1]}
+                  />
+                ),
+                align: 'end'
+              },
+              {
+                label: (
+                  <SortHeader
+                    key='sort-activity'
+                    label='Activity (90 days)'
+                    onClick={() => sortBy('activity')}
+                    help={{
+                      hint: 'What is Activity?',
+                      body: 'Activity tracks the volume of transactions flowing through Apps associated with an Organization.'
+                    }}
+                    sortOrder={sort[0] === 'activity' && sort[1]}
+                  />
+                ),
+                align: 'end'
+              },
+              {
+                label: (
+                  <SortHeader
+                    key='sort-score'
+                    label='Score'
+                    onClick={() => sortBy('score')}
+                    help={{
+                      hint: 'What is Organization Score?',
+                      body: 'Organization Score is a relative weighted ranking of organizations derived from AUM, Activity, and ANT held by an organization expressed as a percentage.'
+                    }}
+                    sortOrder={sort[0] === 'score' && sort[1]}
+                    align='end'
+                  />
+                ),
+                align: 'end'
+              },
               <SortHeader
                 key='sort-created'
                 label='Created'
@@ -243,7 +259,7 @@ export default () => {
                 popoverTitle={ens}
               />,
               <div key='org-aum'>
-                ◈ {formatNumber(aum, ONE_BILLION)}
+                ◈ {formatNumber(aum.toFixed(2), ONE_BILLION)}
               </div>,
               <div key='org-activity'>
                 {activity}
@@ -273,7 +289,7 @@ export default () => {
             pageInfo={data.organisations.pageInfo}
           />
         )}
-        {loading && <SyncIndicator label='Loading...' />}
+        {loading && <SyncIndicator label='Loading…' />}
       </div>}
       secondary={<Box>
         <Text.Block size='xlarge'>{firstFetch ? '-' : formatNumber(data.organisations.totalCount)}</Text.Block>
