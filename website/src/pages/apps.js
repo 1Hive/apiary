@@ -161,6 +161,10 @@ export default () => {
                 label='Score'
                 onClick={() => sortBy('score')}
                 sortOrder={sort[0] === 'score' && sort[1]}
+                help={{
+                  hint: 'What is App Score?',
+                  body: 'App Score is a relative weighted ranking of Applications derived from organization scores.'
+                }}
               />
             ]}
             entries={data.apps.nodes}

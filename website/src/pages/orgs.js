@@ -193,18 +193,30 @@ export default () => {
                 key='sort-aum'
                 label='AUM'
                 onClick={() => sortBy('aum')}
+                help={{
+                  hint: 'What is AUM?',
+                  body: 'AUM (or Assets Under Management) tracks the total USD value of ANT, ETH, DAI, SAI and USDC held by Apps associated with an Organization.'
+                }}
                 sortOrder={sort[0] === 'aum' && sort[1]}
               />,
               <SortHeader
                 key='sort-activity'
                 label='Activity (90 days)'
                 onClick={() => sortBy('activity')}
+                help={{
+                  hint: 'What is Activity?',
+                  body: 'Activity tracks the volume of transactions flowing through Apps associated with an Organization.'
+                }}
                 sortOrder={sort[0] === 'activity' && sort[1]}
               />,
               <SortHeader
                 key='sort-score'
                 label='Score'
                 onClick={() => sortBy('score')}
+                help={{
+                  hint: 'What is Organization Score?',
+                  body: 'Organization Score is a relative weighted ranking of organizations derived from AUM, Activity, and ANT held by an organization.'
+                }}
                 sortOrder={sort[0] === 'score' && sort[1]}
               />,
               <SortHeader
