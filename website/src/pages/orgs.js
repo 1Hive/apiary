@@ -45,6 +45,9 @@ const ORGANISATIONS_QUERY = `
         ens
         kit
         createdAt
+        aum
+        activity
+        score
       }
       pageInfo {
         startCursor
@@ -190,6 +193,24 @@ export default () => {
                 sortOrder={sort[0] === 'ens' && sort[1]}
               />,
               <SortHeader
+                key='sort-aum'
+                label='AUM'
+                onClick={() => sortBy('aum')}
+                sortOrder={sort[0] === 'aum' && sort[1]}
+              />,
+              <SortHeader
+                key='sort-activity'
+                label='Activity (30 days)'
+                onClick={() => sortBy('activity')}
+                sortOrder={sort[0] === 'activity' && sort[1]}
+              />,
+              <SortHeader
+                key='sort-score'
+                label='Score'
+                onClick={() => sortBy('score')}
+                sortOrder={sort[0] === 'score' && sort[1]}
+              />,
+              <SortHeader
                 key='sort-created'
                 label='Created'
                 onClick={() => sortBy('createdAt')}
@@ -197,13 +218,29 @@ export default () => {
               />
             ]}
             entries={data.organisations.nodes}
-            renderEntry={({ address, ens, createdAt }) => [
+            renderEntry={({
+              address,
+              ens,
+              createdAt,
+              aum,
+              activity,
+              score
+            }) => [
               <IdentityBadge
                 key='org-addr'
                 entity={address}
                 customLabel={ens}
                 popoverTitle={ens}
               />,
+              <div key='org-aum'>
+                ◈ {aum}
+              </div>,
+              <div key='org-activity'>
+                {activity}
+              </div>,
+              <div key='org-score'>
+                {(score * 100).toFixed(2)}
+              </div>,
               <div key='org-created-at'>
                 {format(new Date(createdAt), 'dd/MM/y')}
               </div>
