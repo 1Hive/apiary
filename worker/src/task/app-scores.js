@@ -140,7 +140,8 @@ export function appScores (ctx) {
         const balance = (await fetchTokenBalance(ctx, tokenAddress, app.address)) / Math.pow(10, TOKEN_DECIMALS[token])
         result.push({
           token,
-          balance: balance * rates[tokenAddress],
+          balanceInDai: balance * rates[tokenAddress],
+          balance: balance,
           ...app
         })
         ctx.log.debug({
@@ -163,7 +164,7 @@ export function appScores (ctx) {
       .sumBy('balance')
       .value() || 1
     const totalAum = _.chain(balances)
-      .sumBy('balance')
+      .sumBy('balanceInDai')
       .value() || 1
     const totalActivity = activity.length || 1
     ctx.log.info({
@@ -180,7 +181,7 @@ export function appScores (ctx) {
       .value()
     const aumByOrganization = _.chain(balances)
       .groupBy('organization')
-      .mapValues((balances) => _.sumBy(balances, 'balance'))
+      .mapValues((balances) => _.sumBy(balances, 'balanceInDai'))
       .value()
     const activityByOrganization = _.chain(activity)
       .groupBy(({ to }) => {
