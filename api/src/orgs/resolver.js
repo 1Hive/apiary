@@ -14,6 +14,18 @@ export default {
     id (org) {
       return org._id
     },
+    score (org) {
+      return org.score || 0
+    },
+    aum (org) {
+      return org.aum || 0
+    },
+    ant (org) {
+      return org.ant || 0
+    },
+    activity (org) {
+      return org.activity || 0
+    },
     createdAt (org) {
       return org.created_at
     }

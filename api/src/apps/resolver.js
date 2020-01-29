@@ -28,6 +28,9 @@ export default {
     },
     installations (app) {
       return app.installations || 0
+    },
+    score (app) {
+      return app.score || 0
     }
   },
 
