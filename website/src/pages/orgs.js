@@ -113,6 +113,7 @@ const KITS = [{
   value: ['0xd4bc1aFD46e744F1834cad01B2262d095DCB6C9B']
 }]
 
+const ONE_BILLION = 1000000000
 export default () => {
   const [sort, sortBy] = useSort('score', 'DESC')
   const [pagination, setPagination] = useState(['after'])
@@ -242,7 +243,7 @@ export default () => {
                 popoverTitle={ens}
               />,
               <div key='org-aum'>
-                ◈ {aum}
+                ◈ {formatNumber(aum, ONE_BILLION)}
               </div>,
               <div key='org-activity'>
                 {activity}
