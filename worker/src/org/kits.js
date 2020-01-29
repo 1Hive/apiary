@@ -24,7 +24,10 @@ export const KIT_ADDRESSES = new Set([
   '0x3a06A6544e48708142508D9042f94DDdA769d04F',
 
   // Open Enterprise (0.8.4)
-  '0xc54c5dB63aB0E79FBb9555373B969093dEb17859'
+  '0xc54c5dB63aB0E79FBb9555373B969093dEb17859',
+
+  // Fundraising (0.8.7)
+  '0xd4bc1aFD46e744F1834cad01B2262d095DCB6C9B'
 ])
 
 export const KIT_SIGNATURES = new Map([
@@ -257,5 +260,26 @@ export const KIT_SIGNATURES = new Map([
   }, {
     name: 'financePeriod',
     type: 'uint64'
+  }]],
+
+  // Fundraising (0.8.7)
+  ['0x350cbe71', [{
+    name: 'name',
+    type: 'string'
+  }, {
+    name: 'virtualSupplies',
+    type: 'uint256[2]'
+  }, {
+    name: '_virtualBalances',
+    type: 'uint256[2]'
+  }, {
+    name: '_slippages',
+    type: 'uint256[2]'
+  }, {
+    name: '_rateDAI',
+    type: 'uint256'
+  }, {
+    name: '_floorDAI',
+    type: 'uint256'
   }]]
 ])

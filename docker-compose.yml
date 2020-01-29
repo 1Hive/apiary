@@ -24,6 +24,18 @@ services:
     - MONGODB_URI=mongodb://mongo:27017
     depends_on:
     - mongo
+  # Taskmaster
+  taskmaster:
+    build:
+      context: ./taskmaster
+      dockerfile: Dockerfile.taskmaster
+    environment:
+     - LOG_LEVEL=debug
+     - ETH_NODE=wss://mainnet.eth.aragon.network/ws
+     - REDIS_URL=redis://redis:6379
+     - IPFS_URI=https://ipfs.eth.aragon.network
+    depends_on:
+     - redis
   # Worker
   worker:
     build:
