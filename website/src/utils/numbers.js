@@ -8,16 +8,24 @@ const SI_SYMBOLS = [
   'E'
 ]
 
-export function formatNumber (num, cutoff = 10000) {
+export function formatNumber (num, cutoff = 10000, fixedDecimals = false) {
+  const options = [
+    undefined,
+    {
+      minimumFractionDigits: fixedDecimals ? 2 : 0,
+      maximumFractionDigits: 2
+    }
+  ]
+
   if (num < cutoff) {
-    return num.toLocaleString()
+    return num.toLocaleString(...options)
   }
 
   const abs = Math.abs(num)
   const tier = Math.log10(abs) / 3 | 0
 
   if (tier === 0) {
-    return num.toLocaleString()
+    return num.toLocaleString(...options)
   }
 
   const suffix = SI_SYMBOLS[tier]
@@ -25,5 +33,5 @@ export function formatNumber (num, cutoff = 10000) {
 
   const scaled = abs / scale
 
-  return (Math.sign(num) * scaled.toFixed(2)).toLocaleString() + suffix
+  return (Math.sign(num) * scaled).toLocaleString(...options) + suffix
 }

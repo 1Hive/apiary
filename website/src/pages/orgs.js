@@ -259,7 +259,7 @@ export default () => {
                 popoverTitle={ens}
               />,
               <div key='org-aum'>
-                ◈ {formatNumber(aum.toFixed(2), ONE_BILLION)}
+                ◈ {formatNumber(aum, ONE_BILLION, true)}
               </div>,
               <div key='org-activity'>
                 {activity}
@@ -291,10 +291,14 @@ export default () => {
         )}
         {loading && <SyncIndicator label='Loading…' />}
       </div>}
-      secondary={<Box>
-        <Text.Block size='xlarge'>{firstFetch ? '-' : formatNumber(data.organisations.totalCount)}</Text.Block>
-        <Text>organisations</Text>
-      </Box>}
+      secondary={
+        <>
+          <Box>
+            <Text.Block size='xlarge'>{firstFetch ? '-' : formatNumber(data.organisations.totalCount)}</Text.Block>
+            <Text>organisations</Text>
+          </Box>
+        </>
+      }
     />
   </div>
 }
