@@ -110,8 +110,14 @@ export function appScores (ctx) {
       ctx.log.debug({
         token
       }, 'Fetching conversion rate for token')
-      const tokenReserves = await getTokenReserves(tokenAddress)
-      const marketDetails = await getMarketDetails(tokenReserves, daiReserves)
+
+      let marketDetails
+      if (token === 'ETH') {
+        marketDetails = await getMarketDetails(undefined, daiReserves)
+      } else {
+        const tokenReserves = await getTokenReserves(tokenAddress)
+        marketDetails = await getMarketDetails(tokenReserves, daiReserves)
+      }
       const rate = marketDetails.marketRate.rate
 
       rates[tokenAddress] = rate
