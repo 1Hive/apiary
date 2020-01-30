@@ -50,7 +50,7 @@ function fetchOrgs (ctx) {
     .toArray()
 }
 
-function fetchApps (ctx) {
+function fetchAppInstances (ctx) {
   return ctx.db.collection('orgs').aggregate([{
     $unwind: '$apps'
   }, {
@@ -60,6 +60,15 @@ function fetchApps (ctx) {
       address: '$apps.address'
     }
   }]).toArray()
+}
+
+async function fetchAppIds (ctx) {
+  const apps = await ctx.db.collection('apps')
+    .find()
+    .project({ hash: 1 })
+    .toArray()
+
+  return _.map(apps, 'hash')
 }
 
 const DAY = 24 * 60 * 60 * 1000
@@ -99,7 +108,11 @@ export function appScores (ctx) {
 
     // Fetch all installed apps
     ctx.log.info('Fetching all apps...')
-    const apps = await fetchApps(ctx)
+    const appIds = await fetchAppIds(ctx)
+    const apps = _.filter(
+      await fetchAppInstances(ctx),
+      ({ appId }) => appIds.includes(appId)
+    )
 
     // Fetch conversion rates
     ctx.log.info('Fetching conversion rates...')
@@ -156,7 +169,10 @@ export function appScores (ctx) {
 
     // Fetch all activity for the current period
     ctx.log.info('Fetching all activity for current period...')
-    const activity = await fetchActivity(ctx)
+    const activity = _.filter(
+      await fetchActivity(ctx),
+      ({ to }) => !!apps.find(({ address }) => to === address)
+    )
 
     // Calculate totals for each KPI
     const totalAntHeld = _.chain(balances)
@@ -199,16 +215,16 @@ export function appScores (ctx) {
     // Calculate normalized organization scores
     ctx.log.info('Calculating org scores...')
     const orgScores = orgs.reduce((scores, org) => {
-      const antHeld = antHeldByOrganization[org.address]
-      const aum = aumByOrganization[org.address]
-      const orgActivity = activityByOrganization[org.address]
+      const antHeld = antHeldByOrganization[org.address] || 0
+      const aum = aumByOrganization[org.address] || 0
+      const orgActivity = activityByOrganization[org.address] || 0
 
       scores[org.address] = (antHeld / totalAntHeld) * 0.25 + (aum / totalAum) * 0.25 + (orgActivity / totalActivity) * 0.5
       ctx.log.debug({
         organization: org.address,
         antHeld,
         aum,
-        activity: orgActivity.length,
+        activity: orgActivity,
         score: scores[org.address]
       }, 'Calculated organization score.')
 
