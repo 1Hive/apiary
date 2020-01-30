@@ -150,22 +150,32 @@ export default () => {
                 sortOrder={sort[0] === 'name' && sort[1]}
               />,
               <div key='sort-description'>Description</div>,
-              <SortHeader
-                key='sort-installations'
-                label='Installations'
-                onClick={() => sortBy('installations')}
-                sortOrder={sort[0] === 'installations' && sort[1]}
-              />,
-              <SortHeader
-                key='sort-score'
-                label='Score'
-                onClick={() => sortBy('score')}
-                sortOrder={sort[0] === 'score' && sort[1]}
-                help={{
-                  hint: 'What is App Score?',
-                  body: 'App Score is a relative weighted ranking of Applications derived from organization scores expressed as a percentage.'
-                }}
-              />
+              {
+                label: (
+                  <SortHeader
+                    key='sort-installations'
+                    label='Installations'
+                    onClick={() => sortBy('installations')}
+                    sortOrder={sort[0] === 'installations' && sort[1]}
+                  />
+                ),
+                align: 'end'
+              },
+              {
+                label: (
+                  <SortHeader
+                    key='sort-score'
+                    label='Score'
+                    onClick={() => sortBy('score')}
+                    sortOrder={sort[0] === 'score' && sort[1]}
+                    help={{
+                      hint: 'What is App Score?',
+                      body: 'App Score is a relative weighted ranking of Applications derived from organization scores expressed as a percentage.'
+                    }}
+                  />
+                ),
+                align: 'end'
+              }
             ]}
             entries={data.apps.nodes}
             renderEntry={renderAppEntry}
