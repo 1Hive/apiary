@@ -73,19 +73,11 @@ async function fetchAppIds (ctx) {
 
 const DAY = 24 * 60 * 60 * 1000
 function fetchActivity (ctx) {
-  return ctx.db.collection('activity').aggregate([{
-    $match: {
-      timestamp: {
-        $gte: new Date(new Date().getTime() - 90 * DAY)
-      }
+  return ctx.db.collection('activity').find({
+    timestamp: {
+      $gte: new Date(new Date().getTime() - 90 * DAY)
     }
-  }, {
-    $unwind: '$actions'
-  }, {
-    $project: {
-      to: '$actions.to'
-    }
-  }]).toArray()
+  }).toArray()
 }
 
 const processSerially = (set, transform) => {
@@ -113,6 +105,7 @@ export function appScores (ctx) {
       await fetchAppInstances(ctx),
       ({ appId }) => appIds.includes(appId)
     )
+    const appToOrgHash = _.keyBy(apps, 'address')
 
     // Fetch conversion rates
     ctx.log.info('Fetching conversion rates...')
@@ -171,23 +164,8 @@ export function appScores (ctx) {
     ctx.log.info('Fetching all activity for current period...')
     const activity = _.filter(
       await fetchActivity(ctx),
-      ({ to }) => !!apps.find(({ address }) => to === address)
+      ({ actions }) => _.some(actions, ({ to }) => appToOrgHash[to])
     )
-
-    // Calculate totals for each KPI
-    const totalAntHeld = _.chain(balances)
-      .filter({ token: 'ANT' })
-      .sumBy('balance')
-      .value() || 1
-    const totalAum = _.chain(balances)
-      .sumBy('balanceInDai')
-      .value() || 1
-    const totalActivity = activity.length || 1
-    ctx.log.info({
-      totalAntHeld,
-      totalAum,
-      totalActivity
-    }, 'KPI totals calculated.')
 
     // Calculate KPIs for each organization just once
     const antHeldByOrganization = _.chain(balances)
@@ -200,17 +178,38 @@ export function appScores (ctx) {
       .mapValues((balances) => _.sumBy(balances, 'balanceInDai'))
       .value()
     const activityByOrganization = _.chain(activity)
-      .groupBy(({ to }) => {
-        const app = apps.find((app) => app.address === to)
-        if (!app) return 'NO_ORGANIZATION'
-        return app.organization
+      .map(({ actions }) => {
+        const orgs = new Set()
+        for (const action of actions) {
+          const app = appToOrgHash[action.to]
+
+          if (app) orgs.add(app.organization)
+        }
+
+        return Array.from(orgs)
       })
-      .mapValues((activity) => activity.length)
+      .flatten()
+      .countBy()
       .value()
     const orgAppCounts = _.chain(apps)
       .groupBy('organization')
       .mapValues((apps) => apps.length)
       .value()
+
+    // Calculate totals for each KPI
+    const totalAntHeld = _.chain(balances)
+      .filter({ token: 'ANT' })
+      .sumBy('balance')
+      .value() || 1
+    const totalAum = _.chain(balances)
+      .sumBy('balanceInDai')
+      .value() || 1
+    const totalActivity = _.sum(_.values(activityByOrganization)) || 1
+    ctx.log.info({
+      totalAntHeld,
+      totalAum,
+      totalActivity
+    }, 'KPI totals calculated.')
 
     // Calculate normalized organization scores
     ctx.log.info('Calculating org scores...')
@@ -268,10 +267,10 @@ export function appScores (ctx) {
     // Persist organization scores and other organization metrics in database
     const orgBulk = ctx.db.collection('orgs').initializeUnorderedBulkOp()
     for (const orgAddress in orgScores) {
-      const score = orgScores[orgAddress]
-      const aum = aumByOrganization[orgAddress]
-      const ant = antHeldByOrganization[orgAddress]
-      const activity = activityByOrganization[orgAddress]
+      const score = orgScores[orgAddress] || 0
+      const aum = aumByOrganization[orgAddress] || 0
+      const ant = antHeldByOrganization[orgAddress] || 0
+      const activity = activityByOrganization[orgAddress] || 0
 
       orgBulk.find({
         address: orgAddress
