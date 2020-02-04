@@ -6,7 +6,16 @@ export function * persistName (
   tx
 ) {
   const ensName = `${tx.parameters.name}.aragonid.eth`
-  const address = yield call([ctx.web3.eth.ens, 'getAddress', ensName])
+  let address
+  try {
+    address = yield call([ctx.web3.eth.ens, 'getAddress', ensName])
+  } catch (_) {
+    ctx.log.warn({
+      ens: ensName,
+      transactionHash: tx.hash
+    }, `Malformed name found, aborting decoding.`)
+    return
+  }
 
   ctx.log.info({
     organisation: address,
