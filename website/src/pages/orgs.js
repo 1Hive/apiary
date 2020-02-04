@@ -262,10 +262,10 @@ export default () => {
                 ◈ {formatNumber(aum, ONE_BILLION, true)}
               </div>,
               <div key='org-activity'>
-                {activity}
+                {formatNumber(activity)}
               </div>,
               <div key='org-score'>
-                {(score * 100).toFixed(2)}
+                {formatNumber(score * 100, undefined, true)}
               </div>,
               <div key='org-created-at'>
                 {format(new Date(createdAt), 'dd/MM/y')}
