@@ -20,9 +20,6 @@ export default {
     aum (org) {
       return org.aum || 0
     },
-    ant (org) {
-      return org.ant || 0
-    },
     activity (org) {
       return org.activity || 0
     },
