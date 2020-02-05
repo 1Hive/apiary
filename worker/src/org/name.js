@@ -32,7 +32,7 @@ export function * persistName (
         kit: tx.to
       },
       $min: {
-        created_at: tx.timestamp
+        created_at: tx.timestamp.getTime() / 1000
       }
     }
   )

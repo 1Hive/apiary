@@ -37,7 +37,7 @@ export function * persistInstall (
         }
       },
       $min: {
-        created_at: log.timestamp
+        created_at: log.timestamp.getTime() / 1000
       }
     }
   )
