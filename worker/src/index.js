@@ -39,7 +39,7 @@ import {
   // Handle tasks as they come in
   const concurrency = process.env.CONCURRENCY || 5
   context.log.info({
-    concurrency: 5
+    concurrency
   }, 'Started worker.')
   context.queue.process(
     concurrency,

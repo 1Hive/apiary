@@ -95,6 +95,7 @@ A GraphQL API. Interactive documentation for the API is available if you visit t
 | -------------------- | ----------------------------------------------------------- | --------------------------- |
 | **Database**         |                                                             |                             |
 | `MONGODB_URI`        | **Required**. The URI of the MongoDB instance to connect to | `mongodb://localhost:27017` |
+| `MONGODB_NAME`       | The name of the MongoDB database to connect to              | `daolist`                   |
 | **Misc**             |                                                             |                             |
 | `PORT`               | The port to listen for requests on                          | `3000`                      |
 | `LOG_LEVEL`          | The log level                                               | `info`                      |
@@ -104,6 +105,12 @@ A GraphQL API. Interactive documentation for the API is available if you visit t
 ![Website Build Status](https://github.com/1Hive/apiary/workflows/Website%20CI/badge.svg)
 
 The explorer front-end itself, built in React with Aragon UI.
+
+#### Configuration
+
+| Environment Variable | Description                                                 | Default                     |
+| -------------------- | ----------------------------------------------------------- | --------------------------- |
+| `API_URL`            | The URI of the GraphQL API to connect to                    | `https://daolist.1hive.org` |
 
 ## Setup
 
