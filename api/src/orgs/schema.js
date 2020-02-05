@@ -9,11 +9,11 @@ export default `
     # The kit of the organisation.
     kit: String
     # The total amount of assets under management (in Dai) for the organisation.
-    aum: Float
+    aum: Float!
     # The total amount of activity in the last 30 days (rolling) for the organisation.
-    activity: Int
+    activity: Int!
     # The pinion organisation score of the organisation.
-    score: Float
+    score: Float!
     # The date and time when this organisation was created.
     createdAt: DateTime
   }
