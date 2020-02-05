@@ -13,7 +13,7 @@ export default function useSort (
   const sortBy = useCallback((field) => {
     setSort((sort) => [
       field,
-      sort[0] === field ? inverseSortDirection(sort[1]) : 'ASC'
+      sort[0] === field ? inverseSortDirection(sort[1]) : 'DESC'
     ])
   }, [])
 
