@@ -54,7 +54,7 @@ export async function scheduleBlock (
 }
 
 export async function getHighestBlock (ctx) {
-  const q = sql`select max(number) from block`
+  const q = sql`select max(number) - 20 as max from block`
   const { rows } = await ctx.ethstore.query({
     name: 'get-latest-block',
     text: q.text,
@@ -143,6 +143,7 @@ export function * run (ctx) {
         url: process.env.REDIS_URL || 'redis://localhost:6379'
       },
       removeOnSuccess: true,
+      stallInterval: 1000 * 60,
       isWorker: false
     }),
     log: createLogger({
