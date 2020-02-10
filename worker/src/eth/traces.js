@@ -2,19 +2,7 @@ import _ from 'lodash'
 import { call } from 'cofx'
 import { sql } from 'sqliterally'
 
-export async function fetchBlockHash (ctx, blockNumber) {
-  const q = sql`
-    select hash from block where number = ${blockNumber} limit 1
-  `
-  const { rows } = await ctx.ethstore.query(q)
-
-  return rows[0].hash
-}
-
 export async function fetchTracesFromEthEvents (ctx, blockNumber) {
-  // NOTE: This is a temporary measure until Eth.events adds back their
-  // index on `block_number`
-  const blockHash = await fetchBlockHash(ctx, blockNumber)
   const q = sql`
     select
       string_to_array(trace_address, ',')::int[] as trace_addr,
@@ -26,7 +14,7 @@ export async function fetchTracesFromEthEvents (ctx, blockNumber) {
       "value",
       "error"
     from trace
-    where "block_hash" = ${blockHash} and "status" = true
+    where "block_number" = ${blockNumber} and "status" = true
     order by
       "timestamp" asc,
       "transaction_index" asc,
