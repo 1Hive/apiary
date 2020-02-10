@@ -22,11 +22,13 @@ const App = () =>
         </div>
       </Sidebar>
       <Content>
+        {/*
         <div css={`margin-bottom: ${2 * GU}px`}>
           <Info mode='warning' title='Attention'>
             We are currently doing maintenace on our backend services. The information presented may not be complete at this time.
           </Info>
         </div>
+        */}
         <Route path='/' exact render={() => <Redirect to='/orgs' />} />
         <Route path='/orgs' exact component={Organisations} />
         <Route path='/apps' exact component={Apps} />
