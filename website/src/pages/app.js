@@ -1,6 +1,6 @@
 import React from 'react'
 import { Redirect, Route, NavLink } from 'react-router-dom'
-import { Main, IconSearch, Info, GU } from '@aragon/ui'
+import { Main, IconSearch } from '@aragon/ui'
 import { Layout, Sidebar, Content } from '../components/Layout'
 import { Logo } from '../components/Logo'
 import Organisations from './orgs'
