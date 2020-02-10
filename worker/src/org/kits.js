@@ -27,7 +27,10 @@ export const KIT_ADDRESSES = new Set([
   '0xc54c5dB63aB0E79FBb9555373B969093dEb17859',
 
   // Fundraising (0.8.7)
-  '0xd4bc1aFD46e744F1834cad01B2262d095DCB6C9B'
+  '0xd4bc1aFD46e744F1834cad01B2262d095DCB6C9B',
+
+  // Dandelion
+  '0xbc2A863ef2B96d454aC7790D5A9E8cFfd8EccBa8'
 ])
 
 export const KIT_SIGNATURES = new Map([
@@ -281,5 +284,26 @@ export const KIT_SIGNATURES = new Map([
   }, {
     name: '_floorDAI',
     type: 'uint256'
+  }]],
+
+  // Dandelion
+  ['0xffb94e0e', [{
+    name: 'name',
+    type: 'string'
+  }, {
+    name: '_redemptionsRedeemableTokens',
+    type: 'address[]'
+  }, {
+    name: '_tokenRequestAcceptedDepositTokens',
+    type: 'address[]'
+  }, {
+    name: '_timeLockToken',
+    type: 'address'
+  }, {
+    name: '_timeLockSettings',
+    type: 'uint256[3]'
+  }, {
+    name: '_votingSettings',
+    type: 'uint64[5]'
   }]]
 ])
