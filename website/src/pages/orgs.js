@@ -111,6 +111,9 @@ const KITS = [{
 }, {
   label: 'Fundraising',
   value: ['0xd4bc1aFD46e744F1834cad01B2262d095DCB6C9B']
+}, {
+  label: 'Dandelion',
+  value: ['0xbc2A863ef2B96d454aC7790D5A9E8cFfd8EccBa8']
 }]
 
 const ONE_BILLION = 1000000000
