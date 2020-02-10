@@ -20,7 +20,9 @@ export function createMongo (connectionString, database) {
 
 export async function createPostgres (connectionString) {
   const client = new pg.Client({
-    connectionString
+    connectionString,
+    statement_timeout: 15000,
+    query_timeout: 15000
   })
   await client.connect()
 
