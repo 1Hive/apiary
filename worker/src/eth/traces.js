@@ -28,6 +28,7 @@ export async function fetchTracesFromEthEvents (ctx, blockNumber) {
   })
 
   const traces = _.chain(rows)
+    .filter((row) => row.transaction_hash !== null)
     .groupBy('transaction_hash')
     .map((trace) => {
       const actions = _.chain(trace)
