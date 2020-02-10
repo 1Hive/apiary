@@ -3,7 +3,7 @@ import { safeUpsert } from '../db'
 
 export async function appExists (ctx, address) {
   const exists = await ctx.db.collection('orgs').find({
-    'apps.address': ctx.web3.utils.toChecksumAddress(address)
+    'apps.address': address
   }).limit(1).hasNext()
 
   return exists

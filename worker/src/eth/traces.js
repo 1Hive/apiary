@@ -38,6 +38,11 @@ export async function fetchTracesFromEthEvents (ctx, blockNumber) {
           'error',
           'value'
         ]))
+        .map((action) => ({
+          ...action,
+          to: ctx.web3.utils.toChecksumAddress(action.to),
+          from: ctx.web3.utils.toChecksumAddress(action.from)
+        }))
         .value()
 
       return {
