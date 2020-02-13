@@ -247,23 +247,22 @@ function saveScores ({
 }
 
 // Parse command line parameters
-const parameters = process.argv.slice(2)
+const {
+  _: parameters,
+  quadratic
+} = require('minimist')(process.argv.slice(2), {
+  alias: {
+    quadratic: 'quad'
+  }
+})
+
 if (parameters.length < 3) {
   console.error(`Usage: ./calcscore <activity weight> <aum weight> <ant weight> [--quad]`)
   process.exit(1)
 }
 
-// Parse --quad flag
-const quadratic = _.indexOf(parameters, '--quad') > 0
-if (quadratic) {
-  parameters.splice(
-    _.indexOf(parameters, '--quad'),
-    1
-  )
-}
-
 // Validate that weights add up to 1
-const weights = _.map(parameters.slice(0, 3), Number)
+const weights = _.map(parameters, Number)
 const sumOfWeights = _.sum(weights)
 if (sumOfWeights !== 1) {
   console.error(`The sum of the weights should be 1, is ${sumOfWeights}`)
