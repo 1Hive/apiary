@@ -1,0 +1,12 @@
+{
+  "name": "@apiary/scripts",
+  "version": "1.0.0",
+  "description": "",
+  "author": "",
+  "license": "GPLv3",
+  "dependencies": {
+    "csv-writer": "^1.6.0",
+    "got": "^10.5.5",
+    "lodash": "^4.17.15"
+  }
+}
