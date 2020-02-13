@@ -324,6 +324,10 @@ if (parameters.length < 3) {
   console.error('Organisation blacklist file')
   console.error('===')
   console.error('The file used for `--blacklist` should be a newline delimited file of checksummed organisation addresses')
+  console.error()
+  console.error('File comments')
+  console.error('===')
+  console.error('Comments can be added to any file passed to this CLI. Comments start with `//` and anything after it will be ignored')
   process.exit(1)
 }
 
@@ -335,6 +339,12 @@ if (sumOfWeights !== 1) {
   process.exit(1)
 }
 
+function removeComments (item) {
+  return _.trim(
+    item.split('//')[0]
+  )
+}
+
 // Process and validate files
 let orgBlacklist = []
 if (orgBlacklistPath) {
@@ -343,6 +353,7 @@ if (orgBlacklistPath) {
   })
   orgBlacklist = blacklist
     .split('\n')
+    .map(removeComments)
     .filter(_.identity)
 }
 
@@ -353,6 +364,7 @@ if (appsWhitelistPath) {
   })
   eligibleApps = whitelist
     .split('\n')
+    .map(removeComments)
     .filter(_.identity)
 }
 
