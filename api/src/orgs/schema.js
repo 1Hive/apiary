@@ -10,6 +10,8 @@ export default `
     kit: String
     # The total amount of assets under management (in Dai) for the organisation.
     aum: Float!
+    # The total amount of ANT held in the organisation.
+    ant: Float!
     # The total amount of activity in the last 30 days (rolling) for the organisation.
     activity: Int!
     # The pinion organisation score of the organisation.
