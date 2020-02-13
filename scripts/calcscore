@@ -291,14 +291,16 @@ const {
   _: parameters,
   quadratic,
   apps: appsWhitelistPath,
-  blacklist: orgBlacklistPath
+  blacklist: orgBlacklistPath,
+  pot
 } = require('minimist')(process.argv.slice(2), {
   alias: {
     quadratic: 'quad',
     blacklist: 'blacklisted-orgs'
   },
   default: {
-    quadratic: false
+    quadratic: false,
+    pot: 100000
   }
 })
 
@@ -312,6 +314,8 @@ if (parameters.length < 3) {
   console.error('\tPath to a file of app IDs eligible for payouts')
   console.error('--blacklist, --blacklisted-orgs')
   console.error('\tPath to a file of organisation addresses that are blacklisted')
+  console.error('--pot')
+  console.error('\tThe size of the payout pot. Defaults to 100k.')
   console.error()
   console.error('App ID file')
   console.error('===')
@@ -356,6 +360,7 @@ if (appsWhitelistPath) {
 console.log(`Calculating app scores (${quadratic ? 'quadratic' : 'linear'}, weights = [${weights.join(', ')}])`)
 console.log(`Blacklisted orgs: ${orgBlacklist.length}`)
 console.log(`Eligible apps: ${eligibleApps.length}`)
+console.log(`Pot size: ${pot}`)
 console.log('Fetching data...')
 fetchData(quadratic, orgBlacklist)
   .then((data) => {
@@ -382,7 +387,7 @@ fetchData(quadratic, orgBlacklist)
     console.log(`Sanity check; organisation score sum = ${orgScoreSum}, app score sum = ${appScoreSum}`)
 
     console.log('Projecting payouts...')
-    return payouts(scores, eligibleApps)
+    return payouts(scores, eligibleApps, pot)
   })
   .then(saveScores)
   .then(() => {
