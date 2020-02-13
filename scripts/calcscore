@@ -206,6 +206,34 @@ function scoring (weights, quadratic) {
   }
 }
 
+function payouts (
+  scores,
+  eligibleApps = [],
+  potSize = 100000
+) {
+  const eligibleScoreTotal = _.chain(scores.appScores)
+    .filter(({ id }) => eligibleApps.includes(id))
+    .sumBy('score')
+    .value()
+
+  scores.appScores = scores.appScores.map((appScore) => {
+    const eligible = eligibleApps.includes(appScore.id)
+
+    let payout = 0
+    if (eligible) {
+      payout = potSize * (appScore.score / eligibleScoreTotal)
+    }
+
+    return {
+      ...appScore,
+      payout,
+      eligible
+    }
+  })
+
+  return scores
+}
+
 function saveScores ({
   organisationScores,
   appScores
@@ -243,6 +271,9 @@ function saveScores ({
     }, {
       id: 'score',
       title: 'SCORE'
+    }, {
+      id: 'payout',
+      title: 'PAYOUT'
     }]
   })
 
@@ -256,6 +287,7 @@ function saveScores ({
 const {
   _: parameters,
   quadratic,
+  apps: appsWhitelistPath,
   blacklist: orgBlacklistPath
 } = require('minimist')(process.argv.slice(2), {
   alias: {
@@ -273,8 +305,14 @@ if (parameters.length < 3) {
   console.error('Flags:')
   console.error('--quad, --quadratic')
   console.error('\tUse quadratic scoring')
+  console.error('--apps')
+  console.error('\tPath to a file of app IDs eligible for payouts')
   console.error('--blacklist, --blacklisted-orgs')
   console.error('\tPath to a file of organisation addresses that are blacklisted')
+  console.error()
+  console.error('App ID file')
+  console.error('===')
+  console.error('The file used for `--apps` should be a newline delimited file of app IDs')
   console.error()
   console.error('Organisation blacklist file')
   console.error('===')
@@ -301,9 +339,20 @@ if (orgBlacklistPath) {
     .filter(_.identity)
 }
 
+let eligibleApps = []
+if (appsWhitelistPath) {
+  const whitelist = fs.readFileSync(appsWhitelistPath, {
+    encoding: 'utf8'
+  })
+  eligibleApps = whitelist
+    .split('\n')
+    .filter(_.identity)
+}
+
 // Run script
 console.log(`Calculating app scores (${quadratic ? 'quadratic' : 'linear'}, weights = [${weights.join(', ')}])`)
 console.log(`Blacklisted orgs: ${orgBlacklist.length}`)
+console.log(`Eligible apps: ${eligibleApps.length}`)
 console.log('Fetching data...')
 fetchData(quadratic, orgBlacklist)
   .then((data) => {
@@ -329,7 +378,8 @@ fetchData(quadratic, orgBlacklist)
     console.log('Calculated scores.')
     console.log(`Sanity check; organisation score sum = ${orgScoreSum}, app score sum = ${appScoreSum}`)
 
-    return scores
+    console.log('Projecting payouts...')
+    return payouts(scores, eligibleApps)
   })
   .then(saveScores)
   .then(() => {
