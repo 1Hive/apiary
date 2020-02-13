@@ -36,3 +36,9 @@ export function getApps (db, args) {
     camelToSnakeCaseKeys(args.sort)
   )
 }
+
+export function getAppByAppId (db, appId) {
+  return db.collection('apps').findOne({
+    hash: appId
+  })
+}
