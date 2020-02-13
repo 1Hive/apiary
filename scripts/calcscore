@@ -16,12 +16,16 @@ const QUERY = `query(
       endCursor
     }
     nodes {
+      ens
       address
       activity
       aum
       ant
       proxies {
         appId
+        app {
+          name
+        }
       }
     }
   }
@@ -67,6 +71,7 @@ async function fetchData (quadratic) {
     let transformed = _.chain(data.organisations.nodes)
       .map(_.partialRight(_.pick, [
         'address',
+        'ens',
         'activity',
         'aum',
         'ant',
@@ -95,7 +100,11 @@ async function fetchData (quadratic) {
     apps = apps.concat(
       _.chain(data.organisations.nodes)
         .flatMap((org) => org.proxies.map(
-          (proxy) => ({ organisation: org.address, id: proxy.appId })
+          (proxy) => ({
+            organisation: org.address,
+            id: proxy.appId,
+            name: proxy.app ? proxy.app.name : '-'
+          })
         ))
         .value()
     )
@@ -149,17 +158,24 @@ function scoring (weights, quadratic) {
       .value()
     const appScores = _.chain(data.apps)
       .groupBy('id')
-      .mapValues((apps) => _.chain(apps)
-        .map((app) => {
-          const organisation = data.organisations[app.organisation]
+      .mapValues((instances) => {
+        const score = _.chain(instances)
+          .map((instance) => {
+            const organisation = data.organisations[instance.organisation]
 
-          const score = organisationScores[app.organisation].score / organisation.proxies
-          return score
-        })
-        .sum()
-        .value()
-      )
-      .flatMap((score, id) => ({ id, score }))
+            const score = organisationScores[instance.organisation].score / organisation.proxies
+            return score
+          })
+          .sum()
+          .value()
+
+        return {
+          name: instances[0].name,
+          id: instances[0].id,
+          score
+        }
+      })
+      .flatMap()
       .value()
 
     return {
@@ -186,6 +202,9 @@ function saveScores ({
       id: 'address',
       title: 'ADDRESS'
     }, {
+      id: 'ens',
+      title: 'ENS_NAME'
+    }, {
       id: 'activity',
       title: 'ACTIVITY'
     }, {
@@ -204,6 +223,9 @@ function saveScores ({
     header: [{
       id: 'id',
       title: 'APP_ID'
+    }, {
+      id: 'name',
+      title: 'APP_NAME'
     }, {
       id: 'score',
       title: 'SCORE'
