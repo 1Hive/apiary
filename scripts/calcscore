@@ -67,8 +67,16 @@ async function fetchData (quadratic) {
     lastCursor = data.organisations.pageInfo.endCursor
     hasNextPage = data.organisations.pageInfo.hasNextPage
 
+    // Filter out non-indexed apps
+    const filtered = _.chain(data.organisations.nodes)
+      .map((org) => ({
+        ...org,
+        proxies: org.proxies.filter((proxy) => proxy.app)
+      }))
+      .value()
+
     // Transform organisations in current page
-    let transformed = _.chain(data.organisations.nodes)
+    let transformed = _.chain(filtered)
       .map(_.partialRight(_.pick, [
         'address',
         'ens',
@@ -98,12 +106,12 @@ async function fetchData (quadratic) {
       transformed.value()
     )
     apps = apps.concat(
-      _.chain(data.organisations.nodes)
+      _.chain(filtered)
         .flatMap((org) => org.proxies.map(
           (proxy) => ({
             organisation: org.address,
             id: proxy.appId,
-            name: proxy.app ? proxy.app.name : '-'
+            name: proxy.app.name
           })
         ))
         .value()
