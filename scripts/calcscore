@@ -274,6 +274,9 @@ function saveScores ({
     }, {
       id: 'payout',
       title: 'PAYOUT'
+    }, {
+      id: 'eligible',
+      title: 'ELIGIBLE'
     }]
   })
 
