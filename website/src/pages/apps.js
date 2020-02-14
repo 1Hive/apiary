@@ -83,7 +83,7 @@ function renderAppEntry ({
     />,
     <div key='app-description'>{description}</div>,
     <div key='app-installations'>{formatNumber(installations)}</div>,
-    <div key='app-score'>{formatNumber(score * 100, undefined, true)}</div>
+    <div key='app-score'>{formatNumber(score * 100, 2)}</div>
   ]
 }
 

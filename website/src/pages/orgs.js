@@ -259,13 +259,13 @@ export default () => {
                 popoverTitle={ens}
               />,
               <div key='org-aum'>
-                ◈ {formatNumber(aum, ONE_BILLION, true)}
+                ◈ {formatNumber(aum, 2, ONE_BILLION)}
               </div>,
               <div key='org-activity'>
                 {formatNumber(activity)}
               </div>,
               <div key='org-score'>
-                {formatNumber(score * 100, undefined, true)}
+                {formatNumber(score * 100, 2)}
               </div>,
               <div key='org-created-at'>
                 {format(new Date(createdAt), 'dd/MM/y')}
