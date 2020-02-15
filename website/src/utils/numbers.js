@@ -8,11 +8,11 @@ const SI_SYMBOLS = [
   'E'
 ]
 
-export function formatNumber (num, cutoff = 10000, fixedDecimals = false) {
+export function formatNumber (num, decimals = 0, cutoff = 10000) {
   const options = [
     undefined,
     {
-      minimumFractionDigits: fixedDecimals ? 2 : 0,
+      minimumFractionDigits: decimals,
       maximumFractionDigits: 2
     }
   ]
