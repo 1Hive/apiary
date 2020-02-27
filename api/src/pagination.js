@@ -34,10 +34,6 @@ export async function applyPagination (
     .find(filter)
     .count()
 
-  const { aum: totalAUM, activity: totalActivity } = (await query.find(filter).toArray())
-    .map(({ aum, activity }) => ({ aum, activity }))
-    .reduce((accum, { aum, activity }) => ({ aum: aum + accum.aum, activity: activity + accum.activity }))
-
   let documents = await query
     .find(Object.assign(
       filter,
@@ -75,9 +71,7 @@ export async function applyPagination (
       startCursor,
       endCursor
     },
-    totalCount,
-    totalAUM,
-    totalActivity
+    totalCount
   }
 }
 
