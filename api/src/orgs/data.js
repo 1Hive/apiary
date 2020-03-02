@@ -43,12 +43,12 @@ export function getOrganisations (
 const augmentWithOrgStats = (query, filter) => async function (obj) {
   return {
     ...obj,
-    ...(await makeOrgStats(query, filter))
+    ...(await fetchOrgStats(query, filter))
   }
 }
 
-async function makeOrgStats (query, filter) {
-  const [{ totalAUM, totalActivity }] = await query.aggregate(
+async function fetchOrgStats (query, filter) {
+  const { totalAUM, totalActivity } = await query.aggregate(
     [
       { $match: filter },
       {
@@ -59,6 +59,6 @@ async function makeOrgStats (query, filter) {
         }
       }
     ]
-  ).toArray()
+  ).next()
   return { totalAUM, totalActivity }
 }
