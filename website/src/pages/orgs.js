@@ -258,8 +258,8 @@ export default () => {
               <IdentityBadge
                 key='org-addr'
                 entity={address}
-                customLabel={ens}
-                popoverTitle={ens}
+                customLabel={ens.length <= 42 && ens}
+                popoverTitle={ens.length <= 42 && ens}
               />,
               <div key='org-aum'>
                 ◈ {formatNumber(aum, 2, ONE_BILLION)}
