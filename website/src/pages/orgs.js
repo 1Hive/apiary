@@ -56,6 +56,8 @@ const ORGANISATIONS_QUERY = `
         hasNextPage
       }
       totalCount
+      totalAUM
+      totalActivity
     }
   }
 `
@@ -299,6 +301,14 @@ export default () => {
           <Box>
             <Text.Block size='xlarge'>{firstFetch ? '-' : formatNumber(data.organisations.totalCount)}</Text.Block>
             <Text>organisations</Text>
+          </Box>
+          <Box>
+            <Text.Block size='xlarge'>{firstFetch ? '-' : formatNumber(data.organisations.totalAUM)}</Text.Block>
+            <Text>aggregated AUM</Text>
+          </Box>
+          <Box>
+            <Text.Block size='xlarge'>{firstFetch ? '-' : formatNumber(data.organisations.totalActivity)}</Text.Block>
+            <Text>activities in total</Text>
           </Box>
         </>
       }

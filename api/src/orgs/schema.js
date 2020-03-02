@@ -32,6 +32,8 @@ export default `
     nodes: [Organisation]
     pageInfo: PageInfo!
     totalCount: Int!
+    totalAUM: Float!
+    totalActivity: Float!
   }
 
   input OrganisationConnectionFilter {
