@@ -249,7 +249,7 @@ export default () => {
             entries={data.organisations.nodes}
             renderEntry={({
               address,
-              ens,
+              ens = '',
               createdAt,
               aum,
               activity,
