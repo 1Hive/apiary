@@ -36,13 +36,12 @@ export function getOrganisations (
     args,
     filter,
     camelToSnakeCaseKeys(args.sort)
-  )
-    .then(augmentWithOrgStats(query, { ...filter }))
+  ).then(withOrgStats(query, { ...filter }))
 }
 
-const augmentWithOrgStats = (query, filter) => async function (obj) {
+const withOrgStats = (query, filter) => async function (data) {
   return {
-    ...obj,
+    ...data,
     ...(await fetchOrgStats(query, filter))
   }
 }
