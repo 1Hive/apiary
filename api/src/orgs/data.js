@@ -48,13 +48,13 @@ const augmentWithOrgStats = (query, filter) => async function (obj) {
 }
 
 async function fetchOrgStats (query, filter) {
-  const { totalAUM, totalActivity } = await query.aggregate([
-    { $match: filter },
-    {
-      $group: {
-        _id: null,
-        totalAUM: { $sum: '$aum' },
-        totalActivity: { $sum: '$activity' }
+  const { totalAUM, totalActivity } = await query.aggregate([{
+    $match: filter
+  }, {
+    $group: {
+      _id: null,
+      totalAUM: { $sum: '$aum' },
+      totalActivity: { $sum: '$activity' }
     }
   }]).next()
   return { totalAUM, totalActivity }
