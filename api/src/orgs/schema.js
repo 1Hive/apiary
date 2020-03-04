@@ -31,8 +31,11 @@ export default `
     edges: [OrganisationEdge]
     nodes: [Organisation]
     pageInfo: PageInfo!
+    # The total number of organisations relevant to this connection.
     totalCount: Int!
+    # The total AUM for all organisations in this connection.
     totalAUM: Float!
+    # The total number of activities for all organisations in this connection.
     totalActivity: Float!
   }
 
