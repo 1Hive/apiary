@@ -303,12 +303,12 @@ export default () => {
             <Text>organisations</Text>
           </Box>
           <Box>
-            <Text.Block size='xlarge'>{firstFetch ? '-' : formatNumber(data.organisations.totalAUM)}</Text.Block>
-            <Text>aggregated AUM</Text>
+            <Text.Block size='xlarge'>◈ {firstFetch ? '-' : formatNumber(data.organisations.totalAUM)}</Text.Block>
+            <Text>total AUM</Text>
           </Box>
           <Box>
             <Text.Block size='xlarge'>{firstFetch ? '-' : formatNumber(data.organisations.totalActivity)}</Text.Block>
-            <Text>activities in total</Text>
+            <Text>total activities (90 days)</Text>
           </Box>
         </>
       }
