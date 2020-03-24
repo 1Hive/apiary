@@ -199,12 +199,18 @@ export function appScores (ctx) {
     // Calculate totals for each KPI
     const totalAntHeld = _.chain(balances)
       .filter({ token: 'ANT' })
-      .sumBy('balance')
+      .map(({ balance }) => Math.sqrt(balance))
+      .sum()
       .value() || 1
     const totalAum = _.chain(balances)
-      .sumBy('balanceInDai')
+      .map(({ balanceInDai }) => Math.sqrt(balanceInDai))
+      .sum()
       .value() || 1
-    const totalActivity = _.sum(_.values(activityByOrganization)) || 1
+    const totalActivity = _.chain(activityByOrganization)
+      .values()
+      .map(Math.sqrt)
+      .sum()
+      .value() || 1
     ctx.log.info({
       totalAntHeld,
       totalAum,
@@ -214,11 +220,11 @@ export function appScores (ctx) {
     // Calculate normalized organization scores
     ctx.log.info('Calculating org scores...')
     const orgScores = orgs.reduce((scores, org) => {
-      const antHeld = antHeldByOrganization[org.address] || 0
-      const aum = aumByOrganization[org.address] || 0
-      const orgActivity = activityByOrganization[org.address] || 0
+      const antHeld = Math.sqrt(antHeldByOrganization[org.address] || 0)
+      const aum = Math.sqrt(aumByOrganization[org.address] || 0)
+      const orgActivity = Math.sqrt(activityByOrganization[org.address] || 0)
 
-      scores[org.address] = (antHeld / totalAntHeld) * 0.25 + (aum / totalAum) * 0.25 + (orgActivity / totalActivity) * 0.5
+      scores[org.address] = (antHeld / totalAntHeld) * 0.15 + (aum / totalAum) * 0.15 + (orgActivity / totalActivity) * 0.7
       ctx.log.debug({
         organization: org.address,
         antHeld,
