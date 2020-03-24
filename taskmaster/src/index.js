@@ -31,7 +31,9 @@ export async function scheduleBlock (
 
   // Schedule root tasks
   const jobHandles = await Promise.all(rootTasks.map(
-    (def) => ctx.queue.createJob(def).retries(10).save()
+    (def) => ctx.queue.createJob(def)
+      .retries(10)
+      .backoff('exponential', 500).save()
   ))
 
   // Schedule activity persistance task
@@ -39,7 +41,7 @@ export async function scheduleBlock (
     type: PERSIST_ACTIVITY,
     blockNumber,
     dependencies: jobHandles.map(({ id }) => id)
-  }).retries(10).save()
+  }).retries(10).backoff('exponential', 500).save()
 
   // Schedule checkpointing task
   const { id } = await ctx.queue.createJob({
@@ -48,7 +50,7 @@ export async function scheduleBlock (
     dependencies: previousBlockHandle
       ? [activityJobHandle.id, previousBlockHandle]
       : [activityJobHandle.id]
-  }).retries(10).save()
+  }).retries(10).backoff('exponential', 500).save()
 
   return id
 }
