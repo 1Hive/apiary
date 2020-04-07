@@ -8,6 +8,6 @@
     "csv-writer": "^1.6.0",
     "got": "^10.5.5",
     "lodash": "^4.17.15",
-    "minimist": "^1.2.2"
+    "minimist": "^1.2.3"
   }
 }
