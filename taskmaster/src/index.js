@@ -179,7 +179,7 @@ export function * run (ctx) {
   })
 
   // Set up periodic tasks
-  schedule.scheduleJob('0 * * * *', () =>
+  schedule.scheduleJob('* * */2 * *', () =>
     context.queue.createJob({
       type: METRIC_SCORES,
       dependencies: []
