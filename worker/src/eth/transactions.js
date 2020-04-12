@@ -1,5 +1,40 @@
 import { call, all } from 'cofx'
 import abi from 'web3-eth-abi'
+import { sql } from 'sqliterally'
+
+export function * fetchTransactions (
+  ctx,
+  blockNumber
+) {
+  const q = sql`
+    select
+      tx.hash,
+      tx.from,
+      tx.to,
+      tx.input,
+      tx.timestamp
+    from tx
+    where tx.status = true and tx.block_number = ${blockNumber}
+  `
+  const result = yield call([ctx.ethstore, 'query', {
+    name: 'get-transactions',
+    text: q.text,
+    values: q.values
+  }])
+
+  if (result.rowCount === 0) {
+    ctx.log.debug({
+      block: blockNumber
+    }, 'Block had no transactions.')
+  }
+
+  return {
+    block: {
+      number: blockNumber
+    },
+    transactions: result.rows
+  }
+}
 
 export function processTransactions (
   ctx,

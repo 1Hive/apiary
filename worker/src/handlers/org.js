@@ -7,7 +7,7 @@ export function * persistName (
   task
 ) {
   const { transactions } = yield call(
-    eth.fetchDataAtBlock,
+    eth.fetchTransactions,
     ctx,
     task.data.blockNumber
   )
