@@ -1,3 +1,5 @@
+import { promisify } from 'util'
+
 export default async function ensureDeps (
   ctx,
   depIds
@@ -11,14 +13,16 @@ export default async function ensureDeps (
   while (true) {
     let fulfilledDependencies = 0
     for (const depId of depIds) {
-      try {
-        const { status } = await ctx.queue.getJob(depId)
+      const isCompleted = await promisify(
+        ctx.cache.client.sismember
+      ).bind(
+        ctx.cache.client
+      )(
+        'completed',
+        depId
+      )
 
-        if (status === 'succeeded') {
-          fulfilledDependencies += 1
-        }
-      } catch (_) {
-        // Job did not exist in the queue, so it was already processed
+      if (isCompleted) {
         fulfilledDependencies += 1
       }
     }
