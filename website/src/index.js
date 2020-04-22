@@ -11,7 +11,7 @@ import {
 import App from './pages/app'
 
 const client = new GraphQLClient({
-  url: process.env.API_URL || 'https://daolist.1hive.org'
+  url: process.env.API_URL || 'http://localhost:3000'
 })
 
 ReactDOM.render(

@@ -48,6 +48,12 @@ const ORGANISATIONS_QUERY = `
         aum
         activity
         score
+        profile {
+          name
+          description
+          icon
+          links
+        }
       }
       pageInfo {
         startCursor
@@ -157,6 +163,7 @@ export default () => {
   }
 
   const firstFetch = loading && !data
+  data && console.log(data)
   return <div>
     <NavTabs
       items={[{
@@ -255,14 +262,26 @@ export default () => {
               createdAt,
               aum,
               activity,
+              profile,
               score
             }) => [
-              <IdentityBadge
+              profile && profile.icon && profile.name ? (
+              <div 
                 key='org-addr'
-                entity={address}
-                customLabel={(ens || '').length <= 42 && ens}
-                popoverTitle={(ens || '').length <= 42 && ens}
-              />,
+                css={`
+                  display: flex; 
+                  align-items: center;
+                `}>
+                <img src={profile.icon} width="32px" height="32px"/>
+                <IdentityBadge entity={address} label={profile.name} badgeOnly css={`margin-left: 8px;`}/>
+              </div>
+              ) : (
+                <IdentityBadge
+                  key='org-addr'
+                  entity={address}
+                  label={(ens || '')}
+                  popoverTitle={(ens || '')}
+              />),
               <div key='org-aum'>
                 ◈ {formatNumber(aum, 2, ONE_BILLION)}
               </div>,
@@ -277,6 +296,14 @@ export default () => {
               </div>
             ]}
             renderEntryActions={({ address, ens }) => [
+              <Button 
+                key="view-profile" 
+                size="small"
+                mode="strong"
+                onClick={() => {}}
+                css={`margin-right: 8px;`}
+              >View Profile
+              </Button>,
               <Button
                 key='open-org'
                 size='small'
