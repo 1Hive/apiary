@@ -7,6 +7,8 @@ import {
   camelToSnakeCaseKeys
 } from '../utils'
 
+const ORGS_COLLECTION = 'orgs'
+
 export function getOrganisations (
   db,
   args
@@ -37,6 +39,18 @@ export function getOrganisations (
     filter,
     camelToSnakeCaseKeys(args.sort)
   ).then(withOrgStats(query, { ...filter }))
+}
+
+export async function updateProfile (
+  db,
+  args
+) {
+  const { ens, ...updateParams} = args
+  const { profile = {} } = await db.collection(ORGS_COLLECTION).findOne({ ens })
+  await db.collection(ORGS_COLLECTION).updateOne(
+    { ens }, 
+    { $set: { profile: {...profile, ...updateParams} } })
+    return await db.collection(ORGS_COLLECTION).findOne({ ens })
 }
 
 const withOrgStats = (query, filter) => async function (data) {
