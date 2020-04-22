@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react'
-import { useQuery } from 'graphql-hooks'
+import { useQuery, useMutation } from 'graphql-hooks'
 import {
   Info,
 
@@ -10,7 +10,17 @@ import {
   DataView,
   IdentityBadge,
   Button,
-  SyncIndicator
+  SyncIndicator,
+  SidePanel,
+  Field,
+  TextInput,
+  LoadingRing,
+  IconPlus,
+
+  useLayout,
+  useToast,
+
+  GU
 } from '@aragon/ui'
 import { format } from 'date-fns'
 import { WindowedPagination } from '../components/WindowedPagination'
@@ -22,6 +32,7 @@ import {
   FILTER_TYPE_LIST
 } from '../components/Filter'
 import { NavTabs } from '../components/NavTabs/NavTabs'
+import SmartLink from '../components/SmartLink'
 import useSort from '../hooks/sort'
 import openSafe from '../utils/open-safe'
 import { formatNumber } from '../utils/numbers'
@@ -64,6 +75,29 @@ const ORGANISATIONS_QUERY = `
       totalCount
       totalAUM
       totalActivity
+    }
+  }
+`
+
+const UPDATE_PROFILE_MUTATION = `
+  mutation(
+    $ens: String!,
+    $name: String,
+    $description: String,
+    $icon: String,
+    $links: [String]
+  ) {
+    updateProfile(
+      ens: $ens,
+      name: $name,
+      description: $description,
+      icon: $icon,
+      links: $links
+    ) {
+      ens
+      profile {
+        name
+      }
     }
   }
 `
@@ -128,11 +162,16 @@ const ONE_BILLION = 1000000000
 export default () => {
   const [sort, sortBy] = useSort('score', 'DESC')
   const [pagination, setPagination] = useState(['after'])
+  const [editPanelOpened, setEditPanelOpened] = useState(false)
+  const [editPanelData, setEditPanelData] = useState(null)
+  const [editButtonDisabled, setEditButtonDisabled] = useState(false)
   const [filter, setFilter] = useState()
-
+  const { layoutName } = useLayout()
+  const compactMode = layoutName === 'small'
   const page = useCallback(
     (direction, cursor) => setPagination([direction, cursor])
   )
+  const toast = useToast()
 
   // Reset pagination after a new sort or filter has been applied
   useEffect(() => {
@@ -142,7 +181,8 @@ export default () => {
   const {
     loading,
     error,
-    data
+    data,
+    refetch
   } = useQuery(ORGANISATIONS_QUERY, {
     variables: {
       sort: {
@@ -158,12 +198,19 @@ export default () => {
     updateData: (_, data) => data
   })
 
+  const [updateProfile] = useMutation(UPDATE_PROFILE_MUTATION)
+
+  const handleOpenEditPanel = (requestedOrgEns) => {
+    const orgData = data.organisations.nodes.filter(org => org.ens === requestedOrgEns)
+    setEditPanelData(...orgData)
+    setEditPanelOpened(true)
+  }
+
   if (error) {
     return <Info mode='error'>An error occurred. Try again.</Info>
   }
 
   const firstFetch = loading && !data
-  data && console.log(data)
   return <div>
     <NavTabs
       items={[{
@@ -173,7 +220,57 @@ export default () => {
         label: 'Apps',
         path: '/apps'
       }]}
-    />
+      />
+    <SidePanel title="Edit DAO profile" opened={editPanelOpened} onClose={() => setEditPanelOpened(false)}>
+      <Field 
+        label='Organisation Name'
+        css={`margin-top: ${2 * GU}px;`}>
+        <TextInput 
+          value={editPanelData && editPanelData.profile.name} 
+          onChange={e => setEditPanelData({...editPanelData, profile: {...editPanelData.profile, name: e.target.value}})}
+          css={`width: 100%;`}
+        />
+      </Field>
+      <Field label='Organisation Icon URL'>
+        <TextInput 
+          value={editPanelData && editPanelData.profile.icon} 
+          onChange={e => setEditPanelData({...editPanelData, profile: {...editPanelData.profile, icon: e.target.value}})}
+          css={`width: 100%;`}
+        />
+      </Field>
+      <Field label='Organisation Description'>
+        <TextInput
+          multiline 
+          value={editPanelData && editPanelData.profile.description} 
+          onChange={e => setEditPanelData({...editPanelData, profile: {...editPanelData.profile, description: e.target.value}})}
+          css={`width: 100%;`}
+        />
+      </Field>
+      <Button mode="strong" disabled={editButtonDisabled} onClick={ () => {
+        setEditButtonDisabled(true)
+        try {
+          updateProfile({variables: {
+            ens: editPanelData.ens,
+            name: editPanelData.profile.name,
+            description: editPanelData.profile.description,
+            icon: editPanelData.profile.icon,
+            links: editPanelData.profile.links,
+          }})
+          .then(refetch)
+          .then(() => setEditPanelOpened(false))
+          toast('Update successful!')
+        } catch(err) {
+          toast('There was an error updating your profile.')
+        } finally {
+          setEditButtonDisabled(false)
+        }
+      }}>Save Profile</Button>
+      <Info title="DAO Profile Pages" css={`margin-top: ${2 * GU}px;`}>
+        Public profiles allow DAOs to associate their name, icon, description and links (such as website or chat group) to a public profile on Apiary.
+
+        The DAO can add or remove editors by creating a vote.
+      </Info>
+    </SidePanel>
     <Split
       primary={<div>
         {!firstFetch && (
@@ -273,7 +370,7 @@ export default () => {
                   align-items: center;
                 `}>
                 <img src={profile.icon} width="32px" height="32px"/>
-                <IdentityBadge entity={address} label={profile.name} badgeOnly css={`margin-left: 8px;`}/>
+                <IdentityBadge entity={address} label={profile.name} badgeOnly css={`margin-left: ${1 * GU}px;`}/>
               </div>
               ) : (
                 <IdentityBadge
@@ -300,9 +397,9 @@ export default () => {
                 key="view-profile" 
                 size="small"
                 mode="strong"
-                onClick={() => {}}
+                onClick={() => handleOpenEditPanel(ens)}
                 css={`margin-right: 8px;`}
-              >View Profile
+              >Edit Profile
               </Button>,
               <Button
                 key='open-org'
@@ -313,6 +410,60 @@ export default () => {
                 Open
               </Button>
             ]}
+            renderEntryExpansion={({profile}) => {
+              if (!profile) {
+                return null
+              }
+              const profileInfo = [
+                <div 
+                  key='description'
+                  css={`
+                    width: 100%;
+                    display: grid;
+                    grid-template-columns: auto 1fr;
+                    grid-gap: ${3 * GU}px;
+                    align-items: center;
+                    justify-content: space-between;
+                    align-items: start;
+                    margin-top: ${1 * GU}px;
+                  `}>
+                    <div>Description</div>
+                    <div css={`display: flex; justify-content: flex-end;`}>{profile.description || 'No description available.'}</div>
+                  </div>, 
+                <div 
+                  key="links"                  
+                  css={`
+                    width: 100%;
+                    display: grid;
+                    grid-template-columns: auto 1fr;
+                    grid-gap: ${3 * GU}px;
+                    align-items: center;
+                    justify-content: space-between;
+                    align-items: start;
+                    margin-top: ${1 * GU}px;
+                `}>
+                  <div>Links</div>
+                  <div css={`
+                    display: flex; 
+                    justify-content: flex-end;
+                    ${compactMode && `
+                      justify-content: flex-end;
+                    `}
+                  `}>
+                    {profile.links.length > 0 ? profile.links.map(link => (
+                      <>
+                      <SmartLink 
+                        url={link} 
+                        css={`display: block; margin-left: ${1 * GU}px; padding-left: ${1 * GU}px !important;`}
+                        />
+                        {'     '}
+                      </>
+                      )) : 'No links available.'}
+                  </div>
+                </div>
+            ]
+              return compactMode ? <div css='width: 100%;'>{profileInfo}</div> : profileInfo
+            }}
           />
         )}
         {!firstFetch && (

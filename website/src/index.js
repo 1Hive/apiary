@@ -6,7 +6,7 @@ import {
   ClientContext
 } from 'graphql-hooks'
 import {
-  Viewport
+  Viewport,
 } from '@aragon/ui'
 import App from './pages/app'
 

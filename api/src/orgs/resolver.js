@@ -1,5 +1,12 @@
 import { getOrganisations, updateProfile } from './data'
 
+const EMPTY_PROFILE = {
+  name: '',
+  description: '',
+  icon: '',
+  links: []
+}
+
 export default {
   Query: {
     organisations (_, args, { db }) {
@@ -20,7 +27,6 @@ export default {
 
   Profile: {
     name (profile) {
-      console.log('profile', profile)
       return profile.name || ''
     },
     icon (profile) {
@@ -54,7 +60,7 @@ export default {
       return org.activity || 0
     },
     profile (org) {
-      return org.profile || null
+      return org.profile || EMPTY_PROFILE
     },
     createdAt (org) {
       return org.created_at
