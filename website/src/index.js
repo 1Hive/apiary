@@ -5,6 +5,7 @@ import {
   GraphQLClient,
   ClientContext
 } from 'graphql-hooks'
+import { UseWalletProvider } from 'use-wallet'
 import {
   Viewport,
 } from '@aragon/ui'
@@ -18,7 +19,9 @@ ReactDOM.render(
   <Router>
     <ClientContext.Provider value={client}>
       <Viewport.Provider>
-        <App />
+        <UseWalletProvider chainId={4}>
+          <App />
+        </UseWalletProvider>
       </Viewport.Provider>
     </ClientContext.Provider>
   </Router>,

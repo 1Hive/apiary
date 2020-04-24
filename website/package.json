@@ -14,6 +14,8 @@
   },
   "dependencies": {
     "@aragon/ui": "^1.0.0",
+    "@aragon/wrapper": "^5.0.0-rc.26",
+    "clipboard-polyfill": "^2.8.6",
     "date-fns": "^2.0.1",
     "graphql-hooks": "^3.6.1",
     "prop-types": "^15.7.2",
@@ -22,8 +24,10 @@
     "react-dom": "^16.8.6",
     "react-router": "^5.0.1",
     "react-router-dom": "^5.0.1",
+    "react-spring": "^8.0.27",
     "styled-components": "^4.3.2",
-    "use-wallet": "^0.5.0"
+    "use-wallet": "^0.5.0",
+    "web3": "^1.2.6"
   },
   "devDependencies": {
     "@babel/core": "^7.5.5",
