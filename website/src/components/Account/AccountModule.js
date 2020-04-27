@@ -10,8 +10,8 @@ import ScreenConnecting from './ScreenConnecting'
 import ScreenError from './ScreenError'
 import ScreenProviders from './ScreenProviders'
 
-
 const AnimDiv = animated.div
+
 const SCREENS = [
   {
     id: 'providers',

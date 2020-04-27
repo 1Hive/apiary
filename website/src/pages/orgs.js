@@ -14,8 +14,6 @@ import {
   SidePanel,
   Field,
   TextInput,
-  LoadingRing,
-  IconPlus,
 
   useLayout,
   useToast,
@@ -159,6 +157,7 @@ const KITS = [{
 }]
 
 const ONE_BILLION = 1000000000
+
 export default ({ history }) => {
   const [sort, sortBy] = useSort('score', 'DESC')
   const [pagination, setPagination] = useState(['after'])
@@ -199,12 +198,6 @@ export default ({ history }) => {
   })
 
   const [updateProfile] = useMutation(UPDATE_PROFILE_MUTATION)
-
-  const handleOpenEditPanel = (requestedOrgEns) => {
-    const orgData = data.organisations.nodes.filter(org => org.ens === requestedOrgEns)
-    setEditPanelData(...orgData)
-    setEditPanelOpened(true)
-  }
 
   if (error) {
     return <Info mode='error'>An error occurred. Try again.</Info>
@@ -372,20 +365,23 @@ export default ({ history }) => {
                 <div
                   key='org-addr'
                   css={`
-                  display: flex; 
+                  display: flex;
                   align-items: center;
+                  margin-top: ${1 * GU}px;
                 `}
                 >
                   <img src={profile.icon} width='32px' height='32px' />
                   <IdentityBadge entity={address} label={profile.name} badgeOnly css={`margin-left: ${1 * GU}px;`} />
                 </div>
               ) : (
-                <IdentityBadge
-                  key='org-addr'
-                  entity={address}
-                  label={(ens || '')}
-                  popoverTitle={(ens || '')}
-                />),
+                <div css={`margin-top: ${1.5 * GU}px;`}>
+                  <IdentityBadge
+                    key='org-addr'
+                    entity={address}
+                    label={(ens || '')}
+                    popoverTitle={(ens || '')}
+                  />
+                </div>),
               <div key='org-aum'>
                 ◈ {formatNumber(aum, 2, ONE_BILLION)}
               </div>,
@@ -453,7 +449,7 @@ export default ({ history }) => {
                 >
                   <div>Links</div>
                   <div css={`
-                    display: flex; 
+                    display: flex;
                     justify-content: flex-end;
                     ${compactMode && `
                       justify-content: flex-end;

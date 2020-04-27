@@ -7,8 +7,6 @@ import {
   camelToSnakeCaseKeys
 } from '../utils'
 
-const ORGS_COLLECTION = 'orgs'
-
 export function getOrganisations (
   db,
   args
@@ -21,13 +19,13 @@ export function getOrganisations (
   }
 
   if (args.filter && args.filter.kit) {
-    filter['kit'] = transformStringFilter(
+    filter.kit = transformStringFilter(
       args.filter.kit
     )
   }
 
   if (args.filter && args.filter.createdAt) {
-    filter['created_at'] = transformDateFilter(
+    filter.created_at = transformDateFilter(
       args.filter.createdAt
     )
   }
@@ -45,12 +43,20 @@ export async function updateProfile (
   db,
   args
 ) {
-  const { ens, ...updateParams} = args
-  const { profile = {} } = await db.collection(ORGS_COLLECTION).findOne({ ens })
-  await db.collection(ORGS_COLLECTION).updateOne(
-    { ens }, 
-    { $set: { profile: {...profile, ...updateParams} } })
-    return await db.collection(ORGS_COLLECTION).findOne({ ens })
+  const { ens, ...updateParams } = args
+  const { profile = {} } = await db.collection('orgs').findOne({ ens })
+  await db.collection('orgs').updateOne(
+    { ens },
+    { $set: { profile: { ...profile, ...updateParams } } })
+  return db.collection('orgs').findOne({ ens })
+}
+
+export async function getSingleOrganisation (
+  db,
+  args
+) {
+  const { address } = args
+  return db.collection('orgs').findOne({ address })
 }
 
 const withOrgStats = (query, filter) => async function (data) {

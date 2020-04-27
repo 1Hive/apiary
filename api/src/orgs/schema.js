@@ -76,6 +76,10 @@ export default `
       filter: OrganisationConnectionFilter,
       sort: OrganisationConnectionSort
     ): OrganisationConnection!
+
+    organisation(
+      address: String!
+    ): Organisation!
   }
 
   type Mutation {
@@ -89,4 +93,4 @@ export default `
       description: String
     ): Organisation!
   }
-`;
+`

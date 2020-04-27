@@ -1,76 +1,88 @@
 import React, { useState, useEffect } from 'react'
+import PropTypes from 'prop-types'
 import { useQuery } from 'graphql-hooks'
 import { useWallet } from 'use-wallet'
 import Web3 from 'web3'
-import {Box, Button, Split, textStyle, Info} from '@aragon/ui'
+import { Box, Button, Split, textStyle, Info } from '@aragon/ui'
 import Aragon from '@aragon/wrapper'
 import SmartLink from '../components/SmartLink'
 import EditSidePanel from '../components/SidePanel/EditSidePanel'
+import { isAddress } from '../utils/web3-utils'
 
 const MANAGE_PROFILE_ROLE = '0x675b358b95ae7561136697fcc3302da54a334ac7c199d53621288290fb863f5c'
 const EMPTY_SCRIPT = '0x00'
 const NO_PERMISSION = '0x0000000000000000000000000000000000000000'
 
-const ORGANISATIONS_QUERY = `
+const ORGANISATION_QUERY = `
   query(
-    $take: Int
+    $address: String!
   ) {
-    organisations(
-      take: $take
+    organisation(
+      address: $address
     ) {
-      nodes {
-        address
-        ens
-        createdAt
-        aum
-        activity
-        score
-        proxies {
-          app {
-            name
-          }
-          address
-        }
-        profile {
+      address
+      ens
+      createdAt
+      aum
+      activity
+      score
+      proxies {
+        app {
           name
-          description
-          icon
-          links
         }
+        address
+      }
+      profile {
+        name
+        description
+        icon
+        links
       }
     }
   }
 `
 
-function useLocationQuery (location) { 
-  return new URLSearchParams(location.search)
+function useDaoFromLocation (location) {
+  const locationParams = new URLSearchParams(location.search)
+  const daoAddress = locationParams.get('dao')
+  if (!isAddress(daoAddress)) {
+    return null
+  }
+  return daoAddress
 }
 
 function Profile ({ location }) {
   const { connected } = useWallet()
+  const daoAddress = useDaoFromLocation(location)
 
-  return connected ? <ConnectedProfile location={location} /> : (
+  if (!daoAddress) {
+    return <Box>Profile not found!</Box>
+  }
+  console.log('dao address:', daoAddress)
+  return connected ? <ConnectedProfile daoAddress={daoAddress} /> : (
     <Box>Please connect to web3 to view your profile.</Box>
   )
 }
 
-function ConnectedProfile ({ location }) {
+Profile.propTypes = {
+  location: PropTypes.object
+}
+
+function ConnectedProfile ({ daoAddress }) {
   const [editPanelOpened, setEditPanelOpened] = useState(false)
   const [editButtonDisabled, setEditButtonDisabled] = useState(false)
   const [editPanelData, setEditPanelData] = useState(null)
   const [sidePanel, setSidePanel] = useState('')
   const { connected, account } = useWallet()
-
-  const dao = useLocationQuery(location)
-  const daoAddress = dao.get('dao')
+  console.log('connected address', daoAddress)
   const {
     loading,
     error,
     data,
     refetch
-  } = useQuery(ORGANISATIONS_QUERY, {
+  } = useQuery(ORGANISATION_QUERY, {
     variables: {
-      take: 1500
+      address: daoAddress
     },
 
     // This is kind of ugly, but this identity function
@@ -133,7 +145,7 @@ function ConnectedProfile ({ location }) {
         if (permissionCreated !== NO_PERMISSION && !isEditor) {
           setSidePanel('GRANT_SIDEPANEL')
           return
-        } 
+        }
         setSidePanel('EDIT_SIDEPANEL')
       } catch (err) {
         console.log(err)
@@ -145,26 +157,23 @@ function ConnectedProfile ({ location }) {
   }, [])
 
   const handleOpenEditPanel = () => {
-    const orgData = data.organisations.nodes.find(org => org.address === daoAddress)
-    setEditPanelData(orgData)
+    setEditPanelData(data.organisation)
     setEditPanelOpened(true)
   }
 
   const handleClaimDAO = async () => {
-    console.log(data)
-    const org = data.organisations.nodes.find(org => org.address === daoAddress)
-    const votingAddress = org.proxies.find(appProxy => appProxy.app && appProxy.app.name === 'Voting')
-    
+    const votingAddress = data.organisation.proxies.find(appProxy => appProxy.app && appProxy.app.name === 'Voting')
+
     await wrapper.init({
       accounts: {
         providedAccounts: connected ? [account] : []
       }
     })
     const aclAddress = await wrapper.kernelProxy.contract.methods.acl().call()
-      await wrapper.initAcl({
-        aclAddress
-      })
-    console.log(org, votingAddress.address, account, wrapper, wrapper.aclProxy)
+    await wrapper.initAcl({
+      aclAddress
+    })
+    console.log(data.organisation, votingAddress.address, account, wrapper, wrapper.aclProxy)
     const txPath = await wrapper.getACLTransactionPath(
       'createPermission',
       [
@@ -208,7 +217,7 @@ function ConnectedProfile ({ location }) {
     return <Info>Loading</Info>
   }
 
-  const org = data.organisations.nodes.find(org => org.address === daoAddress)
+  const { organisation } = data
 
   return (
     <div>
@@ -220,31 +229,37 @@ function ConnectedProfile ({ location }) {
         refetchQuery={refetch}
         panelData={editPanelData}
         buttonDisabled={editButtonDisabled}
-      />}
+      />
+      }
       <Split
         primary={
           <Box>
             <div css={`
               ${textStyle('title3')}
-            `}>Name.</div>
-            <p>{org.profile.name || 'No name available.'}</p>
+            `}
+            >Name.
+            </div>
+            <p>{organisation.profile.name || 'No name available.'}</p>
             <div css={`
               ${textStyle('title3')}
-            `}>Description</div>
-            <p>{org.profile.description || 'No description available.'}</p>
+            `}
+            >Description
+            </div>
+            <p>{organisation.profile.description || 'No description available.'}</p>
             <h3 css={`
               ${textStyle('title3')}
-            `}>Links</h3>
-            {org.profile.links.length ? org.profile.links.map(link => <SmartLink url={link} key={link}/>) : 'No links available.'}
+            `}
+            >Links
+            </h3>
+            {organisation.profile.links.length ? organisation.profile.links.map(link => <SmartLink url={link} key={link} />) : 'No links available.'}
             {sidePanel === 'EDIT_SIDEPANEL' ? (
               <p><Button onClick={handleOpenEditPanel}>Edit Profile</Button></p>
             ) : sidePanel === 'GRANT_SIDEPANEL' ? (
               <p><Button onClick={handleAddEditorToDAO}>Request Edition Rights</Button></p>
             ) : (
               <p><Button onClick={handleClaimDAO} disabled={editButtonDisabled}>Claim Profile</Button></p>
-            )
-            }
-            
+            )}
+
           </Box>
         }
         secondary={
@@ -255,6 +270,10 @@ function ConnectedProfile ({ location }) {
       />
     </div>
   )
+}
+
+ConnectedProfile.propTypes = {
+  daoAddress: PropTypes.string
 }
 
 export default Profile

@@ -14,7 +14,10 @@ function AccountButton ({ label, onClick }) {
     <HeaderModule
       icon={
         <div css='position: relative'>
-          <EthIdenticon address={wallet.account} radius={RADIUS} />
+          <EthIdenticon
+            address={wallet.account}
+            radius={RADIUS}
+          />
           <div
             css={`
               position: absolute;

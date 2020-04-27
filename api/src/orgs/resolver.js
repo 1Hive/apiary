@@ -1,4 +1,4 @@
-import { getOrganisations, updateProfile } from './data'
+import { getOrganisations, getSingleOrganisation, updateProfile } from './data'
 
 const EMPTY_PROFILE = {
   name: '',
@@ -11,6 +11,13 @@ export default {
   Query: {
     organisations (_, args, { db }) {
       return getOrganisations(
+        db,
+        args
+      )
+    },
+
+    organisation (_, args, { db }) {
+      return getSingleOrganisation(
         db,
         args
       )
@@ -38,10 +45,8 @@ export default {
     description (profile) {
       return profile.description || ''
     }
-    
-  },
 
-  
+  },
 
   Organisation: {
     id (org) {
