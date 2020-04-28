@@ -2,9 +2,26 @@ import React, { useState, useCallback, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { useQuery } from 'graphql-hooks'
 import { useWallet } from 'use-wallet'
-import { Box, Button, EmptyStateCard, LoadingRing, Split, textStyle, Info } from '@aragon/ui'
+import {
+  BackButton,
+  Bar,
+  Box,
+  Button,
+  EmptyStateCard,
+  Header,
+  IdentityBadge,
+  LoadingRing,
+  Split,
+  textStyle,
+  Info,
+  useTheme,
+  useViewport,
+  GU
+} from '@aragon/ui'
 import SmartLink from '../components/SmartLink'
 import EditSidePanel from '../components/SidePanel/EditSidePanel'
+import { formatNumber } from '../utils/numbers'
+import { isProfileEmpty } from '../utils/utils'
 import { useWrapper } from '../utils/web3-contracts'
 import { addressesEqual, isAddress } from '../utils/web3-utils'
 
@@ -42,6 +59,7 @@ const ORGANISATION_QUERY = `
         description
         icon
         links
+        editors
       }
     }
   }
@@ -57,14 +75,13 @@ function useDaoFromLocation (location) {
 }
 
 function Profile ({ history, location }) {
-  const { connected } = useWallet()
   const daoAddress = useDaoFromLocation(location)
 
   if (!daoAddress) {
     return <ProfileNotFound history={history} />
   }
   console.log('dao address:', daoAddress)
-  return <ConnectedProfile daoAddress={daoAddress} />
+  return <DaoProfile daoAddress={daoAddress} />
 }
 
 Profile.propTypes = {
@@ -95,7 +112,7 @@ ProfileNotFound.propTypes = {
   history: PropTypes.object
 }
 
-function ConnectedProfile ({ daoAddress }) {
+function DaoProfile ({ daoAddress }) {
   const [editPanelOpened, setEditPanelOpened] = useState(false)
   const [editButtonDisabled, setEditButtonDisabled] = useState(false)
   const [editPanelData, setEditPanelData] = useState(null)
@@ -103,6 +120,8 @@ function ConnectedProfile ({ daoAddress }) {
   const [sidePanel, setSidePanel] = useState('')
   const [wrapper, wrapperReady] = useWrapper({ daoAddress })
   const { connected, account, ethereum } = useWallet()
+  const theme = useTheme()
+  const { below } = useViewport()
 
   const {
     loading,
@@ -190,6 +209,29 @@ function ConnectedProfile ({ daoAddress }) {
 
   const { organisation } = data
 
+  const profileEmpty = isProfileEmpty(organisation.profile)
+
+  if (
+    profileEmpty &&
+    (ownershipStatus === 'CLAIM_PROFILE' || ownershipStatus === 'NOT_CONNECTED_PROFILE')
+  ) {
+    return (
+      <div
+        css={`
+          width: 100%;
+          min-height: 90vh;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        `}
+      >
+        <EmptyStateCard
+          text='This DAO does not have a profile. Claim it to edit it!'
+          action={<Button onClick={() => history.push('/')}>See all DAOs</Button>}
+        />
+      </div>
+    )
+  }
   return (
     <div>
       {editPanelData && (
@@ -203,41 +245,195 @@ function ConnectedProfile ({ daoAddress }) {
           buttonDisabled={editButtonDisabled}
         />
       )}
+      <Header
+        primary='Profile'
+        secondary={
+          <Button
+            mode='strong'
+            label='Edit Profile'
+            onClick={() => undefined}
+          >
+            Edit Profile
+          </Button>
+        }
+      />
       <Split
         primary={
-          <Box>
-            <div css={`
-              ${textStyle('title3')}
-            `}
-            >Name
-            </div>
-            <p>{organisation.profile.name || 'No name available.'}</p>
-            <div css={`
-              ${textStyle('title3')}
-            `}
-            >Description
-            </div>
-            <p>{organisation.profile.description || 'No description available.'}</p>
-            <h3 css={`
-              ${textStyle('title3')}
-            `}
-            >Links
-            </h3>
-            {organisation.profile.links.length ? organisation.profile.links.map(link => <SmartLink url={link} key={link} />) : 'No links available.'}
-            {ownershipStatus === 'NOT_CONNECTED_PROFILE' ? (
-              <Info title='Editing Profile'>
-                To edit, claim or add yourself as an editor for this DAO profile, please connect to web3.
-              </Info>
-                ) : ownershipStatus === 'LOADING_PROFILE' ? (<p><LoadingRing/></p>): (
-              <p>
-                <Button onClick={handleOwnershipIntent}>{OWNERSHIP_STATUSES.get(ownershipStatus)}</Button>
-              </p>
-            )}
-          </Box>
+          <>
+            <Bar primary={<BackButton onClick={() => history.back()} />} />
+            <Box>
+              <div
+                css={`
+                  display: flex;
+                `}
+              >
+                {organisation.profile.icon && <img src={organisation.profile.icon} height='80px' width='auto' />}
+                <div
+                  css={`
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: space-between;
+                    margin-left: ${2 * GU}px;
+                  `}
+                >
+
+                  <div
+                    css={`
+                      ${textStyle('title3')}
+                    `}
+                  >
+                    {organisation.profile.name || 'No name available.'}
+                  </div>
+
+                  <IdentityBadge entity={daoAddress} />
+
+                </div>
+              </div>
+              <div
+                css={`
+                  display: grid;
+                  grid-template-columns: 1fr 1fr;
+                  ${below('medium') && `
+                    display: flex;
+                    flex-direction: column;
+                  `}
+                `}
+              >
+                <div>
+                  <div
+                    css={`
+                      margin-top: ${2 * GU}px;
+                      margin-bottom: ${1 * GU}px;
+                      ${textStyle('label2')}
+                      color: ${theme.contentSecondary};
+                    `}
+                  >
+                  Description
+                  </div>
+                  <p
+                    css={`
+                      margin-bottom: ${2 * GU}px;
+                    `}
+                  >
+                    {organisation.profile.description || 'No description available.'}
+                  </p>
+                </div>
+                <div>
+                  <div
+                    css={`
+                      margin-top: ${2 * GU}px;
+                      margin-bottom: ${1 * GU}px;
+                      ${textStyle('label2')}
+                      color: ${theme.contentSecondary};
+                    `}
+                  >
+                  Editors
+                  </div>
+                  <div>
+                    {organisation.profile.editors.length
+                      ? organisation.profile.editors.map(editor => (
+                        <div
+                          key={editor}
+                          css={`
+                            margin-top: ${1 * GU}px;
+                          `}
+                        >
+                          <IdentityBadge
+                            entity={editor}
+                          />
+                        </div>
+                      )
+                      ) : 'No authorized editors have edited this profile.'}
+                  </div>
+                </div>
+                <div
+                  css={`
+                    grid-column: 2 / span 1;
+                  `}
+                >
+                  <div
+                    css={`
+                      margin-top: ${2 * GU}px;
+                      margin-bottom: ${1 * GU}px;
+                      ${textStyle('label2')}
+                      color: ${theme.contentSecondary};
+                    `}
+                  >
+                  Links
+                  </div>
+                  {organisation.profile.links.length
+                    ? organisation.profile.links
+                      .map(link => (
+                        <div
+                          key={link}
+                          css={`
+                            display: flex;
+                            flex-wrap: wrap;
+                            margin-right: ${1 * GU}px;
+                          `}
+                        >
+                          <SmartLink url={link} />
+                        </div>
+                      )
+                      ) : 'No links available.'}
+                </div>
+              </div>
+              {ownershipStatus === 'NOT_CONNECTED_PROFILE' ? (
+                <Info title='Editing Profile'>
+                  To edit, claim or add yourself as an editor for this DAO profile, please connect to web3.
+                </Info>
+              ) : ownershipStatus === 'LOADING_PROFILE' ? (<p><LoadingRing /></p>) : (
+                <p>
+                  <Button onClick={handleOwnershipIntent}>{OWNERSHIP_STATUSES.get(ownershipStatus)}</Button>
+                </p>
+              )}
+            </Box>
+          </>
         }
         secondary={
           <Box>
             <h3>Stats</h3>
+            <div
+              css={`
+                display: flex;
+                flex-direction: column;
+              `}
+            >
+              <div
+                css={`
+                  margin-top: ${2 * GU}px;
+                  margin-bottom: ${1 * GU}px;
+                  ${textStyle('label2')}
+                  color: ${theme.contentSecondary};
+                `}
+              >
+              AUM ◈
+              </div>
+              <div
+                css={`
+                  ${textStyle('body3')}
+                `}
+              >
+                {formatNumber(organisation.aum)}
+              </div>
+            </div>
+            <div
+              css={`
+                margin-top: ${2 * GU}px;
+                margin-bottom: ${1 * GU}px;
+                ${textStyle('label2')}
+                color: ${theme.contentSecondary};
+              `}
+            >
+            Activity
+            </div>
+            <div
+              css={`
+                ${textStyle('body3')}
+              `}
+            >
+              {formatNumber(organisation.activity)}
+            </div>
           </Box>
         }
       />
@@ -245,7 +441,7 @@ function ConnectedProfile ({ daoAddress }) {
   )
 }
 
-ConnectedProfile.propTypes = {
+DaoProfile.propTypes = {
   daoAddress: PropTypes.string
 }
 

@@ -19,7 +19,8 @@ export const WindowedPagination = React.memo(({
     justifyContent: space-between;
     width: 100%;
     margin: 1em 0;
-  '>
+  '
+  >
     <Button
       onClick={() => onPage('before', startCursor)}
       style={{

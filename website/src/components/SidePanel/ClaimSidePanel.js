@@ -1,5 +1,5 @@
 import React from 'react'
 
-function ClaimSidePanel() {
+function ClaimSidePanel () {
 
 }

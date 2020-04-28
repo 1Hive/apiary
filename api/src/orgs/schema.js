@@ -6,7 +6,9 @@ export default `
     # URL to the organisation's icon.
     icon: String
     # Array of URL to the different links for the organisation (ex: Discord, Discourse)
-    links: [String]
+    links: [String]!
+    # Array of addresses from the people that have edited the profile at least once
+    editors: [String]!
     # The description of the organisation.
     description: String
   }
@@ -86,11 +88,13 @@ export default `
     # Update organisation profiles.
     updateProfile(
       # The organization id.
-      ens: String!,
+      address: String!,
       name: String,
       icon: String,
       links: [String],
-      description: String
+      description: String,
+      signerAddress: String!,
+      signedMessage: String!
     ): Organisation!
   }
 `

@@ -1,11 +1,18 @@
+import Web3EthContract from 'web3-eth-contract'
+import kernelAbi from '../abis/kernel.json'
 import { makeConnection } from '../pagination'
 import {
   transformStringFilter,
   transformDateFilter
 } from '../filter'
 import {
-  camelToSnakeCaseKeys
+  camelToSnakeCaseKeys,
+  composeSignedMessage
 } from '../utils'
+import { validateSignerAddress } from '../web3-utils'
+
+const MANAGE_PROFILE_ROLE = '0x675b358b95ae7561136697fcc3302da54a334ac7c199d53621288290fb863f5c'
+const EMPTY_SCRIPT = '0x00'
 
 export function getOrganisations (
   db,
@@ -43,12 +50,37 @@ export async function updateProfile (
   db,
   args
 ) {
-  const { ens, ...updateParams } = args
-  const { profile = {} } = await db.collection('orgs').findOne({ ens })
+  const { address, signerAddress, signedMessage, ...updateParams } = args
+
+  const originalMessage = composeSignedMessage(address, updateParams)
+  const isAddressValid = validateSignerAddress(originalMessage, signedMessage, signerAddress)
+  Web3EthContract.setProvider('wss://rinkeby.infura.io/ws/v3/a30bd9ef4acd44aba62fa33b0e159b7c')
+
+  const kernelContract = new Web3EthContract(kernelAbi, address)
+
+  try {
+    const hasPermission = await kernelContract.methods.hasPermission(
+      signerAddress,
+      address,
+      MANAGE_PROFILE_ROLE,
+      EMPTY_SCRIPT
+    ).call()
+    if (!isAddressValid || !hasPermission) {
+      throw new Error('Failed message verification.')
+    }
+  } catch(err) {
+    return
+  }
+
+  const { profile = {} } = await db.collection('orgs').findOne({ address })
+  const currentEditors = profile.editors || []
+  const newEditors = [...currentEditors, signerAddress]
+
   await db.collection('orgs').updateOne(
-    { ens },
-    { $set: { profile: { ...profile, ...updateParams } } })
-  return db.collection('orgs').findOne({ ens })
+    { address },
+    { $set: { profile: { ...profile, ...updateParams, editors: newEditors } } })
+
+  return db.collection('orgs').findOne({ address })
 }
 
 export async function getSingleOrganisation (

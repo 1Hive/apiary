@@ -7,7 +7,7 @@ import {
 } from 'graphql-hooks'
 import { UseWalletProvider } from 'use-wallet'
 import {
-  Viewport,
+  Viewport
 } from '@aragon/ui'
 import App from './pages/app'
 

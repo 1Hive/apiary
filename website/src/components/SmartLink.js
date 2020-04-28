@@ -9,7 +9,7 @@ const KNOWN_PLATFORMS = new Map([
   ['instagram', 'Instagram']
 ])
 
-export default function SmartLink ({ url }) {
+export default function SmartLink ({ url, ...props }) {
   const title = useMemo(() => {
     for (const [platformKey, platform] of KNOWN_PLATFORMS.entries()) {
       if (url.includes(platformKey)) {
@@ -19,6 +19,6 @@ export default function SmartLink ({ url }) {
 
     return url
   }, [url])
-  
-  return <a href={url} css={`padding-left: 8px;`} >{title}</a>
+
+  return <a href={url} {...props}>{title}</a>
 }

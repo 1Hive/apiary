@@ -42,6 +42,10 @@ export default {
     links (profile) {
       return profile.links || []
     },
+    editors (profile) {
+      console.log(profile.editors)
+      return profile.editors || []
+    },
     description (profile) {
       return profile.description || ''
     }

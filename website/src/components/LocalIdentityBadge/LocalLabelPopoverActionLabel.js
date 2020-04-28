@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { IconLabel, GU } from '@aragon/ui'
 
-function LocalLabelPopoverActionLabel({ hasLabel }) {
+function LocalLabelPopoverActionLabel ({ hasLabel }) {
   return (
     <div
       css={`
@@ -20,7 +20,7 @@ function LocalLabelPopoverActionLabel({ hasLabel }) {
   )
 }
 LocalLabelPopoverActionLabel.propTypes = {
-  hasLabel: PropTypes.bool,
+  hasLabel: PropTypes.bool
 }
 
 export default LocalLabelPopoverActionLabel

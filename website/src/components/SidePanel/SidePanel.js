@@ -51,6 +51,4 @@ export default function SidePanel ({
     web3.eth.sendTransaction(txPath[0])
     console.log(txPath)
   }, [])
-
-  return
 }

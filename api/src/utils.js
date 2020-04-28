@@ -1,3 +1,5 @@
+const PROFILE_PREFIX = 'PROFILE_DATA'
+
 export function camelToSnakeCase (string) {
   return string.replace(/[\w]([A-Z])/g, (m) =>
     `${m[0]}_${m[1]}`
@@ -10,4 +12,10 @@ export function camelToSnakeCaseKeys (obj = {}) {
 
     return o
   }, {})
+}
+
+export function composeSignedMessage (daoAddress, { name, description, links, icon }) {
+  const concatenatedLinks = links.reduce((concatenatedLinks, link) => `${concatenatedLinks}${link}`, '')
+
+  return `${PROFILE_PREFIX}${daoAddress}${name.replace(/\s/g, '')}${description.replace(/\s/g, '')}${icon}${concatenatedLinks}`
 }

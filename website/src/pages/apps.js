@@ -191,7 +191,7 @@ export default () => {
                   <ContextMenuItem onClick={() => openSafe(changelogUrl)}>Changelog</ContextMenuItem>
                 )}
                 {hash && (
-                  <ContextMenuItem onClick={() => { window.location = `/orgs?app=${hash}` } }>Organizations</ContextMenuItem>
+                  <ContextMenuItem onClick={() => { window.location = `/orgs?app=${hash}` }}>Organizations</ContextMenuItem>
                 )}
               </ContextMenu>
             ]}

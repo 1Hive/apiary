@@ -90,7 +90,8 @@ export function Filter ({
       grid-template-columns: repeat(${columns}, 1fr);
       grid-template-rows: auto;
     `}
-  `}>
+  `}
+  >
     {filters.map((filter) => {
       switch (filter.type) {
         case FILTER_TYPE_LIST:
@@ -117,8 +118,7 @@ export function Filter ({
         onClick={clearFilter}
       >
         Clear
-      </Button>
-    }
+      </Button>}
   </div>
 }
 

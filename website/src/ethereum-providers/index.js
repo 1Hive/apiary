@@ -15,8 +15,8 @@ const PROVIDERS = new Map(
       type: 'Desktop',
       image: frame,
       strings: {
-        'your Ethereum provider': 'Frame',
-      },
+        'your Ethereum provider': 'Frame'
+      }
     },
     {
       id: 'metamask',
@@ -24,8 +24,8 @@ const PROVIDERS = new Map(
       type: 'Desktop',
       image: metamask,
       strings: {
-        'your Ethereum provider': 'Metamask',
-      },
+        'your Ethereum provider': 'Metamask'
+      }
     },
     {
       id: 'status',
@@ -33,8 +33,8 @@ const PROVIDERS = new Map(
       type: 'Mobile',
       image: status,
       strings: {
-        'your Ethereum provider': 'Status',
-      },
+        'your Ethereum provider': 'Status'
+      }
     },
     {
       id: 'cipher',
@@ -42,8 +42,8 @@ const PROVIDERS = new Map(
       type: 'Mobile',
       image: cipher,
       strings: {
-        'your Ethereum provider': 'Cipher',
-      },
+        'your Ethereum provider': 'Cipher'
+      }
     },
     {
       id: 'fortmatic',
@@ -51,8 +51,8 @@ const PROVIDERS = new Map(
       type: 'Any',
       image: fortmatic,
       strings: {
-        'your Ethereum provider': 'Fortmatic',
-      },
+        'your Ethereum provider': 'Fortmatic'
+      }
     },
     {
       id: 'portis',
@@ -60,8 +60,8 @@ const PROVIDERS = new Map(
       type: 'Any',
       image: portis,
       strings: {
-        'your Ethereum provider': 'Portis',
-      },
+        'your Ethereum provider': 'Portis'
+      }
     },
     {
       id: 'unknown',
@@ -69,26 +69,26 @@ const PROVIDERS = new Map(
       type: 'Desktop',
       image: wallet,
       strings: {
-        'your Ethereum provider': 'your provider',
-      },
-    },
+        'your Ethereum provider': 'your provider'
+      }
+    }
   ].map(provider => [provider.id, provider])
 )
 
 // Get a providers object for a given ID.
-function getProvider(providerId) {
+function getProvider (providerId) {
   return PROVIDERS.get(providerId)
 }
 
 // Get a string that depends on the current Ethereum provider.
 // The default string is used as an identifier (à la gettext).
-function getProviderString(string, providerId = 'unknown') {
+function getProviderString (string, providerId = 'unknown') {
   const provider = getProvider(providerId)
   return (provider && provider.strings[string]) || string
 }
 
 // Get an identifier for the provider, if it can be detected.
-function identifyProvider(provider) {
+function identifyProvider (provider) {
   if (provider && provider.isMetaMask) {
     return 'metamask'
   }
@@ -96,7 +96,7 @@ function identifyProvider(provider) {
 }
 
 // Get a provider from its useWallet() identifier.
-function getProviderFromUseWalletId(id) {
+function getProviderFromUseWalletId (id) {
   if (id === 'injected') {
     return (
       getProvider(identifyProvider(window.ethereum)) || getProvider('unknown')
@@ -109,6 +109,6 @@ export {
   getProvider,
   identifyProvider,
   getProviderString,
-  getProviderFromUseWalletId,
+  getProviderFromUseWalletId
 }
 export default PROVIDERS
