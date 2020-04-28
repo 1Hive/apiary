@@ -1,6 +1,18 @@
 import CryptoJS from 'crypto-js'
 import sha3lib from 'crypto-js/sha3'
 
+/**
+ * Check address equality without checksums
+ * @param {string} first First address
+ * @param {string} second Second address
+ * @returns {boolean} Address equality
+ */
+export function addressesEqual (first, second) {
+  first = first && first.toLowerCase()
+  second = second && second.toLowerCase()
+  return first === second
+}
+
 export function getNetworkType (chainId = process.env.CHAIN_ID) {
   chainId = String(chainId)
 
@@ -8,7 +20,7 @@ export function getNetworkType (chainId = process.env.CHAIN_ID) {
   if (chainId === '3') return 'ropsten'
 
   // Return rinkeby as default
-  return '4'
+  return 'rinkeby'
 }
 
 export function getUseWalletProviders () {

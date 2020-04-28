@@ -25,15 +25,19 @@ const UPDATE_PROFILE_MUTATION = `
   }
 `
 
-function EditSidePanel ({ 
-  onOpen, 
-  onSet, 
-  onButtonDisabled, 
-  refetchQuery, 
-  panelData, 
-  buttonDisabled, 
-  opened 
+function EditSidePanel ({
+  onOpen,
+  onSet,
+  onButtonDisabled,
+  refetchQuery,
+  panelData,
+  buttonDisabled,
+  opened
 }) {
+  const [profileName, setProfileName] = useState(panelData.profile.name)
+  const [profileDescription, setProfileDescription] = useState(panelData.profile.description)
+  const [profileIcon, setProfileIcon] = useState(panelData.profile.icon)
+  const [profileLinks, setProfileLinks] = useState(panelData.profile.links)
   const toast = useToast()
   const [updateProfile] = useMutation(UPDATE_PROFILE_MUTATION)
 
@@ -44,47 +48,52 @@ function EditSidePanel ({
         css={`margin-top: ${2 * GU}px;`}
       >
         <TextInput
-          value={panelData && panelData.profile.name}
+          value={profileName}
           onChange={e => {
-            onSet({ ...panelData, profile: { ...panelData.profile, name: e.target.value } })}
-          }
+            console.log(e.target.value)
+            setProfileName(e.target.value)
+          }}
           css='width: 100%;'
         />
       </Field>
       <Field label='Organisation Icon URL'>
         <TextInput
-          value={panelData && panelData.profile.icon}
-          onChange={e => onSet({ ...panelData, profile: { ...panelData.profile, icon: e.target.value } })}
+          value={profileIcon}
+          onChange={e => setProfileIcon(e.target.value)}
           css='width: 100%;'
         />
       </Field>
       <Field label='Organisation Description'>
         <TextInput
           multiline
-          value={panelData && panelData.profile.description}
-          onChange={e => onSet({ ...panelData, profile: { ...panelData.profile, description: e.target.value } })}
+          value={profileDescription}
+          onChange={e => setProfileDescription(e.target.value)}
           css='width: 100%;'
         />
       </Field>
       <Button
-        mode='strong' disabled={buttonDisabled} onClick={() => {
+        mode='strong' disabled={buttonDisabled} onClick={async () => {
           onButtonDisabled(true)
           try {
-            updateProfile({
+            const { error } = await updateProfile({
               variables: {
                 ens: panelData.ens,
-                name: panelData.profile.name,
-                description: panelData.profile.description,
-                icon: panelData.profile.icon,
-                links: panelData.profile.links
+                name: profileName,
+                description: profileDescription,
+                icon: profileIcon,
+                links: profileLinks
               }
             })
-              .then(refetchQuery)
-              .then(() => { onOpen(false) })
+            if (error) {
+              toast('There was an error updating your profile.')
+              return
+            }
+            await refetchQuery()
             toast('Update successful!')
           } catch (err) {
             toast('There was an error updating your profile.')
           } finally {
+            onOpen(false)
             onButtonDisabled(false)
           }
         }}
