@@ -1,21 +1,28 @@
 import React, { useState } from 'react'
 import { SidePanel, Field, TextInput, Button, Info, GU, useToast } from '@aragon/ui'
 import { useMutation } from 'graphql-hooks'
+import { useWallet } from 'use-wallet'
+import Web3 from 'web3'
+import { composeMessage } from '../../utils/utils'
 
 const UPDATE_PROFILE_MUTATION = `
   mutation(
-    $ens: String!,
+    $address: String!,
     $name: String,
     $description: String,
     $icon: String,
-    $links: [String]
+    $links: [String],
+    $signerAddress: String!,
+    $signedMessage: String!
   ) {
     updateProfile(
-      ens: $ens,
+      address: $address,
       name: $name,
       description: $description,
       icon: $icon,
-      links: $links
+      links: $links,
+      signerAddress: $signerAddress,
+      signedMessage: $signedMessage,
     ) {
       ens
       profile {
@@ -32,13 +39,16 @@ function EditSidePanel ({
   refetchQuery,
   panelData,
   buttonDisabled,
-  opened
+  opened,
+  web3
 }) {
   const [profileName, setProfileName] = useState(panelData.profile.name)
   const [profileDescription, setProfileDescription] = useState(panelData.profile.description)
   const [profileIcon, setProfileIcon] = useState(panelData.profile.icon)
   const [profileLinks, setProfileLinks] = useState(panelData.profile.links)
   const toast = useToast()
+  const { account, ethereum } = useWallet()
+
   const [updateProfile] = useMutation(UPDATE_PROFILE_MUTATION)
 
   return (
@@ -75,13 +85,19 @@ function EditSidePanel ({
         mode='strong' disabled={buttonDisabled} onClick={async () => {
           onButtonDisabled(true)
           try {
+            const web3 = new Web3(ethereum)
+            const messageToSign = composeMessage(panelData.address, profileName, profileDescription, profileIcon, profileLinks)
+            console.log(messageToSign)
+            const signedMessage = await web3.eth.personal.sign(messageToSign, account)
             const { error } = await updateProfile({
               variables: {
-                ens: panelData.ens,
+                address: panelData.address,
                 name: profileName,
                 description: profileDescription,
                 icon: profileIcon,
-                links: profileLinks
+                links: profileLinks,
+                signerAddress: account,
+                signedMessage
               }
             })
             if (error) {
@@ -91,10 +107,11 @@ function EditSidePanel ({
             await refetchQuery()
             toast('Update successful!')
           } catch (err) {
+            console.log(err)
             toast('There was an error updating your profile.')
           } finally {
-            onOpen(false)
             onButtonDisabled(false)
+            onOpen(false)
           }
         }}
       >Save Profile

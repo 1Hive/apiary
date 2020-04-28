@@ -18,12 +18,11 @@ export function useWrapper ({ daoAddress }) {
   useEffect(() => {
     async function initAragonJs () {
       if (!connected) {
-        console.log('not connected')
         setAragonWrapperReady(false)
         return
       }
+
       const web3 = new Web3(window.ethereum)
-      console.log(ethereum, window.ethereum, web3)
       const wrapper = new Aragon(
         daoAddress,
         {
@@ -31,16 +30,18 @@ export function useWrapper ({ daoAddress }) {
           apm: APM_CONFIG
         }
       )
+
       await wrapper.init({
         accounts: {
           providedAccounts: connected ? [account] : []
         }
       })
+
       const aclAddress = await wrapper.kernelProxy.contract.methods.acl().call()
       await wrapper.initAcl({
         aclAddress
       })
-      console.log('got good wrapper', wrapper)
+
       setAragonWrapper(wrapper)
       setAragonWrapperReady(true)
     }

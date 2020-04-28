@@ -197,8 +197,6 @@ export default ({ history }) => {
     updateData: (_, data) => data
   })
 
-  const [updateProfile] = useMutation(UPDATE_PROFILE_MUTATION)
-
   if (error) {
     return <Info mode='error'>An error occurred. Try again.</Info>
   }
@@ -214,62 +212,6 @@ export default ({ history }) => {
         path: '/apps'
       }]}
     />
-    <SidePanel title='Edit DAO profile' opened={editPanelOpened} onClose={() => setEditPanelOpened(false)}>
-      <Field
-        label='Organisation Name'
-        css={`margin-top: ${2 * GU}px;`}
-      >
-        <TextInput
-          value={editPanelData && editPanelData.profile.name}
-          onChange={e => setEditPanelData({ ...editPanelData, profile: { ...editPanelData.profile, name: e.target.value } })}
-          css='width: 100%;'
-        />
-      </Field>
-      <Field label='Organisation Icon URL'>
-        <TextInput
-          value={editPanelData && editPanelData.profile.icon}
-          onChange={e => setEditPanelData({ ...editPanelData, profile: { ...editPanelData.profile, icon: e.target.value } })}
-          css='width: 100%;'
-        />
-      </Field>
-      <Field label='Organisation Description'>
-        <TextInput
-          multiline
-          value={editPanelData && editPanelData.profile.description}
-          onChange={e => setEditPanelData({ ...editPanelData, profile: { ...editPanelData.profile, description: e.target.value } })}
-          css='width: 100%;'
-        />
-      </Field>
-      <Button
-        mode='strong' disabled={editButtonDisabled} onClick={() => {
-          setEditButtonDisabled(true)
-          try {
-            updateProfile({
-              variables: {
-                ens: editPanelData.ens,
-                name: editPanelData.profile.name,
-                description: editPanelData.profile.description,
-                icon: editPanelData.profile.icon,
-                links: editPanelData.profile.links
-              }
-            })
-              .then(refetch)
-              .then(() => setEditPanelOpened(false))
-            toast('Update successful!')
-          } catch (err) {
-            toast('There was an error updating your profile.')
-          } finally {
-            setEditButtonDisabled(false)
-          }
-        }}
-      >Save Profile
-      </Button>
-      <Info title='DAO Profile Pages' css={`margin-top: ${2 * GU}px;`}>
-        Public profiles allow DAOs to associate their name, icon, description and links (such as website or chat group) to a public profile on Apiary.
-
-        The DAO can add or remove editors by creating a vote.
-      </Info>
-    </SidePanel>
     <Split
       primary={<div>
         {!firstFetch && (
@@ -370,8 +312,8 @@ export default ({ history }) => {
                   margin-top: ${1 * GU}px;
                 `}
                 >
-                  <img src={profile.icon} width='32px' height='32px' />
-                  <IdentityBadge entity={address} label={profile.name} badgeOnly css={`margin-left: ${1 * GU}px;`} />
+                  <img src={profile.icon} width='32px' height='auto' />
+                  <IdentityBadge entity={address} label={profile.name} css={`margin-left: ${1 * GU}px;`} />
                 </div>
               ) : (
                 <div css={`margin-top: ${1.5 * GU}px;`}>
