@@ -1,7 +1,9 @@
 setup:
   addons:
-    - plan: heroku-postgresql
-      as: DATABASE
+    - plan: heroku-redis
+      as: REDIS
+    - plan: mongolab
+      as: MONGODB
   config:
     CONCURRENCY: 2
     ETH_NODE: wss://mainnet-fast.eth.aragon.network/ws
