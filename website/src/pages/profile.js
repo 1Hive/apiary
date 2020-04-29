@@ -22,7 +22,7 @@ import {
 import SmartLink from '../components/SmartLink'
 import EditSidePanel from '../components/SidePanel/EditSidePanel'
 import RejectionSidePanel from '../components/SidePanel/RejectionSidePanel'
-import TransactionSidePanel from '../components/Sidepanel/TransactionSidePanel'
+import TransactionSidePanel from '../components/SidePanel/TransactionSidePanel'
 import { formatNumber } from '../utils/numbers'
 import { isProfileEmpty } from '../utils/utils'
 import { useWrapper } from '../utils/web3-contracts'
@@ -285,7 +285,7 @@ function DaoProfile ({ daoAddress, history }) {
 
   if (
     profileEmpty &&
-    (ownershipStatus === 'CLAIM_PROFILE')
+    (ownershipStatus === 'CLAIM_PROFILE' || ownershipStatus === 'NOT_CONNECTED_PROFILE')
   ) {
     return (
       <div

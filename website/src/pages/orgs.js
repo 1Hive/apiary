@@ -341,10 +341,9 @@ export default ({ history }) => {
               <Button
                 key='view-profile'
                 size='small'
-                mode='strong'
                 onClick={() => history.push(`/profile?dao=${address}`)}
                 css='margin-right: 8px;'
-              >View Profile
+              >View profile
               </Button>,
               <Button
                 key='open-org'

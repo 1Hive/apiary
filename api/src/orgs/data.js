@@ -54,7 +54,6 @@ export async function updateProfile (
 
   const originalMessage = composeSignedMessage(address, updateParams)
   const isAddressValid = validateSignerAddress(originalMessage, signedMessage, signerAddress)
-  // Web3EthContract.setProvider('wss://rinkeby.infura.io/ws/v3/a30bd9ef4acd44aba62fa33b0e159b7c')
   Web3EthContract.setProvider('wss://mainnet.eth.aragon.network/ws')
 
   const kernelContract = new Web3EthContract(kernelAbi, address)
