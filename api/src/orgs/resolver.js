@@ -43,7 +43,6 @@ export default {
       return profile.links || []
     },
     editors (profile) {
-      console.log(profile.editors)
       return profile.editors || []
     },
     description (profile) {

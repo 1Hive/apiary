@@ -81,7 +81,7 @@ function Profile ({ history, location }) {
     return <ProfileNotFound history={history} />
   }
   console.log('dao address:', daoAddress)
-  return <DaoProfile daoAddress={daoAddress} />
+  return <DaoProfile daoAddress={daoAddress} history={history} />
 }
 
 Profile.propTypes = {
@@ -112,10 +112,8 @@ ProfileNotFound.propTypes = {
   history: PropTypes.object
 }
 
-function DaoProfile ({ daoAddress }) {
+function DaoProfile ({ daoAddress, history }) {
   const [editPanelOpened, setEditPanelOpened] = useState(false)
-  const [editButtonDisabled, setEditButtonDisabled] = useState(false)
-  const [editPanelData, setEditPanelData] = useState(null)
   const [ownershipStatus, setOwnershipStatus] = useState('NOT_CONNECTED_PROFILE')
   const [sidePanel, setSidePanel] = useState('')
   const [wrapper, wrapperReady] = useWrapper({ daoAddress })
@@ -193,7 +191,6 @@ function DaoProfile ({ daoAddress }) {
     if (ownershipStatus === 'EDIT_PROFILE') {
       // handle open edit profile
       console.log('yay')
-      setEditPanelData(organisation)
       setEditPanelOpened(true)
     }
     console.log('boom')
@@ -204,10 +201,31 @@ function DaoProfile ({ daoAddress }) {
   }
 
   if (loading) {
-    return <LoadingRing mode='half-circle' />
+    return (
+      <div
+        css={`
+          width: 100%;
+        `}
+      >
+        <Header
+          primary='Profile'
+        />
+        <div
+          css={`
+            width: 100%;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+          `}
+        >
+          <LoadingRing />
+        </div>
+      </div>
+    )
   }
 
   const { organisation } = data
+  console.log('links:', organisation.profile.links)
 
   const profileEmpty = isProfileEmpty(organisation.profile)
 
@@ -219,39 +237,48 @@ function DaoProfile ({ daoAddress }) {
       <div
         css={`
           width: 100%;
-          min-height: 90vh;
-          display: flex;
-          align-items: center;
-          justify-content: center;
         `}
       >
-        <EmptyStateCard
-          text='This DAO does not have a profile. Claim it to edit it!'
-          action={<Button onClick={() => history.push('/')}>See all DAOs</Button>}
+        <Header
+          primary='Profile'
         />
+        <div
+          css={`
+            width: 100%;
+            min-height: 50vh;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+          `}
+        >
+          <EmptyStateCard
+            text='This DAO does not have a profile. Claim it to edit it!'
+            action={<Button onClick={() => history.push('/')}>See all DAOs</Button>}
+          />
+        </div>
       </div>
     )
   }
+  console.log(history, 'history')
   return (
     <div>
-      {editPanelData && (
-        <EditSidePanel
-          opened={editPanelOpened}
-          onOpen={setEditPanelOpened}
-          onSet={setEditPanelData}
-          onButtonDisabled={setEditButtonDisabled}
-          refetchQuery={refetch}
-          panelData={organisation}
-          buttonDisabled={editButtonDisabled}
-        />
-      )}
+      <EditSidePanel
+        address={daoAddress}
+        description={organisation.profile.description}
+        name={organisation.profile.name}
+        links={organisation.profile.links}
+        icon={organisation.profile.icon}
+        opened={editPanelOpened}
+        onOpen={setEditPanelOpened}
+        refetchQuery={refetch}
+      />
       <Header
         primary='Profile'
         secondary={
           <Button
             mode='strong'
             label='Edit Profile'
-            onClick={() => undefined}
+            onClick={handleOwnershipIntent}
           >
             Edit Profile
           </Button>
@@ -260,7 +287,7 @@ function DaoProfile ({ daoAddress }) {
       <Split
         primary={
           <>
-            <Bar primary={<BackButton onClick={() => history.back()} />} />
+            <Bar primary={<BackButton onClick={() => history.goBack()} />} />
             <Box>
               <div
                 css={`
