@@ -1,4 +1,5 @@
 {
+  "stack": "container",
   "formation": {
     "web": {
       "quantity": 1,
