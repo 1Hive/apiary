@@ -1,0 +1,21 @@
+{
+  "stack": "container",
+  "formation": {
+    "web": {
+      "quantity": 1,
+      "size": "hobby"
+    },
+    "taskmaster": {
+      "quantity": 1,
+      "size": "hobby"
+    },
+    "worker": {
+      "quantity": 1,
+      "size": "hobby"
+    }
+  },
+  "addons": [
+    "mongolab:shared-single-small",
+    "heroku-redis"
+  ]
+}

@@ -1,0 +1,17 @@
+setup:
+  addons:
+    - plan: heroku-redis
+      as: REDIS
+    - plan: mongolab:shared-single-small
+      as: MONGODB
+  config:
+    CONCURRENCY: 2
+    ETH_NODE: wss://mainnet-fast.eth.aragon.network/ws
+    IPFS_URI: https://ipfs.eth.aragon.network
+    NODE_ENV: production
+    THROTTLE: 80
+build:
+  docker:
+    web: api/Dockerfile.web
+    taskmaster: taskmaster/Dockerfile.taskmaster
+    worker: worker/Dockerfile.worker
