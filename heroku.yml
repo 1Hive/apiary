@@ -2,7 +2,7 @@ setup:
   addons:
     - plan: heroku-redis
       as: REDIS
-    - plan: mongolab
+    - plan: mongolab:shared-single-small
       as: MONGODB
   config:
     CONCURRENCY: 2
