@@ -81,7 +81,7 @@ export default `
 
     organisation(
       address: String!
-    ): Organisation!
+    ): Organisation
   }
 
   type Mutation {

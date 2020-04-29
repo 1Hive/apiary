@@ -54,10 +54,11 @@ export async function updateProfile (
 
   const originalMessage = composeSignedMessage(address, updateParams)
   const isAddressValid = validateSignerAddress(originalMessage, signedMessage, signerAddress)
-  Web3EthContract.setProvider('wss://rinkeby.infura.io/ws/v3/a30bd9ef4acd44aba62fa33b0e159b7c')
+  // Web3EthContract.setProvider('wss://rinkeby.infura.io/ws/v3/a30bd9ef4acd44aba62fa33b0e159b7c')
+  Web3EthContract.setProvider('wss://mainnet.eth.aragon.network/ws')
 
   const kernelContract = new Web3EthContract(kernelAbi, address)
-  console.log(signerAddress, address, MANAGE_PROFILE_ROLE, EMPTY_SCRIPT)
+
   try {
     const hasPermission = await kernelContract.methods.hasPermission(
       signerAddress,
@@ -68,8 +69,8 @@ export async function updateProfile (
     if (!isAddressValid || !hasPermission) {
       throw new Error('Failed message verification.')
     }
-  } catch(err) {
-    console.log(err, 'hjey!')
+  } catch (err) {
+    console.error(err)
     return
   }
 
@@ -79,7 +80,7 @@ export async function updateProfile (
   // Remove duplicates
   const filteredEditors = new Set(newEditors)
   const newFilteredEditors = [...filteredEditors]
-  console.log(newFilteredEditors)
+
   await db.collection('orgs').updateOne(
     { address },
     { $set: { profile: { ...profile, ...updateParams, editors: newFilteredEditors } } })

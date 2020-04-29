@@ -51,7 +51,7 @@ function EditSidePanel ({
   name,
   icon,
   links,
-  opened,
+  opened
 }) {
   const [buttonDisabled, setButtonDisabled] = useState(false)
   const [profileName, setProfileName] = useState(name)
@@ -68,6 +68,7 @@ function EditSidePanel ({
     const hasEmptyLink = profileLinks.includes('')
     if (!profileName || !profileDescription || !profileIcon || hasEmptyLink) {
       setButtonDisabled(true)
+      return
     }
 
     if (buttonDisabled) {
@@ -110,7 +111,7 @@ function EditSidePanel ({
     try {
       const web3 = new Web3(ethereum)
       const messageToSign = composeMessage(address, profileName, profileDescription, profileIcon, profileLinks)
-      console.log(messageToSign)
+
       const signedMessage = await web3.eth.personal.sign(messageToSign, account)
       const { error } = await updateProfile({
         variables: {
@@ -129,7 +130,7 @@ function EditSidePanel ({
       }
       toast('Update successful!')
     } catch (err) {
-      console.log(err)
+      console.error(err)
       toast('There was an error updating your profile.')
     } finally {
       setButtonDisabled(false)
@@ -161,7 +162,6 @@ function EditSidePanel ({
         <TextInput
           value={profileName}
           onChange={e => {
-            console.log(e.target.value)
             setProfileName(e.target.value)
           }}
           css='width: 100%;'
@@ -212,7 +212,7 @@ function EditSidePanel ({
               `}
             />
           }
-          label="Add more"
+          label='Add more'
           onClick={addLink}
         />
       </Field>
@@ -247,9 +247,9 @@ function LinkField ({ index, link, onUpdate, onRemove }) {
   return (
     <TextInput
       adornment={
-        <span css="transform: translateY(1px)">
+        <span css='transform: translateY(1px)'>
           <Button
-            display="icon"
+            display='icon'
             icon={
               <IconTrash
                 css={`
@@ -257,16 +257,16 @@ function LinkField ({ index, link, onUpdate, onRemove }) {
                 `}
               />
             }
-            label="Remove"
+            label='Remove'
             onClick={handleRemove}
-            size="mini"
+            size='mini'
           />
         </span>
       }
-      adornmentPosition="end"
+      adornmentPosition='end'
       adornmentSettings={{ width: 52, padding: 8 }}
       onChange={handleLinkChange}
-      placeholder="Link"
+      placeholder='Link'
       value={link}
       wide
       css={`

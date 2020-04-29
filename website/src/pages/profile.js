@@ -15,11 +15,14 @@ import {
   textStyle,
   Info,
   useTheme,
+  useToast,
   useViewport,
   GU
 } from '@aragon/ui'
 import SmartLink from '../components/SmartLink'
 import EditSidePanel from '../components/SidePanel/EditSidePanel'
+import RejectionSidePanel from '../components/SidePanel/RejectionSidePanel'
+import TransactionSidePanel from '../components/Sidepanel/TransactionSidePanel'
 import { formatNumber } from '../utils/numbers'
 import { isProfileEmpty } from '../utils/utils'
 import { useWrapper } from '../utils/web3-contracts'
@@ -28,9 +31,11 @@ import { addressesEqual, isAddress } from '../utils/web3-utils'
 const MANAGE_PROFILE_ROLE = '0x675b358b95ae7561136697fcc3302da54a334ac7c199d53621288290fb863f5c'
 const EMPTY_SCRIPT = '0x00'
 const NO_PERMISSION = '0x0000000000000000000000000000000000000000'
+const REJECTION_PANEL_TIME = 4000
 
 const OWNERSHIP_STATUSES = new Map([
   ['CLAIM_PROFILE', 'Claim profile'],
+  ['NOT_CONNECTED_PROFILE', 'Claim Profile'],
   ['REQUEST_EDIT_PROFILE', 'Request edit rights'],
   ['EDIT_PROFILE', 'Edit profile']
 ])
@@ -80,7 +85,7 @@ function Profile ({ history, location }) {
   if (!daoAddress) {
     return <ProfileNotFound history={history} />
   }
-  console.log('dao address:', daoAddress)
+
   return <DaoProfile daoAddress={daoAddress} history={history} />
 }
 
@@ -114,12 +119,15 @@ ProfileNotFound.propTypes = {
 
 function DaoProfile ({ daoAddress, history }) {
   const [editPanelOpened, setEditPanelOpened] = useState(false)
+  const [rejectionPanelOpened, setRejectionPanelOpened] = useState(false)
+  const [transactionPanelOpened, setTransactionPanelOpened] = useState(false)
+  const [transactionPath, setTransactionPath] = useState(null)
   const [ownershipStatus, setOwnershipStatus] = useState('NOT_CONNECTED_PROFILE')
-  const [sidePanel, setSidePanel] = useState('')
   const [wrapper, wrapperReady] = useWrapper({ daoAddress })
   const { connected, account, ethereum } = useWallet()
   const theme = useTheme()
   const { below } = useViewport()
+  const toast = useToast()
 
   const {
     loading,
@@ -139,7 +147,6 @@ function DaoProfile ({ daoAddress, history }) {
 
   useEffect(() => {
     async function checkOwnershipStatus () {
-      console.log('useWallet', connected, account, ethereum)
       if (!connected) {
         setOwnershipStatus('NOT_CONNECTED_PROFILE')
         return
@@ -160,7 +167,6 @@ function DaoProfile ({ daoAddress, history }) {
           EMPTY_SCRIPT
         ).call()]
       )
-      console.log('performed setup with ', permissionCreated, isEditor)
       // Diffing:
       // If the permission has not been created,
       // The person can request to create it and
@@ -181,26 +187,70 @@ function DaoProfile ({ daoAddress, history }) {
     checkOwnershipStatus()
   }, [connected, wrapper, wrapperReady])
 
-  const handleOwnershipIntent = useCallback(() => {
+  const handleRejectionPanel = useCallback(() => {
+    setRejectionPanelOpened(true)
+    setTimeout(() => setRejectionPanelOpened(false), REJECTION_PANEL_TIME)
+  }, [])
+
+  const handleOwnershipIntent = useCallback(async () => {
+    const { organisation } = data
+    if (ownershipStatus === 'NOT_CONNECTED_PROFILE') {
+      toast('To claim this profile, you must connect to web3.')
+      return
+    }
     if (ownershipStatus === 'CLAIM_PROFILE') {
       // handle open claim profile panel
+      const votingAddress = organisation.proxies.find(
+        appProxy => appProxy.app && appProxy.app.name === 'Voting'
+      )
+      const transactionPath = await wrapper.getACLTransactionPath(
+        'createPermission',
+        [
+          account,
+          daoAddress,
+          MANAGE_PROFILE_ROLE,
+          votingAddress.address
+        ]
+      )
+      // There's no possible path.
+      if (!transactionPath.length) {
+        setRejectionPanelOpened(true)
+        setTransactionPath(null)
+        return
+      }
+      setTransactionPath(transactionPath)
+      setTransactionPanelOpened(true)
     }
     if (ownershipStatus === 'REQUEST_EDIT_PROFILE') {
       // handle open request edit profile
+      const transactionPath = await wrapper.getACLTransactionPath(
+        'grantPermission',
+        [
+          account,
+          daoAddress,
+          MANAGE_PROFILE_ROLE
+        ]
+      )
+      // There's no possible path.
+      if (!transactionPath.length) {
+        setRejectionPanelOpened(true)
+        setTransactionPath(null)
+        return
+      }
+      setTransactionPath(transactionPath)
+      setTransactionPanelOpened(true)
     }
     if (ownershipStatus === 'EDIT_PROFILE') {
       // handle open edit profile
-      console.log('yay')
       setEditPanelOpened(true)
     }
-    console.log('boom')
-  }, [ownershipStatus])
+  }, [data, ownershipStatus, transactionPath])
 
   if (error) {
     return <Info mode='error'>An error occurred. Try again.</Info>
   }
 
-  if (loading) {
+  if (loading || ownershipStatus === 'LOADING_PROFILE') {
     return (
       <div
         css={`
@@ -225,13 +275,17 @@ function DaoProfile ({ daoAddress, history }) {
   }
 
   const { organisation } = data
-  console.log('links:', organisation.profile.links)
+  // if the organisation itself is null, it means
+  // it was not found in the DB
+  if (!organisation) {
+    return <ProfileNotFound history={history} />
+  }
 
   const profileEmpty = isProfileEmpty(organisation.profile)
 
   if (
     profileEmpty &&
-    (ownershipStatus === 'CLAIM_PROFILE' || ownershipStatus === 'NOT_CONNECTED_PROFILE')
+    (ownershipStatus === 'CLAIM_PROFILE')
   ) {
     return (
       <div
@@ -239,6 +293,16 @@ function DaoProfile ({ daoAddress, history }) {
           width: 100%;
         `}
       >
+        <TransactionSidePanel
+          opened={transactionPanelOpened}
+          onClose={() => setTransactionPanelOpened(false)}
+          proxies={organisation.proxies}
+          transactionPath={transactionPath}
+        />
+        <RejectionSidePanel
+          opened={rejectionPanelOpened}
+          onClose={() => setRejectionPanelOpened(false)}
+        />
         <Header
           primary='Profile'
         />
@@ -253,13 +317,18 @@ function DaoProfile ({ daoAddress, history }) {
         >
           <EmptyStateCard
             text='This DAO does not have a profile. Claim it to edit it!'
-            action={<Button onClick={() => history.push('/')}>See all DAOs</Button>}
+            action={
+              <Button onClick={handleOwnershipIntent}>
+                {OWNERSHIP_STATUSES.get(ownershipStatus)}
+              </Button>
+            }
+            disabled={!connected || !wrapperReady}
           />
         </div>
       </div>
     )
   }
-  console.log(history, 'history')
+
   return (
     <div>
       <EditSidePanel
@@ -272,6 +341,16 @@ function DaoProfile ({ daoAddress, history }) {
         onOpen={setEditPanelOpened}
         refetchQuery={refetch}
       />
+      <TransactionSidePanel
+        opened={transactionPanelOpened}
+        onClose={() => setTransactionPanelOpened(false)}
+        proxies={organisation.proxies}
+        transactionPath={transactionPath}
+      />
+      <RejectionSidePanel
+        opened={rejectionPanelOpened}
+        onClose={() => setRejectionPanelOpened(false)}
+      />
       <Header
         primary='Profile'
         secondary={
@@ -279,8 +358,9 @@ function DaoProfile ({ daoAddress, history }) {
             mode='strong'
             label='Edit Profile'
             onClick={handleOwnershipIntent}
+            disabled={!connected || !wrapperReady}
           >
-            Edit Profile
+            {OWNERSHIP_STATUSES.get(ownershipStatus)}
           </Button>
         }
       />
@@ -405,14 +485,10 @@ function DaoProfile ({ daoAddress, history }) {
                       ) : 'No links available.'}
                 </div>
               </div>
-              {ownershipStatus === 'NOT_CONNECTED_PROFILE' ? (
+              {ownershipStatus === 'NOT_CONNECTED_PROFILE' && (
                 <Info title='Editing Profile'>
                   To edit, claim or add yourself as an editor for this DAO profile, please connect to web3.
                 </Info>
-              ) : ownershipStatus === 'LOADING_PROFILE' ? (<p><LoadingRing /></p>) : (
-                <p>
-                  <Button onClick={handleOwnershipIntent}>{OWNERSHIP_STATUSES.get(ownershipStatus)}</Button>
-                </p>
               )}
             </Box>
           </>

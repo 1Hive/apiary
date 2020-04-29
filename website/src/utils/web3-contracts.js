@@ -5,7 +5,7 @@ import Web3 from 'web3'
 
 const APM_CONFIG = {
   ensRegistryAddress:
-    '0x98df287b6c145399aaa709692c8d308357bc085d',
+    '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e',
   ipfs: {
     gateway: 'https://ipfs.eth.aragon.network/ipfs'
   }
@@ -22,7 +22,7 @@ export function useWrapper ({ daoAddress }) {
         return
       }
 
-      const web3 = new Web3(window.ethereum)
+      const web3 = new Web3(ethereum)
       const wrapper = new Aragon(
         daoAddress,
         {
@@ -33,7 +33,7 @@ export function useWrapper ({ daoAddress }) {
 
       await wrapper.init({
         accounts: {
-          providedAccounts: connected ? [account] : []
+          providedAccounts: [account]
         }
       })
 

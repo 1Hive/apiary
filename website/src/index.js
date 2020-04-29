@@ -19,7 +19,7 @@ ReactDOM.render(
   <Router>
     <ClientContext.Provider value={client}>
       <Viewport.Provider>
-        <UseWalletProvider chainId={4}>
+        <UseWalletProvider chainId={1}>
           <App />
         </UseWalletProvider>
       </Viewport.Provider>
