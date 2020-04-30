@@ -280,8 +280,8 @@ export default ({ history }) => {
                   margin-top: ${1 * GU}px;
                 `}
                 >
-                  <img src={profile.icon} width='32px' height='auto' />
-                  <IdentityBadge entity={address} label={profile.name} css={`margin-left: ${1 * GU}px;`} />
+                  <img src={profile.icon} width='32px' height='auto' css={`margin-right: ${1 * GU}px;`} />
+                  <IdentityBadge label={profile.name} badgeOnly />
                 </div>
               ) : (
                 <div css={`margin-top: ${1.5 * GU}px;`}>
