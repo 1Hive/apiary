@@ -8,8 +8,6 @@ function LocalIdentityBadge ({ entity, ...props }) {
   )
 }
 
-LocalIdentityBadge.propTypes = {
-  ...IdentityBadge.propTypes
-}
+LocalIdentityBadge.propTypes = IdentityBadge.propTypes
 
 export default LocalIdentityBadge
