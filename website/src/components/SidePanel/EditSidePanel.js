@@ -45,7 +45,6 @@ const UPDATE_PROFILE_MUTATION = `
 
 function EditSidePanel ({
   address,
-  onOpen,
   refetchQuery,
   description,
   name,
@@ -143,7 +142,7 @@ function EditSidePanel ({
       toast('There was an error updating your profile.')
     } finally {
       setButtonDisabled(false)
-      onOpen(false)
+      onClose()
     }
   }, [
     account,
@@ -154,7 +153,7 @@ function EditSidePanel ({
     profileLinks,
     profileIcon,
     toast,
-    onOpen
+    onClose
   ])
 
   return (

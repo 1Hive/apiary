@@ -346,7 +346,6 @@ function DaoProfile ({ daoAddress, history }) {
         links={organisation.profile.links}
         icon={organisation.profile.icon}
         opened={editPanelOpened}
-        onOpen={openEditPanel}
         onClose={closeEditPanel}
         refetchQuery={refetch}
       />

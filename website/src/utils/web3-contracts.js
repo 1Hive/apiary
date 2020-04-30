@@ -4,11 +4,12 @@ import Aragon from '@aragon/wrapper'
 import Web3 from 'web3'
 
 const MAINNET_ENS_REGISTRY = '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e'
+const RINKEBY_ENS_REGISTRY = '0x98df287b6c145399aaa709692c8d308357bc085d'
 const IPFS_GATEWAY = process.env.IPFS_GATEWAY || 'https://ipfs.eth.aragon.network/ipfs'
 
 const APM_CONFIG = {
   ensRegistryAddress:
-    MAINNET_ENS_REGISTRY,
+  process.env.CHAIN_ID === '1' ? MAINNET_ENS_REGISTRY : RINKEBY_ENS_REGISTRY,
   ipfs: {
     gateway: IPFS_GATEWAY
   }
