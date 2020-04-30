@@ -12,14 +12,14 @@ import {
 import App from './pages/app'
 
 const client = new GraphQLClient({
-  url: process.env.API_URL || 'http://localhost:3000'
+  url: process.env.API_URL || 'https://daolist.1hive.org/'
 })
 
 ReactDOM.render(
   <Router>
     <ClientContext.Provider value={client}>
       <Viewport.Provider>
-        <UseWalletProvider chainId={1}>
+        <UseWalletProvider chainId={Number(process.env.CHAIN_ID)}>
           <App />
         </UseWalletProvider>
       </Viewport.Provider>

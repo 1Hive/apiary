@@ -4,6 +4,8 @@
   "main": "index.html",
   "license": "GPLv3",
   "scripts": {
+    "start:mainnet": "CHAIN_ID=1 npm start",
+    "start:rinkeby": "CHAIN_ID=4 npm start",
     "start": "parcel src/index.html --open && npx copy-aragon-ui-assets dist",
     "build": "parcel build src/index.html && npx copy-aragon-ui-assets dist",
     "lint": "eslint src",

@@ -3,11 +3,14 @@ import { useWallet } from 'use-wallet'
 import Aragon from '@aragon/wrapper'
 import Web3 from 'web3'
 
+const MAINNET_ENS_REGISTRY = '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e'
+const IPFS_GATEWAY = process.env.IPFS_GATEWAY || 'https://ipfs.eth.aragon.network/ipfs'
+
 const APM_CONFIG = {
   ensRegistryAddress:
-    '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e',
+    MAINNET_ENS_REGISTRY,
   ipfs: {
-    gateway: 'https://ipfs.eth.aragon.network/ipfs'
+    gateway: IPFS_GATEWAY
   }
 }
 
@@ -15,6 +18,7 @@ export function useWrapper ({ daoAddress }) {
   const [aragonWrapper, setAragonWrapper] = useState(null)
   const [aragonWrapperReady, setAragonWrapperReady] = useState(false)
   const { connected, account, ethereum } = useWallet()
+
   useEffect(() => {
     async function initAragonJs () {
       if (!connected) {
@@ -45,6 +49,7 @@ export function useWrapper ({ daoAddress }) {
       setAragonWrapper(wrapper)
       setAragonWrapperReady(true)
     }
+
     initAragonJs()
   }, [connected, account, ethereum])
 

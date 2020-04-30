@@ -1,4 +1,5 @@
-import React, { Fragment } from 'react'
+import React from 'react'
+import { isAddress } from './web3-utils'
 const PROFILE_PREFIX = 'PROFILE_DATA'
 
 export function isProfileEmpty ({ name, description, icon, links }) {
@@ -33,4 +34,13 @@ export function constructPathDescription (transactionPath, proxies) {
       description: formattedDescription
     }
   ]
+}
+
+export function getDaoFromLocation (location) {
+  const locationParams = new URLSearchParams(location.search)
+  const daoAddress = locationParams.get('dao')
+  if (!isAddress(daoAddress)) {
+    return null
+  }
+  return daoAddress
 }

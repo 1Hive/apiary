@@ -11,12 +11,8 @@ import {
   IdentityBadge,
   Button,
   SyncIndicator,
-  SidePanel,
-  Field,
-  TextInput,
 
   useLayout,
-  useToast,
 
   GU
 } from '@aragon/ui'
@@ -30,7 +26,7 @@ import {
   FILTER_TYPE_LIST
 } from '../components/Filter'
 import { NavTabs } from '../components/NavTabs/NavTabs'
-import SmartLink from '../components/SmartLink'
+import SmartLink from '../components/SmartLink/SmartLink'
 import useSort from '../hooks/sort'
 import openSafe from '../utils/open-safe'
 import { formatNumber } from '../utils/numbers'
@@ -73,29 +69,6 @@ const ORGANISATIONS_QUERY = `
       totalCount
       totalAUM
       totalActivity
-    }
-  }
-`
-
-const UPDATE_PROFILE_MUTATION = `
-  mutation(
-    $ens: String!,
-    $name: String,
-    $description: String,
-    $icon: String,
-    $links: [String]
-  ) {
-    updateProfile(
-      ens: $ens,
-      name: $name,
-      description: $description,
-      icon: $icon,
-      links: $links
-    ) {
-      ens
-      profile {
-        name
-      }
     }
   }
 `
@@ -161,16 +134,12 @@ const ONE_BILLION = 1000000000
 export default ({ history }) => {
   const [sort, sortBy] = useSort('score', 'DESC')
   const [pagination, setPagination] = useState(['after'])
-  const [editPanelOpened, setEditPanelOpened] = useState(false)
-  const [editPanelData, setEditPanelData] = useState(null)
-  const [editButtonDisabled, setEditButtonDisabled] = useState(false)
   const [filter, setFilter] = useState()
   const { layoutName } = useLayout()
   const compactMode = layoutName === 'small'
   const page = useCallback(
     (direction, cursor) => setPagination([direction, cursor])
   )
-  const toast = useToast()
 
   // Reset pagination after a new sort or filter has been applied
   useEffect(() => {
@@ -180,8 +149,7 @@ export default ({ history }) => {
   const {
     loading,
     error,
-    data,
-    refetch
+    data
   } = useQuery(ORGANISATIONS_QUERY, {
     variables: {
       sort: {

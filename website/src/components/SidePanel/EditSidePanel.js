@@ -51,9 +51,11 @@ function EditSidePanel ({
   name,
   icon,
   links,
-  opened
+  opened,
+  onClose
 }) {
   const [buttonDisabled, setButtonDisabled] = useState(false)
+  const [saved, setSaved] = useState(false)
   const [profileName, setProfileName] = useState(name)
   const [profileDescription, setProfileDescription] = useState(description)
   const [profileIcon, setProfileIcon] = useState(icon)
@@ -101,13 +103,20 @@ function EditSidePanel ({
   }, [])
 
   const handleRefetchOnClose = useCallback(async () => {
-    if (!opened) {
-      await refetchQuery()
+    if (!opened && saved) {
+      try {
+        await refetchQuery()
+      } catch (err) {
+        console.error(err)
+      } finally {
+        setSaved(false)
+      }
     }
   }, [opened])
 
   const handleSubmit = useCallback(async () => {
     setButtonDisabled(true)
+    setSaved(true)
     try {
       const web3 = new Web3(ethereum)
       const messageToSign = composeMessage(address, profileName, profileDescription, profileIcon, profileLinks)
@@ -152,7 +161,7 @@ function EditSidePanel ({
     <SidePanel
       title='Edit DAO profile'
       opened={opened}
-      onClose={() => onOpen(false)}
+      onClose={onClose}
       onTransitionEnd={handleRefetchOnClose}
     >
       <Field
