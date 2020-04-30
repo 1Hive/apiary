@@ -5,9 +5,9 @@ export default `
     name: String
     # URL to the organisation's icon.
     icon: String
-    # Array of URL to the different links for the organisation (ex: Discord, Discourse)
+    # Array of URL to the different links for the organisation (e.g. Discord, Discourse)
     links: [String]!
-    # Array of addresses from the people that have edited the profile at least once
+    # Array of addresses that have edited the profile at least once
     editors: [String]!
     # The description of the organisation.
     description: String
@@ -85,9 +85,9 @@ export default `
   }
 
   type Mutation {
-    # Update organisation profiles.
+    # Update organisation profile.
     updateProfile(
-      # The organization id.
+      # The organization address.
       address: String!,
       name: String,
       icon: String,
