@@ -22,6 +22,7 @@ services:
     - "3000:3000"
     environment:
     - MONGODB_URI=mongodb://mongo:27017
+    - ETH_NODE=wss://mainnet.eth.aragon.network/ws
     depends_on:
     - mongo
   # Taskmaster
