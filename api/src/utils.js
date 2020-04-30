@@ -14,6 +14,12 @@ export function camelToSnakeCaseKeys (obj = {}) {
   }, {})
 }
 
+/**
+ * Re-create the original message composed in the frontend for signing
+ * @param {string} daoAddress DAO address
+ * @param {object} profile Organisation Profile
+ * @returns {string} Original messaged that was then signed by the user.
+ */
 export function composeSignedMessage (daoAddress, { name, description, links, icon }) {
   const concatenatedLinks = links.reduce((concatenatedLinks, link) => `${concatenatedLinks}${link}`, '')
 
