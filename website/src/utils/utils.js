@@ -14,7 +14,7 @@ export function composeMessage (address, name, description, icon, links) {
 export function constructPathDescription (transactionPath, proxies) {
   const preTransactionPath = transactionPath.slice(0, transactionPath.length - 1)
   const transactionDescription = preTransactionPath.map(({ description, to }, index) => {
-    //
+
     // See if we can find the app address on the proxies
     const appProxy = proxies.find(({ address }) => address === to)
     const appName = appProxy && appProxy.app && appProxy.app.name
@@ -22,7 +22,7 @@ export function constructPathDescription (transactionPath, proxies) {
     // 1. APP_NAME: DESCRIPTION
     const fullDescription =
       <p key={index}>
-        {`${index + 1}.${`${!appName ? ':' : ` ${appName}:`}`} ${description}`}
+        {`${index + 1}.${`${!appName ? ' ' : ` ${appName}:`}`} ${description}`}
       </p>
     return fullDescription
   })
