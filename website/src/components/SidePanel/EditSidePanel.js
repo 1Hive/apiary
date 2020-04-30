@@ -16,6 +16,11 @@ import { useWallet } from 'use-wallet'
 import Web3 from 'web3'
 import { composeMessage } from '../../utils/utils'
 
+const MAX_CHARACTER_COUNT = 140
+
+const BACKSPACE_KEYCODE = 8
+const DELETE_KEYCODE = 46
+
 const UPDATE_PROFILE_MUTATION = `
   mutation(
     $address: String!,
@@ -54,6 +59,7 @@ function EditSidePanel ({
   onClose
 }) {
   const [buttonDisabled, setButtonDisabled] = useState(false)
+  const [characterCountMode, setCharacterCountMode] = useState('info')
   const [saved, setSaved] = useState(false)
   const [profileName, setProfileName] = useState(name)
   const [profileDescription, setProfileDescription] = useState(description)
@@ -79,6 +85,26 @@ function EditSidePanel ({
 
   const addLink = useCallback(() => {
     setProfileLinks(links => [...links, ''])
+  }, [])
+
+  useEffect(() => {
+    if (profileDescription.length < 100) {
+      setCharacterCountMode('info')
+    }
+    if (profileDescription.length >= 100) {
+      setCharacterCountMode('warning')
+    }
+    if (profileDescription.length >= 120) {
+      setCharacterCountMode('error')
+    }
+  }, [profileDescription])
+
+  const handleDescriptionChange = useCallback(e => {
+    if (e.target.value.length >= MAX_CHARACTER_COUNT) {
+      setProfileDescription(e.target.value.substring(0, MAX_CHARACTER_COUNT))
+      return
+    }
+    setProfileDescription(e.target.value)
   }, [])
 
   const removeLink = useCallback(
@@ -182,14 +208,27 @@ function EditSidePanel ({
           css='width: 100%;'
         />
       </Field>
-      <Field label='Organisation Description'>
+      <Field
+        label='Organisation Description'
+        css={`
+          margin-bottom: ${0.5 * GU}px;
+        `}
+      >
         <TextInput
           multiline
           value={profileDescription}
-          onChange={e => setProfileDescription(e.target.value)}
+          onChange={handleDescriptionChange}
           css='width: 100%;'
         />
       </Field>
+      <Info
+        mode={characterCountMode}
+        css={`
+          margin-bottom: 16px;
+        `}
+      >
+        You have {MAX_CHARACTER_COUNT - profileDescription.length} characters remaining.
+      </Info>
       <Field
         label={
           <div
