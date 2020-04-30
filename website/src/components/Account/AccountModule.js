@@ -12,31 +12,26 @@ import ScreenProviders from './ScreenProviders'
 
 const AnimDiv = animated.div
 
-const SCREENS = [
-  {
+const SCREENS = [{
     id: 'providers',
     title: 'Ethereum providers',
     height:
       4 * GU + // header
       (12 + 1.5) * GU * (getUseWalletProviders().length / 2) + // buttons
       7 * GU // footer
-  },
-  {
+  }, {
     id: 'connecting',
     title: 'Ethereum providers',
     height: 38 * GU
-  },
-  {
+  }, {
     id: 'connected',
     title: 'Active wallet',
     height: 22 * GU
-  },
-  {
+  }, {
     id: 'error',
     title: 'Ethereum providers',
     height: 50 * GU
-  }
-]
+}]
 
 function AccountModule () {
   const buttonRef = useRef()

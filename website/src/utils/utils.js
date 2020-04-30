@@ -23,12 +23,10 @@ export function constructPathDescription (transactionPath, proxies) {
   })
 
   const formattedDescription = <>{transactionDescription}</>
-  return [
-    {
-      title: 'Transaction Path',
-      description: formattedDescription
-    }
-  ]
+  return [{
+    title: 'Transaction Path',
+    description: formattedDescription
+  }]
 }
 
 export function getDaoFromLocation (location) {

@@ -8,71 +8,63 @@ import portis from './icons/Portis.svg'
 
 // See the corresponding prop type, EthereumProviderType, in prop-types.js.
 const PROVIDERS = new Map(
-  [
-    {
-      id: 'frame',
-      name: 'Frame',
-      type: 'Desktop',
-      image: frame,
-      strings: {
-        'your Ethereum provider': 'Frame'
-      }
-    },
-    {
-      id: 'metamask',
-      name: 'Metamask',
-      type: 'Desktop',
-      image: metamask,
-      strings: {
-        'your Ethereum provider': 'Metamask'
-      }
-    },
-    {
-      id: 'status',
-      name: 'Status',
-      type: 'Mobile',
-      image: status,
-      strings: {
-        'your Ethereum provider': 'Status'
-      }
-    },
-    {
-      id: 'cipher',
-      name: 'Cipher',
-      type: 'Mobile',
-      image: cipher,
-      strings: {
-        'your Ethereum provider': 'Cipher'
-      }
-    },
-    {
-      id: 'fortmatic',
-      name: 'Fortmatic',
-      type: 'Any',
-      image: fortmatic,
-      strings: {
-        'your Ethereum provider': 'Fortmatic'
-      }
-    },
-    {
-      id: 'portis',
-      name: 'Portis',
-      type: 'Any',
-      image: portis,
-      strings: {
-        'your Ethereum provider': 'Portis'
-      }
-    },
-    {
-      id: 'unknown',
-      name: 'Unknown',
-      type: 'Desktop',
-      image: wallet,
-      strings: {
-        'your Ethereum provider': 'your provider'
-      }
+  [{
+    id: 'frame',
+    name: 'Frame',
+    type: 'Desktop',
+    image: frame,
+    strings: {
+      'your Ethereum provider': 'Frame'
     }
-  ].map(provider => [provider.id, provider])
+  }, {
+    id: 'metamask',
+    name: 'Metamask',
+    type: 'Desktop',
+    image: metamask,
+    strings: {
+      'your Ethereum provider': 'Metamask'
+    }
+  }, {
+    id: 'status',
+    name: 'Status',
+    type: 'Mobile',
+    image: status,
+    strings: {
+      'your Ethereum provider': 'Status'
+    }
+  }, {
+    id: 'cipher',
+    name: 'Cipher',
+    type: 'Mobile',
+    image: cipher,
+    strings: {
+      'your Ethereum provider': 'Cipher'
+    }
+  }, {
+    id: 'fortmatic',
+    name: 'Fortmatic',
+    type: 'Any',
+    image: fortmatic,
+    strings: {
+      'your Ethereum provider': 'Fortmatic'
+    }
+  }, {
+    id: 'portis',
+    name: 'Portis',
+    type: 'Any',
+    image: portis,
+    strings: {
+      'your Ethereum provider': 'Portis'
+    }
+  }, {
+    id: 'unknown',
+    name: 'Unknown',
+    type: 'Desktop',
+    image: wallet,
+    strings: {
+      'your Ethereum provider': 'your provider'
+    }
+  }].map(provider => [provider.id, provider])
 )
 
 // Get a providers object for a given ID.
