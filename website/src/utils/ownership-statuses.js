@@ -7,6 +7,6 @@ export const REQUEST_EDIT_PROFILE = 'REQUEST_EDIT_PROFILE'
 export const OWNERSHIP_STATUSES = new Map([
   ['CLAIM_PROFILE', 'Claim profile'],
   ['EDIT_PROFILE', 'Edit profile'],
-  ['NOT_CONNECTED_PROFILE', 'Claim Profile'],
+  ['NOT_CONNECTED_PROFILE', 'Claim profile'],
   ['REQUEST_EDIT_PROFILE', 'Request edit rights']
 ])
