@@ -1,4 +1,4 @@
-import { getOrganisations, getSingleOrganisation, updateProfile } from './data'
+import { getOrganisations, getOrganisation, updateProfile } from './data'
 
 const EMPTY_PROFILE = {
   name: '',
@@ -17,7 +17,7 @@ export default {
     },
 
     organisation (_, args, { db }) {
-      return getSingleOrganisation(
+      return getOrganisation(
         db,
         args
       )

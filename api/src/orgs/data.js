@@ -99,7 +99,7 @@ export async function updateProfile (
   return db.collection('orgs').findOne({ address })
 }
 
-export async function getSingleOrganisation (
+export function getOrganisation (
   db,
   args
 ) {
