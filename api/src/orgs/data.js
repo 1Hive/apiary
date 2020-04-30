@@ -77,16 +77,24 @@ export async function updateProfile (
     return
   }
 
-  const { profile = {} } = await db.collection('orgs').findOne({ address })
-  const currentEditors = profile.editors || []
-  const newEditors = [...currentEditors, signerAddress]
-  // Remove duplicates
-  const filteredEditors = new Set(newEditors)
-  const newFilteredEditors = [...filteredEditors]
+  const {
+    profile = {}
+  } = await db.collection('orgs').findOne({ address })
+
+  // Ensure there are no duplicates
+  const newEditors = new Set(profile.editors || [])
+  newEditors.add(signerAddress)
 
   await db.collection('orgs').updateOne(
     { address },
-    { $set: { profile: { ...profile, ...updateParams, editors: newFilteredEditors } } })
+    {
+      $set: {
+        profile: {
+          ...profile, ...updateParams, editors: [...newEditors]
+        }
+      }
+    }
+  )
 
   return db.collection('orgs').findOne({ address })
 }
