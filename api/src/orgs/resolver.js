@@ -27,19 +27,19 @@ export default {
 
   Profile: {
     name (profile) {
-      return profile.name || ''
+      return profile.name
     },
     icon (profile) {
-      return profile.icon || ''
+      return profile.icon
     },
     links (profile) {
-      return profile.links || []
+      return profile.links
     },
     editors (profile) {
-      return profile.editors || []
+      return profile.editors
     },
     description (profile) {
-      return profile.description || ''
+      return profile.description
     }
 
   },
