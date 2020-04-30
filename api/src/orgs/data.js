@@ -11,9 +11,6 @@ import {
 } from '../utils'
 import { validateSignerAddress } from '../web3-utils'
 
-const MANAGE_PROFILE_ROLE = '0x675b358b95ae7561136697fcc3302da54a334ac7c199d53621288290fb863f5c'
-const EMPTY_SCRIPT = '0x00'
-
 export function getOrganisations (
   db,
   args
@@ -45,6 +42,9 @@ export function getOrganisations (
     camelToSnakeCaseKeys(args.sort)
   ).then(withOrgStats(query, { ...filter }))
 }
+
+const MANAGE_PROFILE_ROLE = '0x675b358b95ae7561136697fcc3302da54a334ac7c199d53621288290fb863f5c'
+const EMPTY_SCRIPT = '0x00'
 
 export async function updateProfile (
   db,
