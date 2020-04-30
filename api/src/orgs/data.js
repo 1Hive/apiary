@@ -52,21 +52,25 @@ export async function updateProfile (
 ) {
   const { address, signerAddress, signedMessage, ...updateParams } = args
 
-  const originalMessage = composeSignedMessage(address, updateParams)
-  const isAddressValid = validateSignerAddress(originalMessage, signedMessage, signerAddress)
-  Web3EthContract.setProvider(process.env.ETH_NODE)
-
-  const kernelContract = new Web3EthContract(kernelAbi, address)
-
   try {
+    const originalMessage = composeSignedMessage(address, updateParams)
+    const isAddressValid = validateSignerAddress(originalMessage, signedMessage, signerAddress)
+
+    if (!isAddressValid) {
+      throw new Error('Failed message verification.')
+    }
+
+    Web3EthContract.setProvider(process.env.ETH_NODE)
+    const kernelContract = new Web3EthContract(kernelAbi, address)
     const hasPermission = await kernelContract.methods.hasPermission(
       signerAddress,
       address,
       MANAGE_PROFILE_ROLE,
       EMPTY_SCRIPT
     ).call()
-    if (!isAddressValid || !hasPermission) {
-      throw new Error('Failed message verification.')
+
+    if (!hasPermission) {
+      throw new Error(`Provided address ${signerAddress} does not have the required permissions on the ACL.`)
     }
   } catch (err) {
     console.error(err)
