@@ -20,5 +20,5 @@ export default function SmartLink ({ url, ...props }) {
     return url
   }, [url])
 
-  return <a href={url} {...props}>{title}</a>
+  return <a href={url} rel='noopener noreferrer' target='blank' {...props}>{title}</a>
 }
