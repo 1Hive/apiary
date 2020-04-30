@@ -13,8 +13,6 @@ import {
 } from '@aragon/ui'
 import { constructPathDescription } from '../../utils/utils'
 
-const MANAGE_PROFILE_ROLE = '0x675b358b95ae7561136697fcc3302da54a334ac7c199d53621288290fb863f5c'
-
 export default function TransactionSidePanel ({
   opened,
   onClose,
