@@ -101,9 +101,8 @@ export async function updateProfile (
 
 export function getOrganisation (
   db,
-  args
+  { address }
 ) {
-  const { address } = args
   return db.collection('orgs').findOne({ address })
 }
 
