@@ -502,50 +502,58 @@ function DaoProfile ({ daoAddress, history }) {
           </>
         }
         secondary={
-          <Box>
-            <h3>Stats</h3>
-            <div
-              css={`
-                display: flex;
-                flex-direction: column;
-              `}
-            >
+          <>
+            <Box>
               <div
                 css={`
-                  margin-top: ${2 * GU}px;
-                  margin-bottom: ${1 * GU}px;
-                  ${textStyle('label2')}
-                  color: ${theme.contentSecondary};
+                  display: flex;
+                  flex-direction: column;
                 `}
               >
-              AUM ◈
+                <div
+                  css={`
+                    ${textStyle('title3')}
+                  `}
+                >
+                  {formatNumber(organisation.aum)}
+                </div>
+                <div
+                  css={`
+                    margin-top: ${2 * GU}px;
+                    margin-bottom: ${1 * GU}px;
+                    ${textStyle('body2')}
+                  `}
+                >
+                AUM ◈
+                </div>
               </div>
+            </Box>
+            <Box>
               <div
                 css={`
-                  ${textStyle('body3')}
+                  display: flex;
+                  flex-direction: column;
                 `}
               >
-                {formatNumber(organisation.aum)}
+                <div
+                  css={`
+                    ${textStyle('title3')}
+                  `}
+                >
+                  {formatNumber(organisation.activity)}
+                </div>
+                <div
+                  css={`
+                    margin-top: ${2 * GU}px;
+                    margin-bottom: ${1 * GU}px;
+                    ${textStyle('body2')}
+                  `}
+                >
+                  Activity
+                </div>
               </div>
-            </div>
-            <div
-              css={`
-                margin-top: ${2 * GU}px;
-                margin-bottom: ${1 * GU}px;
-                ${textStyle('label2')}
-                color: ${theme.contentSecondary};
-              `}
-            >
-            Activity
-            </div>
-            <div
-              css={`
-                ${textStyle('body3')}
-              `}
-            >
-              {formatNumber(organisation.activity)}
-            </div>
-          </Box>
+            </Box>
+          </>
         }
       />
     </div>
