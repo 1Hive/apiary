@@ -1,5 +1,6 @@
 import React, { useState, useCallback, useEffect } from 'react'
-import { useQuery, useMutation } from 'graphql-hooks'
+import PropTypes from 'prop-types'
+import { useQuery } from 'graphql-hooks'
 import {
   Info,
 
@@ -131,7 +132,7 @@ const KITS = [{
 
 const ONE_BILLION = 1000000000
 
-export default ({ history }) => {
+const Orgs = ({ history }) => {
   const [sort, sortBy] = useSort('score', 'DESC')
   const [pagination, setPagination] = useState(['after'])
   const [filter, setFilter] = useState()
@@ -408,3 +409,9 @@ export default ({ history }) => {
     />
   </div>
 }
+
+Orgs.propTypes = {
+  history: PropTypes.object
+}
+
+export default Orgs

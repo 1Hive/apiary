@@ -1,4 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react'
+import PropTypes from 'prop-types'
 import { useWallet } from 'use-wallet'
 import Web3 from 'web3'
 import {
@@ -14,8 +15,8 @@ import {
 import { constructPathDescription } from '../../utils/utils'
 
 export default function TransactionSidePanel ({
-  opened,
   onClose,
+  opened,
   proxies,
   transactionPath
 }) {
@@ -180,4 +181,11 @@ export default function TransactionSidePanel ({
       </div>
     </SidePanel>
   )
+}
+
+TransactionSidePanel.propTypes = {
+  onClose: PropTypes.func,
+  opened: PropTypes.bool,
+  proxies: PropTypes.object,
+  transactionPath: PropTypes.array
 }

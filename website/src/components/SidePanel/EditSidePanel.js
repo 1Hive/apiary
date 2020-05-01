@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react'
+import PropTypes from 'prop-types'
 import {
   SidePanel,
   Field,
@@ -17,9 +18,6 @@ import Web3 from 'web3'
 import { composeMessage } from '../../utils/utils'
 
 const MAX_CHARACTER_COUNT = 140
-
-const BACKSPACE_KEYCODE = 8
-const DELETE_KEYCODE = 46
 
 const UPDATE_PROFILE_MUTATION = `
   mutation(
@@ -50,13 +48,13 @@ const UPDATE_PROFILE_MUTATION = `
 
 function EditSidePanel ({
   address,
-  refetchQuery,
   description,
-  name,
   icon,
+  name,
   links,
   opened,
-  onClose
+  onClose,
+  refetchQuery
 }) {
   const [buttonDisabled, setButtonDisabled] = useState(false)
   const [characterCountMode, setCharacterCountMode] = useState('info')
@@ -277,7 +275,18 @@ function EditSidePanel ({
   )
 }
 
-function LinkField ({ index, link, onUpdate, onRemove }) {
+EditSidePanel.propTypes = {
+  address: PropTypes.string,
+  description: PropTypes.string,
+  icon: PropTypes.string,
+  name: PropTypes.string,
+  links: PropTypes.arrayOf(PropTypes.string),
+  opened: PropTypes.func,
+  onClose: PropTypes.func,
+  refetchQuery: PropTypes.func
+}
+
+function LinkField ({ index, link, onRemove, onUpdate }) {
   const theme = useTheme()
 
   const handleRemove = useCallback(() => {
@@ -322,6 +331,13 @@ function LinkField ({ index, link, onUpdate, onRemove }) {
     />
 
   )
+}
+
+LinkField.propTypes = {
+  index: PropTypes.number,
+  link: PropTypes.string,
+  onRemove: PropTypes.func,
+  onUpdate: PropTypes.func
 }
 
 export default EditSidePanel

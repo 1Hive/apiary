@@ -293,7 +293,10 @@ function DaoProfile ({ daoAddress, history }) {
 
   if (
     profileEmpty &&
-    (ownershipStatus === 'CLAIM_PROFILE' || ownershipStatus === 'NOT_CONNECTED_PROFILE')
+    (
+      ownershipStatus === 'CLAIM_PROFILE' ||
+      ownershipStatus === 'NOT_CONNECTED_PROFILE'
+    )
   ) {
     return (
       <div
@@ -302,14 +305,14 @@ function DaoProfile ({ daoAddress, history }) {
         `}
       >
         <TransactionSidePanel
-          opened={transactionPanelOpened}
           onClose={closeTransactionPanel}
+          opened={transactionPanelOpened}
           proxies={organisation.proxies}
           transactionPath={transactionPath}
         />
         <RejectionSidePanel
-          opened={rejectionPanelOpened}
           onClose={closeRejectionPanel}
+          opened={rejectionPanelOpened}
         />
         <Header
           primary='Profile'
@@ -343,30 +346,30 @@ function DaoProfile ({ daoAddress, history }) {
         address={daoAddress}
         description={organisation.profile.description}
         name={organisation.profile.name}
-        links={organisation.profile.links}
         icon={organisation.profile.icon}
+        links={organisation.profile.links}
         opened={editPanelOpened}
         onClose={closeEditPanel}
         refetchQuery={refetch}
       />
       <TransactionSidePanel
-        opened={transactionPanelOpened}
         onClose={closeTransactionPanel}
+        opened={transactionPanelOpened}
         proxies={organisation.proxies}
         transactionPath={transactionPath}
       />
       <RejectionSidePanel
-        opened={rejectionPanelOpened}
         onClose={closeRejectionPanel}
+        opened={rejectionPanelOpened}
       />
       <Header
         primary='Profile'
         secondary={
           <Button
+            disabled={!connected || !wrapperReady}
             mode='strong'
             label='Edit Profile'
             onClick={handleOwnershipIntent}
-            disabled={!connected || !wrapperReady}
           >
             {OWNERSHIP_STATUSES.get(ownershipStatus)}
           </Button>

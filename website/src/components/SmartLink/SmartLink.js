@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react'
+import PropTypes from 'prop-types'
 
 const KNOWN_PLATFORMS = new Map([
   ['discord', 'Discord'],
@@ -21,4 +22,8 @@ export default function SmartLink ({ url, ...props }) {
   }, [url])
 
   return <a href={url} rel='noopener noreferrer' target='blank' {...props}>{title}</a>
+}
+
+SmartLink.propTypes = {
+  url: PropTypes.string
 }
