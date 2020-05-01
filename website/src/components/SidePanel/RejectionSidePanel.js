@@ -16,7 +16,7 @@ export default function RejectionSidePanel ({ onClose, opened }) {
           margin-top: ${2 * GU}px;
         `}
       >
-        This action is impossible. You may not have the required permissions.
+        This action is impossible. You may not have the required permissions. If you&apos;re requesting access to a Dandelion organisation, these profiles will be able to be claimed in the near future.
       </Info>
     </SidePanel>
   )

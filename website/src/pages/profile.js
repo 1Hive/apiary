@@ -39,7 +39,9 @@ import { addressesEqual } from '../utils/web3-utils'
 const MANAGE_PROFILE_ROLE = '0x675b358b95ae7561136697fcc3302da54a334ac7c199d53621288290fb863f5c'
 const EMPTY_SCRIPT = '0x00'
 const NO_PERMISSION = '0x0000000000000000000000000000000000000000'
+
 const REJECTION_PANEL_TIME = 4000
+const DANDELION_KIT_ADDRESS = '0xbc2A863ef2B96d454aC7790D5A9E8cFfd8EccBa8'
 
 const ORGANISATION_QUERY = `
   query(
@@ -54,6 +56,7 @@ const ORGANISATION_QUERY = `
       aum
       activity
       score
+      kit
       proxies {
         app {
           name
@@ -221,7 +224,9 @@ function DaoProfile ({ daoAddress, history }) {
         ]
       )
       // There's no possible path.
-      if (!transactionPath.length) {
+      // Also, block Dandelion apps from claiming their profile,
+      // due to not supporting pre-transactions as of yet. :(
+      if (!transactionPath.length || organisation.kit === DANDELION_KIT_ADDRESS) {
         openRejectionPanel()
         setTransactionPath(null)
         return
@@ -239,8 +244,9 @@ function DaoProfile ({ daoAddress, history }) {
           MANAGE_PROFILE_ROLE
         ]
       )
+      //
       // There's no possible path.
-      if (!transactionPath.length) {
+      if (!transactionPath.length || organisation.kit === DANDELION_KIT_ADDRESS) {
         openRejectionPanel()
         setTransactionPath(null)
         return
@@ -249,6 +255,11 @@ function DaoProfile ({ daoAddress, history }) {
     }
 
     if (ownershipStatus === 'EDIT_PROFILE') {
+      if (organisation.kit === DANDELION_KIT_ADDRESS) {
+        openRejectionPanel()
+        setTransactionPath(null)
+        return
+      }
       // handle open edit profile
       openEditPanel()
     }
