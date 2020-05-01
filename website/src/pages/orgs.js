@@ -34,6 +34,7 @@ import SmartLink from '../components/SmartLink/SmartLink'
 import useSort from '../hooks/sort'
 import openSafe from '../utils/open-safe'
 import { formatNumber } from '../utils/numbers'
+import { isProfileEmpty } from '../utils/utils'
 
 const ORGANISATIONS_QUERY = `
   query(
@@ -330,7 +331,7 @@ const Orgs = ({ history }) => {
               </Button>
             ]}
             renderEntryExpansion={({ profile }) => {
-              if (!profile) {
+              if (isProfileEmpty(profile)) {
                 return null
               }
               const profileInfo = [
