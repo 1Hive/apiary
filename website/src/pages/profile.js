@@ -329,7 +329,10 @@ function DaoProfile ({ daoAddress, history }) {
           <EmptyStateCard
             text='This DAO does not have a profile. Claim it to edit it!'
             action={
-              <Button onClick={handleOwnershipIntent}>
+              <Button
+                onClick={handleOwnershipIntent}
+                label={OWNERSHIP_STATUSES.get(ownershipStatus)}
+              >
                 {OWNERSHIP_STATUSES.get(ownershipStatus)}
               </Button>
             }
