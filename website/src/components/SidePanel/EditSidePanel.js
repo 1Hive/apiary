@@ -109,12 +109,9 @@ function EditSidePanel ({
     index => {
       setProfileLinks(links =>
         links.length < 2
-          ? // When the remove button of the last field
-        // gets clicked, we only empty the field.
-          []
+          ? []
           : links.filter((_, i) => i !== index)
       )
-      // focusLastMember()
     }, [])
 
   const updateLink = useCallback((index, updatedLink) => {

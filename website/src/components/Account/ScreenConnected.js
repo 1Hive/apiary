@@ -123,4 +123,8 @@ function AccountScreenConnected ({ wallet }) {
   )
 }
 
+AccountScreenConnected.propTypes = {
+  wallet: PropTypes.object
+}
+
 export default AccountScreenConnected
