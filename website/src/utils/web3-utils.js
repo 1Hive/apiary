@@ -16,11 +16,11 @@ export function addressesEqual (first, second) {
 export function getNetworkType (chainId = process.env.CHAIN_ID) {
   chainId = String(chainId)
 
-  if (chainId === '1') return 'main'
+  if (chainId === '4') return 'rinkeby'
   if (chainId === '3') return 'ropsten'
 
-  // Return rinkeby as default
-  return 'rinkeby'
+  // Return main as default
+  return 'main'
 }
 
 export function getUseWalletProviders () {
