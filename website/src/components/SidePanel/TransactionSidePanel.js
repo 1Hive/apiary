@@ -186,6 +186,6 @@ export default function TransactionSidePanel ({
 TransactionSidePanel.propTypes = {
   onClose: PropTypes.func,
   opened: PropTypes.bool,
-  proxies: PropTypes.object,
+  proxies: PropTypes.array,
   transactionPath: PropTypes.array
 }

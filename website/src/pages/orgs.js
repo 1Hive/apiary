@@ -370,17 +370,15 @@ const Orgs = ({ history }) => {
                   `}
                   >
                     {profile.links.length > 0 ? profile.links.slice(0, 2).map(link => (
-                      <>
-                        <SmartLink
-                          url={link}
-                          css={`
-                            display: block;
-                            margin-left: ${1 * GU}px;
-                            padding-left: ${1 * GU}px !important;
-                          `}
-                        />
-                        {'     '}
-                      </>
+                      <SmartLink
+                        key={link}
+                        url={link}
+                        css={`
+                          display: block;
+                          margin-left: ${1 * GU}px;
+                          padding-left: ${1 * GU}px !important;
+                        `}
+                      />
                     )) : 'No links available.'}
                   </div>
                 </div>

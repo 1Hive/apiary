@@ -281,7 +281,7 @@ EditSidePanel.propTypes = {
   icon: PropTypes.string,
   name: PropTypes.string,
   links: PropTypes.arrayOf(PropTypes.string),
-  opened: PropTypes.func,
+  opened: PropTypes.bool,
   onClose: PropTypes.func,
   refetchQuery: PropTypes.func
 }
