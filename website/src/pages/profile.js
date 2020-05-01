@@ -32,7 +32,7 @@ import {
   REQUEST_EDIT_PROFILE,
   OWNERSHIP_STATUSES
 } from '../utils/ownership-statuses'
-import { getDaoFromLocation } from '../utils/utils'
+import { isProfileEmpty, getDaoFromLocation } from '../utils/utils'
 import { useWrapper } from '../utils/web3-contracts'
 import { addressesEqual } from '../utils/web3-utils'
 
@@ -289,7 +289,7 @@ function DaoProfile ({ daoAddress, history }) {
     return <ProfileNotFound history={history} />
   }
 
-  const profileEmpty = organisation.profile === null
+  const profileEmpty = isProfileEmpty(organisation.profile)
 
   if (
     profileEmpty &&
