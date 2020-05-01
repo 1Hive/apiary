@@ -13,7 +13,10 @@ import {
   Button,
   SyncIndicator,
 
+  textStyle,
+
   useLayout,
+  useTheme,
 
   GU
 } from '@aragon/ui'
@@ -137,7 +140,10 @@ const Orgs = ({ history }) => {
   const [pagination, setPagination] = useState(['after'])
   const [filter, setFilter] = useState()
   const { layoutName } = useLayout()
+  const theme = useTheme()
+
   const compactMode = layoutName === 'small'
+
   const page = useCallback(
     (direction, cursor) => setPagination([direction, cursor])
   )
@@ -341,7 +347,15 @@ const Orgs = ({ history }) => {
                     margin-top: ${1 * GU}px;
                   `}
                 >
-                  <div>Description</div>
+                  <div
+                    css={`
+                      align-self: center;
+                      ${textStyle('label2')}
+                      color: ${theme.contentSecondary}
+                    `}
+                  >
+                    Description
+                  </div>
                   <div css='display: flex; justify-content: flex-end;'>{profile.description || 'No description available.'}</div>
                 </div>,
                 <div
@@ -357,7 +371,15 @@ const Orgs = ({ history }) => {
                     margin-top: ${1 * GU}px;
                 `}
                 >
-                  <div>Links</div>
+                  <div
+                    css={`
+                      align-self: center;
+                      ${textStyle('label2')}
+                      color: ${theme.contentSecondary}
+                    `}
+                  >
+                    Links
+                  </div>
                   <div css={`
                     display: flex;
                     justify-content: flex-end;
