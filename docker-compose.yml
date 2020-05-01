@@ -58,6 +58,7 @@ services:
       dockerfile: Dockerfile.frontend
       args:
         API_URL: "http://localhost:3000"
+        CHAIN_ID: "1"
     ports:
     - "8888:80"
     depends_on:

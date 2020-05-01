@@ -15,11 +15,13 @@ const client = new GraphQLClient({
   url: process.env.API_URL || 'https://daolist.1hive.org/'
 })
 
+const chainId = Number(process.env.CHAIN_ID) || 1
+
 ReactDOM.render(
   <Router>
     <ClientContext.Provider value={client}>
       <Viewport.Provider>
-        <UseWalletProvider chainId={Number(process.env.CHAIN_ID)}>
+        <UseWalletProvider chainId={chainId}>
           <App />
         </UseWalletProvider>
       </Viewport.Provider>
