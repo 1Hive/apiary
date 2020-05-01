@@ -333,7 +333,7 @@ const Orgs = ({ history }) => {
                   css={`
                     width: 100%;
                     display: grid;
-                    grid-template-columns: auto 1fr;
+                    grid-template-columns: 1fr 1fr;
                     grid-gap: ${3 * GU}px;
                     align-items: center;
                     justify-content: space-between;
@@ -361,16 +361,23 @@ const Orgs = ({ history }) => {
                   <div css={`
                     display: flex;
                     justify-content: flex-end;
+                    text-overflow: ellipsis;
+                    overflow: hidden;
+                    white-space: nowrap;
                     ${compactMode && `
                       justify-content: flex-end;
                     `}
                   `}
                   >
-                    {profile.links.length > 0 ? profile.links.map(link => (
+                    {profile.links.length > 0 ? profile.links.slice(0, 2).map(link => (
                       <>
                         <SmartLink
                           url={link}
-                          css={`display: block; margin-left: ${1 * GU}px; padding-left: ${1 * GU}px !important;`}
+                          css={`
+                            display: block;
+                            margin-left: ${1 * GU}px;
+                            padding-left: ${1 * GU}px !important;
+                          `}
                         />
                         {'     '}
                       </>
