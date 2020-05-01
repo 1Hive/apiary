@@ -49,7 +49,7 @@ export default function TransactionSidePanel ({
   }
 
   const radioItems = constructPathDescription(transactionPath, proxies)
-  const { annotatedDescription, to } = transactionPath[transactionPath.length - 1]
+  const { annotatedDescription } = transactionPath[transactionPath.length - 1]
 
   return (
     <SidePanel
