@@ -12,19 +12,19 @@ export function getApps (db, args) {
   const filter = {}
 
   if (args.filter && args.filter.name) {
-    filter['name'] = transformStringFilter(
+    filter.name = transformStringFilter(
       args.filter.name
     )
   }
 
   if (args.filter && args.filter.createdAt) {
-    filter['created_at'] = transformDateFilter(
+    filter.created_at = transformDateFilter(
       args.filter.createdAt
     )
   }
 
   if (args.filter && args.filter.installations) {
-    filter['installations'] = transformNumberFilter(
+    filter.installations = transformNumberFilter(
       args.filter.installations
     )
   }

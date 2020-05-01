@@ -1,4 +1,11 @@
-import { getOrganisations } from './data'
+import { getOrganisations, getOrganisation, updateProfile } from './data'
+
+const EMPTY_PROFILE = {
+  name: '',
+  description: '',
+  icon: '',
+  links: []
+}
 
 export default {
   Query: {
@@ -7,7 +14,41 @@ export default {
         db,
         args
       )
+    },
+
+    organisation (_, args, { db }) {
+      return getOrganisation(
+        db,
+        args
+      )
     }
+  },
+
+  Mutation: {
+    updateProfile (_, args, { db }) {
+      return updateProfile(
+        db, args
+      )
+    }
+  },
+
+  Profile: {
+    name (profile) {
+      return profile.name || ''
+    },
+    icon (profile) {
+      return profile.icon || ''
+    },
+    links (profile) {
+      return profile.links || []
+    },
+    editors (profile) {
+      return profile.editors || []
+    },
+    description (profile) {
+      return profile.description || ''
+    }
+
   },
 
   Organisation: {
@@ -25,6 +66,9 @@ export default {
     },
     activity (org) {
       return org.activity || 0
+    },
+    profile (org) {
+      return org.profile || EMPTY_PROFILE
     },
     createdAt (org) {
       return org.created_at

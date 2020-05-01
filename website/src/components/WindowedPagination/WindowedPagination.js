@@ -14,31 +14,35 @@ export const WindowedPagination = React.memo(({
     endCursor
   } = pageInfo
 
-  return <div css='
-    display: flex;
-    justifyContent: space-between;
-    width: 100%;
-    margin: 1em 0;
-  '>
-    <Button
-      onClick={() => onPage('before', startCursor)}
-      style={{
-        marginRight: 'auto',
-        visibility: hasPreviousPage ? 'visible' : 'hidden'
-      }}
+  return (
+    <div
+      css={`
+        display: flex;
+        justifyContent: space-between;
+        width: 100%;
+        margin: 1em 0;
+      `}
     >
-      Previous
-    </Button>
-    <Button
-      onClick={() => onPage('after', endCursor)}
-      style={{
-        marginLeft: 'auto',
-        visibility: hasNextPage ? 'visible' : 'hidden'
-      }}
-    >
+      <Button
+        onClick={() => onPage('before', startCursor)}
+        style={{
+          marginRight: 'auto',
+          visibility: hasPreviousPage ? 'visible' : 'hidden'
+        }}
+      >
+        Previous
+      </Button>
+      <Button
+        onClick={() => onPage('after', endCursor)}
+        style={{
+          marginLeft: 'auto',
+          visibility: hasNextPage ? 'visible' : 'hidden'
+        }}
+      >
       Next
-    </Button>
-  </div>
+      </Button>
+    </div>
+  )
 })
 
 WindowedPagination.propTypes = {

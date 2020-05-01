@@ -10,6 +10,7 @@ setup:
     IPFS_URI: https://ipfs.eth.aragon.network
     NODE_ENV: production
     THROTTLE: 80
+    CHAIN_ID: 1
 build:
   docker:
     web: api/Dockerfile.web

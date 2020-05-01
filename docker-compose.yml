@@ -22,6 +22,7 @@ services:
     - "3000:3000"
     environment:
     - MONGODB_URI=mongodb://mongo:27017
+    - ETH_NODE=wss://mainnet.eth.aragon.network/ws
     depends_on:
     - mongo
   # Taskmaster
@@ -57,6 +58,7 @@ services:
       dockerfile: Dockerfile.frontend
       args:
         API_URL: "http://localhost:3000"
+        CHAIN_ID: "1"
     ports:
     - "8888:80"
     depends_on:

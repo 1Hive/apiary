@@ -1,4 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react'
+import PropTypes from 'prop-types'
 import { useQuery } from 'graphql-hooks'
 import {
   Info,
@@ -10,7 +11,14 @@ import {
   DataView,
   IdentityBadge,
   Button,
-  SyncIndicator
+  SyncIndicator,
+
+  textStyle,
+
+  useLayout,
+  useTheme,
+
+  GU
 } from '@aragon/ui'
 import { format } from 'date-fns'
 import { WindowedPagination } from '../components/WindowedPagination'
@@ -22,9 +30,11 @@ import {
   FILTER_TYPE_LIST
 } from '../components/Filter'
 import { NavTabs } from '../components/NavTabs/NavTabs'
+import SmartLink from '../components/SmartLink/SmartLink'
 import useSort from '../hooks/sort'
 import openSafe from '../utils/open-safe'
 import { formatNumber } from '../utils/numbers'
+import { isProfileEmpty } from '../utils/utils'
 
 const ORGANISATIONS_QUERY = `
   query(
@@ -48,6 +58,12 @@ const ORGANISATIONS_QUERY = `
         aum
         activity
         score
+        profile {
+          name
+          description
+          icon
+          links
+        }
       }
       pageInfo {
         startCursor
@@ -119,10 +135,15 @@ const KITS = [{
 }]
 
 const ONE_BILLION = 1000000000
-export default () => {
+
+const Orgs = ({ history }) => {
   const [sort, sortBy] = useSort('score', 'DESC')
   const [pagination, setPagination] = useState(['after'])
   const [filter, setFilter] = useState()
+  const { layoutName } = useLayout()
+  const theme = useTheme()
+
+  const compactMode = layoutName === 'small'
 
   const page = useCallback(
     (direction, cursor) => setPagination([direction, cursor])
@@ -255,14 +276,30 @@ export default () => {
               createdAt,
               aum,
               activity,
+              profile,
               score
             }) => [
-              <IdentityBadge
-                key='org-addr'
-                entity={address}
-                customLabel={(ens || '').length <= 42 && ens}
-                popoverTitle={(ens || '').length <= 42 && ens}
-              />,
+              profile && profile.icon && profile.name ? (
+                <div
+                  key='org-addr'
+                  css={`
+                  display: flex;
+                  align-items: center;
+                  margin-top: ${1 * GU}px;
+                `}
+                >
+                  <img src={profile.icon} width='32px' height='auto' css={`margin-right: ${1 * GU}px;`} />
+                  <IdentityBadge label={profile.name} badgeOnly />
+                </div>
+              ) : (
+                <div css={`margin-top: ${1.5 * GU}px;`}>
+                  <IdentityBadge
+                    key='org-addr'
+                    entity={address}
+                    label={(ens || '')}
+                    popoverTitle={(ens || '')}
+                  />
+                </div>),
               <div key='org-aum'>
                 ◈ {formatNumber(aum, 2, ONE_BILLION)}
               </div>,
@@ -278,6 +315,13 @@ export default () => {
             ]}
             renderEntryActions={({ address, ens }) => [
               <Button
+                key='view-profile'
+                size='small'
+                onClick={() => history.push(`/profile?dao=${address}`)}
+                css='margin-right: 8px;'
+              >View profile
+              </Button>,
+              <Button
                 key='open-org'
                 size='small'
                 mode='strong'
@@ -286,6 +330,84 @@ export default () => {
                 Open
               </Button>
             ]}
+            renderEntryExpansion={({ profile }) => {
+              if (isProfileEmpty(profile)) {
+                return null
+              }
+              const profileInfo = [
+                <div
+                  key='description'
+                  css={`
+                    width: 100%;
+                    display: grid;
+                    grid-template-columns: 1fr 1fr;
+                    grid-gap: ${3 * GU}px;
+                    align-items: center;
+                    justify-content: space-between;
+                    align-items: start;
+                    margin-top: ${1 * GU}px;
+                  `}
+                >
+                  <div
+                    css={`
+                      align-self: center;
+                      ${textStyle('label2')}
+                      color: ${theme.contentSecondary}
+                    `}
+                  >
+                    Description
+                  </div>
+                  <div css='display: flex; justify-content: flex-end;'>{profile.description || 'No description available.'}</div>
+                </div>,
+                <div
+                  key='links'
+                  css={`
+                    width: 100%;
+                    display: grid;
+                    grid-template-columns: auto 1fr;
+                    grid-gap: ${3 * GU}px;
+                    align-items: center;
+                    justify-content: space-between;
+                    align-items: start;
+                    margin-top: ${1 * GU}px;
+                `}
+                >
+                  <div
+                    css={`
+                      align-self: center;
+                      ${textStyle('label2')}
+                      color: ${theme.contentSecondary}
+                    `}
+                  >
+                    Links
+                  </div>
+                  <div css={`
+                    display: flex;
+                    justify-content: flex-end;
+                    text-overflow: ellipsis;
+                    overflow: hidden;
+                    white-space: nowrap;
+                    ${compactMode && `
+                      justify-content: flex-end;
+                    `}
+                  `}
+                  >
+                    {profile.links.length > 0 ? profile.links.slice(0, 2).map(link => (
+                      <SmartLink
+                        key={link}
+                        url={link}
+                        css={`
+                          display: block;
+                          margin-left: ${1 * GU}px;
+                          padding-left: ${1 * GU}px !important;
+                        `}
+                      />
+                    )) : 'No links available.'}
+                  </div>
+                </div>
+              ]
+              return compactMode ? <div css='width: 100%;'>{profileInfo}</div> : profileInfo
+            }}
           />
         )}
         {!firstFetch && (
@@ -315,3 +437,9 @@ export default () => {
     />
   </div>
 }
+
+Orgs.propTypes = {
+  history: PropTypes.object
+}
+
+export default Orgs

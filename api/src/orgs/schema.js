@@ -1,4 +1,18 @@
 export default `
+  # An organization's own profile.
+  type Profile {
+    # The human-readable name of the organisation.
+    name: String!
+    # URL to the organisation's icon.
+    icon: String!
+    # Array of URL to the different links for the organisation (e.g. Discord, Discourse)
+    links: [String]!
+    # Array of addresses that have edited the profile at least once
+    editors: [String]!
+    # The description of the organisation.
+    description: String!
+  }
+
   # An organisation on Aragon.
   type Organisation implements Node {
     id: ID!
@@ -14,6 +28,8 @@ export default `
     ant: Float!
     # The total amount of activity in the last 30 days (rolling) for the organisation.
     activity: Int!
+    # The profile of the organisation.
+    profile: Profile!
     # The pinion organisation score of the organisation.
     score: Float!
     # The date and time when this organisation was created.
@@ -62,5 +78,23 @@ export default `
       filter: OrganisationConnectionFilter,
       sort: OrganisationConnectionSort
     ): OrganisationConnection!
+
+    organisation(
+      address: String!
+    ): Organisation
+  }
+
+  type Mutation {
+    # Update organisation profile.
+    updateProfile(
+      # The organization address.
+      address: String!,
+      name: String,
+      icon: String,
+      links: [String],
+      description: String,
+      signerAddress: String!,
+      signedMessage: String!
+    ): Organisation!
   }
 `

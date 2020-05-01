@@ -14,12 +14,16 @@
   "license": "GPLv3",
   "dependencies": {
     "base64-url": "^2.3.2",
+    "eth-sig-util": "^2.5.3",
+    "ethereumjs-util": "^6.2.0",
     "graphql": "^14.4.2",
     "graphql-yoga": "^1.18.1",
     "merge-graphql-schemas": "^1.7.0",
-    "mongodb": "^3.3.3"
+    "mongodb": "^3.3.3",
+    "web3-eth-contract": "^1.2.7"
   },
   "devDependencies": {
+    "@rollup/plugin-json": "^4.0.3",
     "babel-eslint": "^10.0.2",
     "eslint": "^6.1.0",
     "eslint-config-standard": "^13.0.1",

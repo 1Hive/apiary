@@ -85,13 +85,13 @@ export function navigationCursors (
 
   const secondarySortOnId = sortField !== '_id'
   const previous = [
-    firstDocument['_id']
-      ? firstDocument['_id'].toString()
+    firstDocument._id
+      ? firstDocument._id.toString()
       : null
   ]
   const next = [
-    lastDocument['_id']
-      ? lastDocument['_id'].toString()
+    lastDocument._id
+      ? lastDocument._id.toString()
       : null
   ]
   if (secondarySortOnId) {
