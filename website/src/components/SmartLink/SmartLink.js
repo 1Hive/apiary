@@ -4,10 +4,11 @@ import PropTypes from 'prop-types'
 const KNOWN_PLATFORMS = new Map([
   ['discord', 'Discord'],
   ['discourse', 'Discourse'],
-  ['github', 'Github'],
+  ['github', 'GitHub'],
   ['metacartel', 'Metacartel'],
   ['twitter', 'Twitter'],
-  ['instagram', 'Instagram']
+  ['instagram', 'Instagram'],
+  ['keybase', 'Keybase']
 ])
 
 export default function SmartLink ({ url, ...props }) {
