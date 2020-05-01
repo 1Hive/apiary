@@ -1,3 +1,5 @@
+/* eslint-disable react/display-name */
+/* eslint-disable react/prop-types */
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useWallet } from 'use-wallet'
 import { Button, GU, IconConnect, springs, useViewport } from '@aragon/ui'
@@ -120,7 +122,7 @@ function AccountModule () {
   const screenId = screen.id
 
   const handlePopoverClose = useCallback(
-    reject => {
+    () => {
       if (screenId === 'connecting' || screenId === 'error') {
         // reject closing the popover
         return false
@@ -198,7 +200,6 @@ function AccountModule () {
               transform: `translate3d(${3 * GU * -direction}px, 0, 0)`
             }}
           >
-            {/* eslint-disable-next-line react/display-name */}
             {({ screen, activating, wallet }) => ({ opacity, transform }) => (
               <AnimDiv
                 style={{ opacity, transform }}

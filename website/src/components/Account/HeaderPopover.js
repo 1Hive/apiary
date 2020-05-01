@@ -82,7 +82,8 @@ HeaderPopover.propTypes = {
   height: PropTypes.number.isRequired,
   onClose: PropTypes.func.isRequired,
   opener: PropTypes.any,
-  visible: PropTypes.bool.isRequired
+  visible: PropTypes.bool.isRequired,
+  width: PropTypes.number
 }
 
 export default HeaderPopover

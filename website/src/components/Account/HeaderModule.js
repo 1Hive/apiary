@@ -1,7 +1,8 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { ButtonBase, GU, useTheme } from '@aragon/ui'
 
-function HeaderModule ({ icon, content, onClick }) {
+function HeaderModule ({ icon, onClick }) {
   const theme = useTheme()
 
   return (
@@ -28,6 +29,12 @@ function HeaderModule ({ icon, content, onClick }) {
       </div>
     </ButtonBase>
   )
+}
+
+HeaderModule.propTypes = {
+  icon: PropTypes.node,
+  content: PropTypes.node,
+  onClick: PropTypes.func
 }
 
 export default HeaderModule
