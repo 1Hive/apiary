@@ -312,7 +312,7 @@ const Orgs = ({ history }) => {
                     align-items: center;
                     justify-content: space-between;
                     align-items: start;
-                    margin-top: ${1 * GU}px;
+                    margin-top: ${0.5 * GU}px;
                   `}
                 >
                   <div
@@ -324,7 +324,14 @@ const Orgs = ({ history }) => {
                   >
                     Description
                   </div>
-                  <div css='display: flex; justify-content: flex-end;'>{profile.description || 'No description available.'}</div>
+                  <div
+                    css={`
+                      display: flex; justify-content: flex-end;
+                      ${textStyle('body3')}
+                    `}
+                  >
+                    {profile.description || 'No description available.'}
+                  </div>
                 </div>,
                 <div
                   key='links'
@@ -354,6 +361,7 @@ const Orgs = ({ history }) => {
                     text-overflow: ellipsis;
                     overflow: hidden;
                     white-space: nowrap;
+                    ${textStyle('body3')}
                     ${compactMode && `
                       justify-content: flex-end;
                     `}

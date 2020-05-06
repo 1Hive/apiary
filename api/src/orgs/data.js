@@ -80,7 +80,7 @@ export async function updateProfile (
       throw new Error(`Provided address ${signerAddress} does not have the required permissions on the ACL.`)
     }
   } catch (err) {
-    console.error(err)
+    console.error('ACL Error', err)
     return
   }
 
