@@ -42,6 +42,7 @@ const APPS_QUERY = `
           src
         }
         name
+        ens
         description
         installations
         sourceUrl
@@ -64,6 +65,7 @@ function renderAppEntry ({
   icons,
   repository,
   name,
+  ens,
   description,
   installations,
   score
@@ -81,6 +83,7 @@ function renderAppEntry ({
       label={name || `Unknown (${shortenAddress(repository)})`}
       popoverTitle={name ? `${name}'s repository` : 'Repository'}
     />,
+    <div key='app-repo'>{ens}</div>,
     <div key='app-description'>{description}</div>,
     <div key='app-installations'>{formatNumber(installations)}</div>,
     <div key='app-score'>{formatNumber(score * 100, 2)}</div>
@@ -148,6 +151,12 @@ export default () => {
                 label='App'
                 onClick={() => sortBy('name')}
                 sortOrder={sort[0] === 'name' && sort[1]}
+              />,
+              <SortHeader
+                key='sort-repo'
+                label='Repository'
+                onClick={() => sortBy('ens')
+                sortOrder={sort[0] === 'ens' && sort[1]}}
               />,
               <div key='sort-description'>Description</div>,
               {
