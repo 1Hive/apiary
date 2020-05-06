@@ -72,6 +72,7 @@ export default `
   input AppConnectionSort {
     id: SortOrder
     name: SortOrder
+    ens: SortOrder
     installations: SortOrder
     score: SortOrder
   }
