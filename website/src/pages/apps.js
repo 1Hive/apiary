@@ -155,8 +155,8 @@ export default () => {
               <SortHeader
                 key='sort-repo'
                 label='Repository'
-                onClick={() => sortBy('ens')
-                sortOrder={sort[0] === 'ens' && sort[1]}}
+                onClick={() => sortBy('ens')}
+                sortOrder={sort[0] === 'ens' && sort[1]}
               />,
               <div key='sort-description'>Description</div>,
               {
