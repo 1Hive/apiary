@@ -115,7 +115,7 @@ export function Filter ({
             value={filterState[filter.name]}
             onChange={setFilterValue}
             label={filter.label}
-            />
+          />
         default:
           throw new Error(`Unknown filter type ${filter.type}`)
       }
