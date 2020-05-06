@@ -58,6 +58,7 @@ export default `
   input OrganisationConnectionFilter {
     app: StringOperators
     kit: StringOperators
+    profile: Boolean
     createdAt: DateOperators
   }
 
