@@ -3,7 +3,8 @@ import kernelAbi from '../abis/kernel.json'
 import { makeConnection } from '../pagination'
 import {
   transformStringFilter,
-  transformDateFilter
+  transformDateFilter,
+  transformBooleanFilter
 } from '../filter'
 import {
   camelToSnakeCaseKeys,
@@ -31,6 +32,12 @@ export function getOrganisations (
   if (args.filter && args.filter.createdAt) {
     filter.created_at = transformDateFilter(
       args.filter.createdAt
+    )
+  }
+
+  if (args.filter && args.filter.profile) {
+    filter.profile = transformBooleanFilter(
+      args.filter.profile
     )
   }
 

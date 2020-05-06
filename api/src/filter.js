@@ -61,3 +61,9 @@ export function transformNumberFilter (op) {
 
   return {}
 }
+
+export function transformBooleanFilter (op) {
+  return {
+    $exists: op
+  }
+}

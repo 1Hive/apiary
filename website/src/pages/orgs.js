@@ -27,7 +27,8 @@ import {
   Filter,
 
   FILTER_TYPE_DATE_RANGE,
-  FILTER_TYPE_LIST
+  FILTER_TYPE_LIST,
+  FILTER_TYPE_CHECKBOX
 } from '../components/Filter'
 import { NavTabs } from '../components/NavTabs/NavTabs'
 import SmartLink from '../components/SmartLink/SmartLink'
@@ -77,39 +78,6 @@ const ORGANISATIONS_QUERY = `
     }
   }
 `
-
-// 1Hive curated list of Good Apps™️
-const APPS = [{
-  label: 'Token Manager',
-  value: '0x6b20a3010614eeebf2138ccec99f028a61c811b3b1a3343b6ff635985c75c91f'
-}, {
-  label: 'Vault',
-  value: '0x7e852e0fcfce6551c13800f1e7476f982525c2b5277ba14b24339c68416336d1'
-}, {
-  label: 'Agent',
-  value: '0x9ac98dc5f995bf0211ed589ef022719d1487e5cb2bab505676f0d084c07cf89a'
-}, {
-  label: 'Finance',
-  value: '0xbf8491150dafc5dcaee5b861414dca922de09ccffa344964ae167212e8c673ae'
-}, {
-  label: 'Voting',
-  value: '0x9fa3927f639745e587912d4b0fea7ef9013bf93fb907d29faeab57417ba6e1d4'
-}, {
-  label: 'Address Book',
-  value: '0x32ec8cc9f3136797e0ae30e7bf3740905b0417b81ff6d4a74f6100f9037425de'
-}, {
-  label: 'Allocations',
-  value: '0x370ef8036e8769f293a3d9c1362d0e21bdfa4e0465d2cd9cf196ebd4ba75aa8b'
-}, {
-  label: 'Dot Voting',
-  value: '0x6bf2b7dbfbb51844d0d6fdc211b014638011261157487ccfef5c2e4fb26b1d7e'
-}, {
-  label: 'Projects',
-  value: '0xac5c7cc8f4ed07bb3543b5a4152c4f1a045e1be68bd86e2cf6720b680d1d14f3'
-}, {
-  label: 'Rewards',
-  value: '0x3ca69801a60916e9222ceb2fa3089b3f66b4e1b3fc49f4a562043d9ec1e5a00b'
-}]
 
 const KITS = [{
   label: 'Company',
@@ -195,17 +163,16 @@ const Orgs = ({ history }) => {
             heading={<Filter
               filters={[{
                 type: FILTER_TYPE_LIST,
-                name: 'app',
-                placeholder: 'Apps',
-                items: APPS
-              }, {
-                type: FILTER_TYPE_LIST,
                 name: 'kit',
-                placeholder: 'Templates',
+                label: 'Templates',
                 items: KITS
               }, {
                 type: FILTER_TYPE_DATE_RANGE,
                 name: 'createdAt'
+              }, {
+                type: FILTER_TYPE_CHECKBOX,
+                label: 'Profile',
+                name: 'profile'
               }]}
               onChange={setFilter}
             />}

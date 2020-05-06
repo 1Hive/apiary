@@ -4,6 +4,7 @@ import qs from 'qs'
 import { Button, GU } from '@aragon/ui'
 import { FILTER_TYPE_DATE_RANGE, DateRangeFilter } from './DateRangeFilter'
 import { FILTER_TYPE_LIST, ListFilter } from './ListFilter'
+import { FILTER_TYPE_CHECKBOX, CheckboxFilter } from './CheckboxFilter'
 import { useLocation } from '../../hooks/router'
 import { breakpoint } from '../../utils/breakpoint'
 
@@ -100,13 +101,20 @@ export function Filter ({
             value={filterState[filter.name]}
             onChange={setFilterValue}
             items={filter.items}
-            placeholder={filter.placeholder}
+            label={filter.label}
           />
         case FILTER_TYPE_DATE_RANGE:
           return <DateRangeFilter
             name={filter.name}
             value={filterState[filter.name]}
             onChange={setFilterValue}
+          />
+        case FILTER_TYPE_CHECKBOX:
+          return <CheckboxFilter
+            name={filter.name}
+            value={filterState[filter.name]}
+            onChange={setFilterValue}
+            label={filter.label}
           />
         default:
           throw new Error(`Unknown filter type ${filter.type}`)
