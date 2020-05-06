@@ -1,26 +1,59 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
-	<head>
-		<title>Apiary Explorer | apiary.1hive.org </title>
-		<!-- Accessibility -->
-		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<meta charset="UTF-8" />
-		<!-- SEO -->
-		<meta name="description" content="Apiary Explorer allows you to explore and search Aragon DAOs on the Ethereum network">
-		<!-- Open Graph -->
-		<meta property="og:title" content="Apiary Explorer" />
-		<meta property="og:description" content="Apiary Explorer allows you to explore and search Aragon DAOs on the Ethereum network" />
-		<meta property="og:url" content="https://apiary.1hive.org" />
-		<!-- Twitter -->
-		<meta name="twitter:creator" content="@1hiveorg" />
-		<!-- Misc !-->
-	</head>
+  <head>
+    <title>Apiary Explorer | apiary.1hive.org</title>
+    <!-- Accessibility -->
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta charset="UTF-8" />
+    <!-- SEO -->
+    <meta
+      name="description"
+      content="Apiary Explorer allows you to explore and search Aragon DAOs on the Ethereum network"
+    />
+    <!-- Open Graph -->
+    <meta property="og:title" content="Apiary Explorer" />
+    <meta
+      property="og:description"
+      content="Apiary Explorer allows you to explore and search Aragon DAOs on the Ethereum network"
+    />
+    <meta property="og:url" content="https://apiary.1hive.org" />
+    <!-- Twitter -->
+    <meta name="twitter:creator" content="@1hiveorg" />
+    <!-- Misc !-->
+  </head>
 
-	<body>
-		<noscript>Your browser does not support JavaScript. Please update to a modern browser to use Apiary.</noscript>
+  <body>
+    <noscript
+      >Your browser does not support JavaScript. Please update to a modern
+      browser to use Apiary.
+    </noscript>
 
-		<div id="app"></div>
+    <div id="app"></div>
 
-		<script src="index.js"></script>
-	</body>
+    <script src="index.js"></script>
+    <script type="text/javascript">
+      var Countly = Countly || {};
+      Countly.q = Countly.q || [];
+      //provide countly initialization parameters
+      Countly.app_key = "0bfb9753483b0094c8407076d77b0719b5a9c2e5";
+      Countly.url = "https://analytics.aragon.org/";
+      Countly.inactivity_time = 10;
+      Countly.q.push(["track_sessions"]);
+      Countly.q.push(["track_pageview"]);
+      Countly.q.push(["track_clicks"]);
+      Countly.q.push(["track_errors"]);
+      (function() {
+        var cly = document.createElement("script");
+        cly.type = "text/javascript";
+        cly.async = true;
+        cly.src = "https://analytics.aragon.org/sdk/web/countly.min.js";
+        cly.onload = function() {
+          Countly.init();
+        };
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(cly, s);
+      })();
+      console.log('atibo')
+    </script>
+  </body>
 </html>

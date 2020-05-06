@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import PropTypes from 'prop-types'
 import { useQuery } from 'graphql-hooks'
 import { useWallet } from 'use-wallet'
@@ -118,6 +118,7 @@ function DaoProfile ({ daoAddress, history }) {
   const [transactionPanelOpened, setTransactionPanelOpened] = useState(false)
   const [transactionPath, setTransactionPath] = useState(null)
   const [ownershipStatus, setOwnershipStatus] = useState('NOT_CONNECTED_PROFILE')
+
   const [wrapper, wrapperReady] = useWrapper({ daoAddress })
   const { connected, account } = useWallet()
   const theme = useTheme()
@@ -265,6 +266,8 @@ function DaoProfile ({ daoAddress, history }) {
     }
   }, [data, ownershipStatus, transactionPath])
 
+  const ownershipActionLabel = useMemo(() => OWNERSHIP_STATUSES.get(ownershipStatus), [ownershipStatus])
+
   if (error) {
     return <Info mode='error'>An error occurred. Try again.</Info>
   }
@@ -294,11 +297,6 @@ function DaoProfile ({ daoAddress, history }) {
   }
 
   const { organisation } = data
-  // if the organisation itself is null, it means
-  // it was not found in the DB
-  if (!organisation) {
-    return <ProfileNotFound history={history} />
-  }
 
   const profileEmpty = isProfileEmpty(organisation.profile)
 
@@ -342,9 +340,9 @@ function DaoProfile ({ daoAddress, history }) {
             action={
               <Button
                 onClick={handleOwnershipIntent}
-                label={OWNERSHIP_STATUSES.get(ownershipStatus)}
+                label={ownershipActionLabel}
               >
-                {OWNERSHIP_STATUSES.get(ownershipStatus)}
+                {ownershipActionLabel}
               </Button>
             }
             disabled={!connected || !wrapperReady}
@@ -385,7 +383,7 @@ function DaoProfile ({ daoAddress, history }) {
             label='Edit Profile'
             onClick={handleOwnershipIntent}
           >
-            {OWNERSHIP_STATUSES.get(ownershipStatus)}
+            {ownershipActionLabel}
           </Button>
         }
       />
@@ -445,6 +443,7 @@ function DaoProfile ({ daoAddress, history }) {
                   <p
                     css={`
                       margin-bottom: ${2 * GU}px;
+                      padding-right: ${1 * GU}
                     `}
                   >
                     {organisation.profile.description || 'No description available.'}
