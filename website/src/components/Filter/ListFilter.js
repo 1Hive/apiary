@@ -8,7 +8,7 @@ export function ListFilter ({
   value,
   onChange,
   items = [],
-  placeholder
+  label
 }) {
   const setSelectedItem = useCallback((index) => {
     if (!items[index]) return
@@ -20,7 +20,7 @@ export function ListFilter ({
   )
 
   return <DropDown
-    placeholder={placeholder}
+    label={label}
     items={items.map(({ label }) => label)}
     selected={selectedItem}
     onChange={setSelectedItem}
@@ -35,5 +35,5 @@ ListFilter.propTypes = {
     label: PropTypes.string.isRequired,
     value: PropTypes.any.isRequired
   })),
-  placeholder: PropTypes.string
+  label: PropTypes.string
 }
