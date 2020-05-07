@@ -27,6 +27,8 @@ function transformFilterValue (
       return {
         eq: filterValue
       }
+    case FILTER_TYPE_CHECKBOX:
+      return filterValue
     default:
       throw new Error(`Unknown filter type ${filterType}`)
   }
