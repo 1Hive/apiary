@@ -20,7 +20,7 @@ export function ListFilter ({
   )
 
   return <DropDown
-    label={label}
+    placeholder={label}
     items={items.map(({ label }) => label)}
     selected={selectedItem}
     onChange={setSelectedItem}
