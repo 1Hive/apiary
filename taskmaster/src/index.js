@@ -132,14 +132,14 @@ export function * run (ctx) {
   let previousBlockHandle = null
   while (
     // eslint-disable-next-line no-unmodified-loop-condition
-    currentBlock <= targetBlock || targetBlock === 'latest'
+    Number(currentBlock) <= Number(targetBlock) || targetBlock === 'latest'
   ) {
     previousBlockHandle = yield call(scheduleBlock, ctx, currentBlock, previousBlockHandle)
     ctx.log.info({
       block: currentBlock
     }, 'Scheduled block')
 
-    while (currentBlock >= highestBlock) {
+    while (Number(currentBlock) >= Number(highestBlock)) {
       yield call(delay, 10 * 1000)
       highestBlock = yield call(getHighestBlock, ctx)
     }
