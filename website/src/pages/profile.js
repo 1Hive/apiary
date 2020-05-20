@@ -6,6 +6,7 @@ import {
   BackButton,
   Bar,
   Box,
+  Text,
   Button,
   EmptyStateCard,
   Header,
@@ -516,7 +517,7 @@ function DaoProfile ({ daoAddress, history }) {
                 </div>
               </div>
               {ownershipStatus === 'NOT_CONNECTED_PROFILE' && (
-                <Info title='Editing Profile'>
+                <Info title='Editing Profile' css={`margin-top: ${GU}px`}>
                   To edit, claim or add yourself as an editor for this DAO profile, please connect to web3.
                 </Info>
               )}
@@ -526,54 +527,12 @@ function DaoProfile ({ daoAddress, history }) {
         secondary={
           <>
             <Box>
-              <div
-                css={`
-                  display: flex;
-                  flex-direction: column;
-                `}
-              >
-                <div
-                  css={`
-                    ${textStyle('title3')}
-                  `}
-                >
-                  {formatNumber(organisation.aum)}
-                </div>
-                <div
-                  css={`
-                    margin-top: ${2 * GU}px;
-                    margin-bottom: ${1 * GU}px;
-                    ${textStyle('body2')}
-                  `}
-                >
-                AUM ◈
-                </div>
-              </div>
+              <Text.Block size='xlarge'>◈ {formatNumber(organisation.aum)}</Text.Block>
+              <Text>AUM</Text>
             </Box>
             <Box>
-              <div
-                css={`
-                  display: flex;
-                  flex-direction: column;
-                `}
-              >
-                <div
-                  css={`
-                    ${textStyle('title3')}
-                  `}
-                >
-                  {formatNumber(organisation.activity)}
-                </div>
-                <div
-                  css={`
-                    margin-top: ${2 * GU}px;
-                    margin-bottom: ${1 * GU}px;
-                    ${textStyle('body2')}
-                  `}
-                >
-                  Activity
-                </div>
-              </div>
+              <Text.Block size='xlarge'>{formatNumber(organisation.activity)}</Text.Block>
+              <Text>activity (90 days)</Text>
             </Box>
           </>
         }
