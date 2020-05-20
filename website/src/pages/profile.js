@@ -390,7 +390,13 @@ function DaoProfile ({ daoAddress, history }) {
       <Split
         primary={
           <>
-            <Bar primary={<BackButton onClick={() => history.goBack()} />} />
+            <Bar primary={<BackButton onClick={() => {
+              if (history.length) {
+                history.goBack()
+              } else {
+                window.location.href = '/'
+              }
+            }} />} />
             <Box>
               <div
                 css={`
