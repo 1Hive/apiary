@@ -6,7 +6,7 @@ export function * fetchLogs (
   ctx,
   blockNumber
 ) {
-   const q = sql`
+  const q = sql`
     select
       tx.timestamp,
       log.data,

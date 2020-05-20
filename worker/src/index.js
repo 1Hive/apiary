@@ -29,33 +29,60 @@ async function fetchTasks (ctx, name, from, count) {
       'tasks',
       from,
       (err, res) => {
-      if (err) {
-        reject(err)
-        return
-      }
+        if (err) {
+          reject(err)
+          return
+        }
 
-      // Timed out
-      if (res === null) {
-        resolve([null, true])
-        return
-      }
+        // Timed out
+        if (res === null) {
+          resolve([null, true])
+          return
+        }
 
-      // Empty reply
-      const entries = res[0][1]
-      if (entries.length === 0) {
-        resolve([null, false])
-        return
-      }
+        // Empty reply
+        const entries = res[0][1]
+        if (entries.length === 0) {
+          resolve([null, false])
+          return
+        }
 
-      // Parse tasks
-      const tasks = entries.map(([id, props]) => ({
-        id,
-        data: JSON.parse(props[1])
-      }))
+        // Parse tasks
+        const tasks = entries.map(([id, props]) => ({
+          id,
+          data: JSON.parse(props[1])
+        }))
 
-      resolve([tasks, false])
-    })
+        resolve([tasks, false])
+      })
   })
+}
+
+// Whether we are looking at task history
+// as opposed to new tasks
+let catchup = true
+let pendingTasks = []
+
+async function getTask (context, name, concurrency) {
+  // Refill pending tasks
+  if (pendingTasks.length <= 1) {
+    while (true) {
+      const [tasks, timeout] = await fetchTasks(
+        context, name, catchup ? 0 : '>', concurrency
+      )
+
+      if (tasks === null && !timeout) {
+        catchup = false
+        continue
+      }
+      if (tasks === null) continue
+
+      pendingTasks = pendingTasks.concat(tasks)
+      break
+    }
+  }
+
+  return pendingTasks.shift()
 }
 
 (async () => {
@@ -87,33 +114,6 @@ async function fetchTasks (ctx, name, from, count) {
       name
     }, 'Started main worker.')
 
-    // Whether we are looking at task history
-    // as opposed to new tasks
-    let catchup = true
-    let pendingTasks = []
-
-    async function getTask () {
-      // Refill pending tasks
-      if (pendingTasks.length <= 1) {
-        while (true) {
-          const [tasks, timeout] = await fetchTasks(
-            context, name, catchup ? 0 : '>', concurrency
-          )
-
-          if (tasks === null && !timeout) {
-            catchup = false
-            continue
-          }
-          if (tasks === null) continue
-
-          pendingTasks = pendingTasks.concat(tasks)
-          break
-        }
-      }
-
-      return pendingTasks.shift()
-    }
-
     // Spawn workers
     const workers = []
     for (let i = 0; i < concurrency; i++) {
@@ -129,7 +129,7 @@ async function fetchTasks (ctx, name, from, count) {
             break
         }
 
-        worker.postMessage(await getTask())
+        worker.postMessage(await getTask(context, name, concurrency))
       })
       worker.on('error', (err) => {
         context.log.error({
@@ -139,7 +139,7 @@ async function fetchTasks (ctx, name, from, count) {
         process.exit(1)
       })
       worker.once('online', async () => {
-        worker.postMessage(await getTask())
+        worker.postMessage(await getTask(context, name, concurrency))
       })
 
       workers.push(worker)
