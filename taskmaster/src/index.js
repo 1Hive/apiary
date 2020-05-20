@@ -1,6 +1,5 @@
 import { call, task } from 'cofx'
 import createLogger from 'pino'
-import Queue from 'bee-queue'
 import { sql } from 'sqliterally'
 import schedule from 'node-schedule'
 import { createPostgres, createCache } from './db'
@@ -13,6 +12,37 @@ export const PERSIST_ACTIVITY = 'ACTIVITY/PERSIST'
 export const CHECKPOINT = 'CORE/CHECKPOINT'
 export const METRIC_SCORES = 'METRIC/SCORES'
 export const METRIC_INSTALLS = 'METRIC/INSTALLS'
+
+export function initStream (ctx) {
+  return new Promise((resolve, reject) => {
+    ctx.cache.client.xgroup('CREATE', 'tasks', 'workers', '0', 'MKSTREAM', (err) => {
+      if (err) {
+        if (err.code !== 'BUSYGROUP') {
+          reject(err)
+          return
+        }
+      }
+
+      resolve()
+    })
+  })
+}
+
+export function createJob (
+  ctx,
+  def
+) {
+  return new Promise((resolve, reject) => {
+    ctx.cache.client.xadd('tasks', '*', 'message', JSON.stringify(def), (err, res) => {
+      if (err) {
+        reject(err)
+        return
+      }
+
+      resolve(res)
+    })
+  })
+}
 
 export async function scheduleBlock (
   ctx,
@@ -31,28 +61,26 @@ export async function scheduleBlock (
 
   // Schedule root tasks
   const jobHandles = await Promise.all(rootTasks.map(
-    (def) => ctx.queue.createJob(def)
-      .retries(10)
-      .backoff('exponential', 500).save()
+    (def) => createJob(ctx, def)
   ))
 
   // Schedule activity persistance task
-  const activityJobHandle = await ctx.queue.createJob({
+  const activityJobHandle = await createJob(ctx, {
     type: PERSIST_ACTIVITY,
     blockNumber,
-    dependencies: jobHandles.map(({ id }) => id)
-  }).retries(10).backoff('exponential', 500).save()
+    dependencies: jobHandles
+  })
 
   // Schedule checkpointing task
-  const { id } = await ctx.queue.createJob({
+  const handle = await createJob(ctx, {
     type: CHECKPOINT,
     blockNumber,
     dependencies: previousBlockHandle
-      ? [activityJobHandle.id, previousBlockHandle]
-      : [activityJobHandle.id]
-  }).retries(10).backoff('exponential', 500).save()
+      ? [activityJobHandle, previousBlockHandle]
+      : [activityJobHandle]
+  })
 
-  return id
+  return handle
 }
 
 export async function getHighestBlock (ctx) {
@@ -74,13 +102,6 @@ export async function getStartBlock (ctx) {
   const GENESIS_BLOCK = 6592900
   if (process.env.START_BLOCK) {
     return process.env.START_BLOCK
-  }
-
-  const [latestJob] = await ctx.queue.getJobs('waiting', {
-    start: -1, end: -1
-  })
-  if (latestJob) {
-    return latestJob.data.blockNumber
   }
 
   const cache = await ctx.cache.get('checkpoint')
@@ -111,14 +132,14 @@ export function * run (ctx) {
   let previousBlockHandle = null
   while (
     // eslint-disable-next-line no-unmodified-loop-condition
-    currentBlock <= targetBlock || targetBlock === 'latest'
+    Number(currentBlock) <= Number(targetBlock) || targetBlock === 'latest'
   ) {
     previousBlockHandle = yield call(scheduleBlock, ctx, currentBlock, previousBlockHandle)
     ctx.log.info({
       block: currentBlock
     }, 'Scheduled block')
 
-    while (currentBlock >= highestBlock) {
+    while (Number(currentBlock) >= Number(highestBlock)) {
       yield call(delay, 10 * 1000)
       highestBlock = yield call(getHighestBlock, ctx)
     }
@@ -140,56 +161,25 @@ export function * run (ctx) {
     cache: await createCache(
       process.env.REDIS_URL || 'redis://localhost:6379'
     ),
-    queue: new Queue('tasks', {
-      redis: {
-        url: process.env.REDIS_URL || 'redis://localhost:6379'
-      },
-      removeOnSuccess: true,
-      stallInterval: 1000 * 60,
-      isWorker: false
-    }),
     log: createLogger({
       level: process.env.LOG_LEVEL || 'info'
     })
   }
 
-  await context.queue.ready()
-
-  // Set up error handlers
-  context.queue.on('failed', (job, err) => {
-    context.log.error({
-      id: job.id,
-      error: err.stack
-    }, 'Job failed.')
-  }).on('retrying', (job) => {
-    context.log.info({
-      id: job.id
-    }, 'Retrying job.')
-  }).on('stalled', (jobId, err) => {
-    context.log.warn({
-      id: jobId
-    }, 'Job stalled.')
-  })
-  context.queue.checkStalledJobs(5000, (_, numStalled) => {
-    if (numStalled > 0) {
-      context.log.warn({
-        count: numStalled
-      }, 'Re-queued stalled jobs.')
-    }
-  })
+  await initStream(context)
 
   // Set up periodic tasks
   schedule.scheduleJob('* * */2 * *', () =>
-    context.queue.createJob({
+    createJob(context, {
       type: METRIC_SCORES,
       dependencies: []
-    }).save()
+    })
   )
   schedule.scheduleJob('*/5 * * * *', () =>
-    context.queue.createJob({
+    createJob(context, {
       type: METRIC_INSTALLS,
       dependencies: []
-    }).save()
+    })
   )
 
   // Run the taskmaster

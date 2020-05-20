@@ -12,7 +12,8 @@ export default function createCache (url) {
     const set = promisify(client.set).bind(client)
     resolve({
       get,
-      set
+      set,
+      client
     })
   })
 }

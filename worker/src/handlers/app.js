@@ -7,7 +7,7 @@ export function * persistInstall (
   task
 ) {
   const { logs } = yield call(
-    eth.fetchDataAtBlock,
+    eth.fetchLogs,
     ctx,
     task.data.blockNumber
   )
@@ -24,7 +24,7 @@ export function * persistVersion (
   task
 ) {
   const { logs } = yield call(
-    eth.fetchDataAtBlock,
+    eth.fetchLogs,
     ctx,
     task.data.blockNumber
   )
