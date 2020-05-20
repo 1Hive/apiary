@@ -136,6 +136,7 @@ async function fetchTasks (ctx, name, from, count) {
           workerId: i,
           error: err.toString()
         }, 'Worker thread crashed.')
+        process.exit(1)
       })
       worker.once('online', async () => {
         worker.postMessage(await getTask())
