@@ -5,6 +5,7 @@ import { Button, GU } from '@aragon/ui'
 import { FILTER_TYPE_DATE_RANGE, DateRangeFilter } from './DateRangeFilter'
 import { FILTER_TYPE_LIST, ListFilter } from './ListFilter'
 import { FILTER_TYPE_CHECKBOX, CheckboxFilter } from './CheckboxFilter'
+import { FILTER_TYPE_LABEL, LabelFilter } from './LabelFilter'
 import { useLocation } from '../../hooks/router'
 import { breakpoint } from '../../utils/breakpoint'
 
@@ -18,6 +19,7 @@ function transformFilterValue (
         between: filterValue
       }
     case FILTER_TYPE_LIST:
+    case FILTER_TYPE_LABEL:
       if (filterValue instanceof Array) {
         return {
           in: filterValue
@@ -118,6 +120,11 @@ export function Filter ({
             onChange={setFilterValue}
             label={filter.label}
           />
+        case FILTER_TYPE_LABEL:
+          return <LabelFilter
+            value={filterState[filter.name]}
+            label={filter.label}
+          />
         default:
           throw new Error(`Unknown filter type ${filter.type}`)
       }
@@ -136,7 +143,8 @@ Filter.propTypes = {
   filters: PropTypes.arrayOf(PropTypes.shape({
     type: PropTypes.oneOf([
       FILTER_TYPE_LIST,
-      FILTER_TYPE_DATE_RANGE
+      FILTER_TYPE_DATE_RANGE,
+      FILTER_TYPE_LABEL
     ]).isRequired,
     name: PropTypes.string.isRequired
   })),
