@@ -28,7 +28,8 @@ import {
 
   FILTER_TYPE_DATE_RANGE,
   FILTER_TYPE_LIST,
-  FILTER_TYPE_CHECKBOX
+  FILTER_TYPE_CHECKBOX,
+  FILTER_TYPE_LABEL
 } from '../components/Filter'
 import { NavTabs } from '../components/NavTabs/NavTabs'
 import SmartLink from '../components/SmartLink/SmartLink'
@@ -169,6 +170,10 @@ const Orgs = ({ history }) => {
               }, {
                 type: FILTER_TYPE_DATE_RANGE,
                 name: 'createdAt'
+              }, {
+                type: FILTER_TYPE_LABEL,
+                label: 'App',
+                name: 'app'
               }, {
                 type: FILTER_TYPE_CHECKBOX,
                 label: 'Profile',
