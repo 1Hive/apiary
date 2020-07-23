@@ -10,9 +10,10 @@ const {
 } = require('graphql-tools')
 const DataLoader = require('dataloader')
 const { MongoClient } = require('mongodb')
-
+const { toChecksumAddress } = require('ethereumjs-util')
 async function connectToDatabase() {
-  const db = await MongoClient.connect(process.env.MONGO_URL)
+  const client = await MongoClient.connect(process.env.MONGODB_URI)
+  const db = client.db(process.env.MONGODB_NAME)
 
   return {
     profiles: db.collection('profiles')
@@ -72,7 +73,7 @@ async function buildSchema(loaders) {
         profile: {
           selectionSet: `{ address }`,
           async resolve(org) {
-            return loaders.profileLoader.load(org.address)
+            return await loaders.profileLoader.load(org.address) || {}
           }
         }
       }
@@ -81,8 +82,27 @@ async function buildSchema(loaders) {
 }
 
 connectToDatabase().then(async (db) => {
-  const profileLoader = new DataLoader((keys) => {
-    return db.profiles.find({ address: { $in: keys } }).toArray()
+  const profileLoader = new DataLoader(async (keys) => {
+    // For some reason addresses in The Graph are not checksummed..
+    keys = keys.map((k) => toChecksumAddress(k))
+    const results = await db.profiles
+      .find({
+        address: {
+          $in: keys
+        }
+      })
+      .toArray()
+    
+    // We have to reorder the results and insert nulls in case
+    // the profile does not exist as this is expected by DataLoader.
+    let profiles = []
+    for (const result of results) {
+      profiles[keys.indexOf(result.address)] = result
+    }
+    for (let i = 0; i < keys.length; i++) {
+      if (!profiles[i]) profiles[i] = null
+    }
+    return profiles
   })
   const schema = await buildSchema({
     profileLoader
