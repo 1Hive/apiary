@@ -48,7 +48,8 @@ async function buildSchema ({
     new FilterRootFields((_, rootField) => [
       'organizations',
       'organization',
-      'repos'
+      'repos',
+      'orgFactories'
     ].includes(rootField))
   ]
 
