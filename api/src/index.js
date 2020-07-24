@@ -11,7 +11,7 @@ const {
 const DataLoader = require('dataloader')
 const { MongoClient } = require('mongodb')
 const { toChecksumAddress } = require('ethereumjs-util')
-async function connectToDatabase() {
+async function connectToDatabase () {
   const client = await MongoClient.connect(process.env.MONGODB_URI)
   const db = client.db(process.env.MONGODB_NAME)
 
@@ -20,7 +20,7 @@ async function connectToDatabase() {
   }
 }
 
-async function buildSchema(loaders) {
+async function buildSchema (loaders) {
   const aragonConnectExecutor = linkToExecutor(new HttpLink({
     uri: process.env.GRAPH_ARAGON_CONNECT,
     fetch
@@ -65,14 +65,14 @@ async function buildSchema(loaders) {
   return stitchSchemas({
     subschemas: [{
       schema: aragonConnectSchema,
-      transforms: aragonConnectSchemaTransforms,
+      transforms: aragonConnectSchemaTransforms
     }],
     typeDefs: localTypeDefs,
     resolvers: {
       Organization: {
         profile: {
           selectionSet: `{ address }`,
-          async resolve(org) {
+          async resolve (org) {
             return await loaders.profileLoader.load(org.address) || {}
           }
         }
@@ -92,10 +92,10 @@ connectToDatabase().then(async (db) => {
         }
       })
       .toArray()
-    
+
     // We have to reorder the results and insert nulls in case
     // the profile does not exist as this is expected by DataLoader.
-    let profiles = []
+    const profiles = []
     for (const result of results) {
       profiles[keys.indexOf(result.address)] = result
     }
@@ -115,4 +115,3 @@ connectToDatabase().then(async (db) => {
     console.log(`Server listening at ${url}`)
   })
 })
-
