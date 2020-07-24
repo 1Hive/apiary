@@ -66,8 +66,8 @@ async function buildSchema ({
       profile: Profile!
     }
 
-    extend type Mutation {
-      # Update organisation profile.
+    type Mutation {
+      # Update organization profile.
       updateProfile(
         # The organization address
         adress: String!,
@@ -83,7 +83,7 @@ async function buildSchema ({
         signerAddress: String!,
         # The signed message.
         signedMessage: String!
-      ): Organisation!
+      ): Organization!
     }
   `
 
