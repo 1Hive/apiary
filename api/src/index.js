@@ -12,7 +12,7 @@ const {
 const DataLoader = require('dataloader')
 const { MongoClient } = require('mongodb')
 const { toChecksumAddress } = require('ethereumjs-util')
-const { validateSignature, validatePermission } = require('./eth.js')
+import { validateSignature, validatePermission } from './eth'
 
 async function connectToDatabase () {
   const client = await MongoClient.connect(process.env.MONGODB_URI)

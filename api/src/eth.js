@@ -37,6 +37,17 @@ export function validateSignerAddress (
   return addressEqual(recoveredAddress, signerAddress)
 }
 
+export function validateSignature (
+  orgAddress,
+  profile,
+  signedMessage,
+  signerAddress
+) {
+  const originalMessage = composeSignedMessage(orgAddress, profile)
+  
+  return validateSignerAddress(originalMessage, signedMessage, signerAddress)
+}
+
 const MANAGE_PROFILE_ROLE = '0x675b358b95ae7561136697fcc3302da54a334ac7c199d53621288290fb863f5c'
 const EMPTY_SCRIPT = '0x00'
 export async function validatePermission (
