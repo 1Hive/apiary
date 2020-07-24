@@ -6,11 +6,14 @@ const {
   linkToExecutor,
   wrapSchema,
   stitchSchemas,
+  delegateToSchema,
   FilterRootFields
 } = require('graphql-tools')
 const DataLoader = require('dataloader')
 const { MongoClient } = require('mongodb')
 const { toChecksumAddress } = require('ethereumjs-util')
+const { validateSignature, validatePermission } = require('./eth.js')
+
 async function connectToDatabase () {
   const client = await MongoClient.connect(process.env.MONGODB_URI)
   const db = client.db(process.env.MONGODB_NAME)
@@ -20,7 +23,10 @@ async function connectToDatabase () {
   }
 }
 
-async function buildSchema (loaders) {
+async function buildSchema ({
+  loaders,
+  db
+}) {
   const aragonConnectExecutor = linkToExecutor(new HttpLink({
     uri: process.env.GRAPH_ARAGON_CONNECT,
     fetch
@@ -59,6 +65,26 @@ async function buildSchema (loaders) {
     extend type Organization {
       profile: Profile!
     }
+
+    extend type Mutation {
+      # Update organisation profile.
+      updateProfile(
+        # The organization address
+        adress: String!,
+        # The desired organization name.
+        name: String,
+        # An URL to the desired organization icon.
+        icon: String,
+        # A list of links relevant to the organization.
+        links: [String],
+        # An organization description.
+        description: String,
+        # The address of the signer.
+        signerAddress: String!,
+        # The signed message.
+        signedMessage: String!
+      ): Organisation!
+    }
   `
 
   // Merge the remote schemas with the local type defs
@@ -75,6 +101,50 @@ async function buildSchema (loaders) {
           async resolve (org) {
             return await loaders.profileLoader.load(org.address) || {}
           }
+        }
+      },
+      Mutation: {
+        async updateProfile (_, args, context, info) {
+          const {
+            address,
+            signerAddress,
+            signedMessage,
+            ...profile
+          } = args
+
+          const isValidSignature = validateSignature(
+            address,
+            profile,
+            signedMessage,
+            signerAddress
+          )
+          if (!isValidSignature) {
+            throw new Error('Failed to verify signed message.')
+          }
+
+          const hasPermission = await validatePermission(
+            address,
+            signerAddress
+          )
+          if (!hasPermission) {
+            throw new Error(`Provided address ${signerAddress} does not have relevant permissions.`)
+          }
+
+          await db.profiles.updateOne({ address }, {
+            $set: { ...profile },
+            $addToSet: { editors: signerAddress }
+          })
+
+          return delegateToSchema({
+            schema: aragonConnectSchema,
+            operation: 'query',
+            fieldName: 'organization',
+            args: {
+              id: address
+            },
+            context,
+            info
+          })
         }
       }
     }
@@ -105,7 +175,10 @@ connectToDatabase().then(async (db) => {
     return profiles
   })
   const schema = await buildSchema({
-    profileLoader
+    loaders: {
+      profileLoader
+    },
+    db
   })
 
   // Start the GraphQL server
