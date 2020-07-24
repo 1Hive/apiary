@@ -100,7 +100,12 @@ async function buildSchema ({
         profile: {
           selectionSet: `{ address }`,
           async resolve (org) {
-            return await loaders.profileLoader.load(org.address) || {}
+            const profile = await loaders.profileLoader.load(org.address) || {}
+
+            profile.links = profile.links || []
+            profile.editors = profile.editors || []
+
+            return profile
           }
         }
       },
