@@ -44,7 +44,7 @@ export function validateSignature (
   signerAddress
 ) {
   const originalMessage = composeSignedMessage(orgAddress, profile)
-  
+
   return validateSignerAddress(originalMessage, signedMessage, signerAddress)
 }
 

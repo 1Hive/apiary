@@ -1,3 +1,4 @@
+import { validateSignature, validatePermission } from './eth'
 const { ApolloServer } = require('apollo-server')
 const { HttpLink } = require('apollo-link-http')
 const fetch = require('node-fetch')
@@ -12,7 +13,6 @@ const {
 const DataLoader = require('dataloader')
 const { MongoClient } = require('mongodb')
 const { toChecksumAddress } = require('ethereumjs-util')
-import { validateSignature, validatePermission } from './eth'
 
 async function connectToDatabase () {
   const client = await MongoClient.connect(process.env.MONGODB_URI)
@@ -132,7 +132,7 @@ async function buildSchema ({
           // it has been claimed.
           const currentProfile = await db.profiles.find({
             address
-	  }).limit(1).next()
+          }).limit(1).next()
           let isOpen = true
           if (currentProfile && currentProfile.editors) {
             isOpen = currentProfile.editors.length === 0
@@ -146,7 +146,7 @@ async function buildSchema ({
             throw new Error(`Provided address ${signerAddress} does not have relevant permissions.`)
           }
 
-          let changeset = { $set: { ...profile } }
+          const changeset = { $set: { ...profile } }
           if (hasPermission) {
             changeset['$addToSet'] = { editors: signerAddress }
           }
