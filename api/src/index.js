@@ -128,18 +128,30 @@ async function buildSchema ({
             throw new Error('Failed to verify signed message.')
           }
 
+          // Profiles start out being editable by anyone unless
+          // it has been claimed.
+          const currentProfile = await db.profiles.find({
+            address
+	  }).limit(1).next()
+          let isOpen = true
+          if (currentProfile && currentProfile.editors) {
+            isOpen = currentProfile.editors.length === 0
+          }
+
           const hasPermission = await validatePermission(
             address,
             signerAddress
           )
-          if (!hasPermission) {
+          if (!hasPermission && !isOpen) {
             throw new Error(`Provided address ${signerAddress} does not have relevant permissions.`)
           }
 
-          await db.profiles.updateOne({ address }, {
-            $set: { ...profile },
-            $addToSet: { editors: signerAddress }
-          })
+          let changeset = { $set: { ...profile } }
+          if (hasPermission) {
+            changeset['$addToSet'] = { editors: signerAddress }
+          }
+
+          await db.profiles.updateOne({ address }, changeset)
 
           return delegateToSchema({
             schema: aragonConnectSchema,
