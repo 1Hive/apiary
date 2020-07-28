@@ -134,7 +134,7 @@ export default () => {
   return <div>
     <NavTabs
       items={[{
-        label: 'Organisations',
+        label: 'Organizations',
         path: '/orgs'
       }, {
         label: 'Apps',

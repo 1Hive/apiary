@@ -46,10 +46,6 @@ export const WindowedPagination = React.memo(({
 
 WindowedPagination.propTypes = {
   onPage: PropTypes.func.isRequired,
-  pageInfo: PropTypes.shape({
-    hasPreviousPage: PropTypes.bool,
-    hasNextPage: PropTypes.bool,
-    startCursor: PropTypes.string,
-    endCursor: PropTypes.string
-  })
+  skip: PropTypes.number,
+  resultCount: PropTypes.number
 }

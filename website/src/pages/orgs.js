@@ -23,14 +23,6 @@ import {
 import { format } from 'date-fns'
 import { WindowedPagination } from '../components/WindowedPagination'
 import { SortHeader } from '../components/SortHeader'
-import {
-  Filter,
-
-  FILTER_TYPE_DATE_RANGE,
-  FILTER_TYPE_LIST,
-  FILTER_TYPE_CHECKBOX,
-  FILTER_TYPE_LABEL
-} from '../components/Filter'
 import { NavTabs } from '../components/NavTabs/NavTabs'
 import SmartLink from '../components/SmartLink/SmartLink'
 import useSort from '../hooks/sort'
@@ -38,19 +30,16 @@ import openSafe from '../utils/open-safe'
 import { formatNumber } from '../utils/numbers'
 import { isProfileEmpty } from '../utils/utils'
 
-const ORGANISATIONS_QUERY = `
+const ORGANIZATIONS_QUERY = `
   query(
     $first: Int!
     $skip: Int!
-    #$sort: OrganisationConnectionSort
   ) {
     organizations(
       first: $first,
       skip: $skip#,
-      #sort: $sort,
     ) {
       address
-      #kit
       #createdAt
       profile {
         name
@@ -86,12 +75,8 @@ const Orgs = ({ history }) => {
     loading,
     error,
     data
-  } = useQuery(ORGANISATIONS_QUERY, {
-    // TODO
+  } = useQuery(ORGANIZATIONS_QUERY, {
     variables: {
-      //sort: {
-      //  [sort[0]]: sort[1]
-      //},
       first: 10,
       skip: pagination
     },
@@ -117,7 +102,7 @@ const Orgs = ({ history }) => {
   return <div>
     <NavTabs
       items={[{
-        label: 'Organisations',
+        label: 'Organizations',
         path: '/orgs'
       }, {
         label: 'Apps',
@@ -129,12 +114,7 @@ const Orgs = ({ history }) => {
         {!firstFetch && (
           <DataView
             fields={[
-              <SortHeader
-                key='sort-org'
-                label='Organisation'
-                onClick={() => sortBy('ens')}
-                sortOrder={sort[0] === 'ens' && sort[1]}
-              />,
+              'Organization',
               <SortHeader
                 key='sort-created'
                 label='Created'
@@ -147,7 +127,7 @@ const Orgs = ({ history }) => {
               address,
               createdAt,
               profile = {}
-            }) => [ 
+            }) => [
               <div
                 key='org-addr'
                 css={`
@@ -281,7 +261,7 @@ const Orgs = ({ history }) => {
         <>
           <Box>
             <Text.Block size='xlarge'>{formatNumber(totalOrgs)}</Text.Block>
-            <Text>organisations</Text>
+            <Text>organizations</Text>
           </Box>
         </>
       }
