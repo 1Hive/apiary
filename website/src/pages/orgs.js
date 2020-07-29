@@ -40,7 +40,7 @@ const ORGANIZATIONS_QUERY = `
       skip: $skip#,
     ) {
       address
-      #createdAt
+      createdAt
       profile {
         name
         description
@@ -140,7 +140,7 @@ const Orgs = ({ history }) => {
                 <IdentityBadge key='org-addr' entity={address} label={profile.name || ''} popoverTitle={profile.name || ''} />
               </div>,
               <div key='org-created-at'>
-                {format(new Date(createdAt || 0), 'dd/MM/y')}
+                {format(new Date(createdAt * 1000), 'dd/MM/y')}
               </div>
             ]}
             renderEntryActions={({ address }) => [
