@@ -12,6 +12,7 @@ import {
   IdentityBadge,
   Button,
   SyncIndicator,
+  IconCircleCheck,
 
   textStyle,
 
@@ -50,6 +51,7 @@ const ORGANIZATIONS_QUERY = `
         description
         icon
         links
+        editors
       }
     }
     orgFactories {
@@ -143,7 +145,8 @@ const Orgs = ({ history }) => {
               `}
               >
                 {profile.icon && <img src={profile.icon} width='32px' height='auto' css={`margin-right: ${1 * GU}px;`} />}
-                <IdentityBadge key='org-addr' entity={address} label={profile.name || ''} popoverTitle={profile.name || ''} />
+                <IdentityBadge key='org-addr' entity={address} label={profile.name || ''} popoverTitle={profile.name || ''} badgeOnly={!!profile.name} />
+                {profile.editors && profile.editors.length > 0 && <IconCircleCheck />}
               </div>,
               <div key='org-created-at'>
                 {format(new Date(createdAt * 1000), 'dd/MM/y')}
