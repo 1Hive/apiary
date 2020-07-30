@@ -34,10 +34,14 @@ const ORGANIZATIONS_QUERY = `
   query(
     $first: Int!
     $skip: Int!
+    $orderBy: Organization_orderBy!,
+    $orderDirection: OrderDirection!
   ) {
     organizations(
       first: $first,
-      skip: $skip#,
+      skip: $skip,
+      orderBy: $orderBy,
+      orderDirection: $orderDirection
     ) {
       address
       createdAt
@@ -55,7 +59,7 @@ const ORGANIZATIONS_QUERY = `
 `
 
 const Orgs = ({ history }) => {
-  const [sort, sortBy] = useSort('createdAt', 'DESC')
+  const [sort, sortBy] = useSort('createdAt', 'desc')
   const [pagination, setPagination] = useState(0)
   const { layoutName } = useLayout()
   const theme = useTheme()
@@ -78,7 +82,9 @@ const Orgs = ({ history }) => {
   } = useQuery(ORGANIZATIONS_QUERY, {
     variables: {
       first: 10,
-      skip: pagination
+      skip: pagination,
+      orderBy: sort[0],
+      orderDirection: sort[1]
     },
 
     // This is kind of ugly, but this identity function
