@@ -100,7 +100,7 @@ async function buildSchema ({
         profile: {
           selectionSet: `{ address }`,
           async resolve (org) {
-            const profile = await loaders.profileLoader.load(org.address) || {}
+            const profile = await loaders.profileLoader.load(`${process.env.NETWORK_ID}-${org.address}`) || {}
 
             profile.links = profile.links || []
             profile.editors = profile.editors || []
@@ -151,7 +151,7 @@ async function buildSchema ({
             changeset['$addToSet'] = { editors: signerAddress }
           }
 
-          await db.profiles.updateOne({ address }, changeset)
+          await db.profiles.updateOne({ address: `${process.env.NETWORK_ID}-${address}` }, changeset)
 
           return delegateToSchema({
             schema: aragonConnectSchema,
@@ -167,6 +167,25 @@ async function buildSchema ({
       }
     }
   })
+}
+
+const REQUIRED_ENV_VARS = [
+  'NETWORK_ID',
+  'GRAPH_ARAGON_CONNECT',
+  'MONGODB_URI',
+  'MONGODB_NAME'
+]
+
+const missingEnvVars = REQUIRED_ENV_VARS.filter(
+  (var) => !!process.env[var]
+)
+for (const missingVar of missingEnvVars) {
+  console.error(`Please set ${missingVar}.`)
+}
+
+if (missingEnvVars.length > 0) {
+  console.error('Misconfigured environment. Please see above.')
+  process.exit(1)
 }
 
 connectToDatabase().then(async (db) => {
