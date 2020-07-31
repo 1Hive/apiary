@@ -60,7 +60,7 @@ function EditSidePanel ({
   const [characterCountMode, setCharacterCountMode] = useState('info')
   const [saved, setSaved] = useState(false)
   const [profileName, setProfileName] = useState(name)
-  const [profileDescription, setProfileDescription] = useState(description)
+  const [profileDescription, setProfileDescription] = useState(description || '')
   const [profileIcon, setProfileIcon] = useState(icon)
   const [profileLinks, setProfileLinks] = useState(links.length > 0 ? links : [''])
   const { account, ethereum } = useWallet()
@@ -264,9 +264,9 @@ function EditSidePanel ({
       >Save Profile
       </Button>
       <Info title='DAO Profile Pages' css={`margin-top: ${2 * GU}px;`}>
-      Public profiles allow DAOs to associate their name, icon, description and links (such as website or chat group) to a public profile on Apiary.
+        Public profiles allow DAOs to associate their name, icon, description and links (such as website or chat group) to a public profile on Apiary.
 
-      The DAO can add or remove editors by creating a vote.
+        The DAO can add or remove editors by creating a vote.
       </Info>
     </SidePanel>
   )

@@ -33,7 +33,7 @@ import {
   REQUEST_EDIT_PROFILE,
   OWNERSHIP_STATUSES
 } from '../utils/ownership-statuses'
-import { isProfileEmpty, getDaoFromLocation } from '../utils/utils'
+import { getDaoFromLocation } from '../utils/utils'
 import { useWrapper } from '../utils/web3-contracts'
 import { addressesEqual } from '../utils/web3-utils'
 
@@ -42,34 +42,30 @@ const EMPTY_SCRIPT = '0x00'
 const NO_PERMISSION = '0x0000000000000000000000000000000000000000'
 
 const REJECTION_PANEL_TIME = 4000
-const DANDELION_KIT_ADDRESS = '0xbc2A863ef2B96d454aC7790D5A9E8cFfd8EccBa8'
 
-const ORGANISATION_QUERY = `
+const ORGANIZATION_QUERY = `
   query(
-    $address: String!
+    $address: ID!
   ) {
-    organisation(
-      address: $address
+    organization(
+      id: $address
     ) {
       address
-      ens
       createdAt
-      aum
-      activity
-      score
-      kit
-      proxies {
-        app {
-          name
-        }
-        address
-      }
       profile {
         name
         description
         icon
         links
         editors
+      }
+      apps {
+        repoName
+        address
+        version {
+          semanticVersion
+          manifest
+        }
       }
     }
   }
@@ -131,7 +127,7 @@ function DaoProfile ({ daoAddress, history }) {
     error,
     data,
     refetch
-  } = useQuery(ORGANISATION_QUERY, {
+  } = useQuery(ORGANIZATION_QUERY, {
     variables: {
       address: daoAddress
     },
@@ -209,13 +205,21 @@ function DaoProfile ({ daoAddress, history }) {
       return
     }
 
-    const { organisation } = data
+    const { organization } = data
 
     if (ownershipStatus === 'CLAIM_PROFILE') {
       // handle open claim profile panel
-      const votingAddress = organisation.proxies.find(
-        appProxy => appProxy.app && appProxy.app.name === 'Voting'
+      const votingAddress = organization.apps.find(
+        appProxy => appProxy.repoName === 'voting'
       )
+      if (!votingAddress) {
+        console.error(`Could not find voting app.`)
+        console.error(organization.apps)
+        openRejectionPanel()
+        setTransactionPath(null)
+        return
+      }
+
       const transactionPath = await wrapper.getACLTransactionPath(
         'createPermission',
         [
@@ -228,7 +232,7 @@ function DaoProfile ({ daoAddress, history }) {
       // There's no possible path.
       // Also, block Dandelion apps from claiming their profile,
       // due to not supporting pre-transactions as of yet. :(
-      if (!transactionPath.length || organisation.kit === DANDELION_KIT_ADDRESS) {
+      if (!transactionPath.length) {
         openRejectionPanel()
         setTransactionPath(null)
         return
@@ -248,7 +252,7 @@ function DaoProfile ({ daoAddress, history }) {
       )
       //
       // There's no possible path.
-      if (!transactionPath.length || organisation.kit === DANDELION_KIT_ADDRESS) {
+      if (!transactionPath.length) {
         openRejectionPanel()
         setTransactionPath(null)
         return
@@ -257,12 +261,6 @@ function DaoProfile ({ daoAddress, history }) {
     }
 
     if (ownershipStatus === 'EDIT_PROFILE') {
-      if (organisation.kit === DANDELION_KIT_ADDRESS) {
-        openRejectionPanel()
-        setTransactionPath(null)
-        return
-      }
-      // handle open edit profile
       openEditPanel()
     }
   }, [data, ownershipStatus, transactionPath])
@@ -297,70 +295,16 @@ function DaoProfile ({ daoAddress, history }) {
     )
   }
 
-  const { organisation } = data
-
-  const profileEmpty = isProfileEmpty(organisation.profile)
-
-  if (
-    profileEmpty &&
-    (
-      ownershipStatus === 'CLAIM_PROFILE' ||
-      ownershipStatus === 'NOT_CONNECTED_PROFILE'
-    )
-  ) {
-    return (
-      <div
-        css={`
-          width: 100%;
-        `}
-      >
-        <TransactionSidePanel
-          onClose={closeTransactionPanel}
-          opened={transactionPanelOpened}
-          proxies={organisation.proxies}
-          transactionPath={transactionPath}
-        />
-        <RejectionSidePanel
-          onClose={closeRejectionPanel}
-          opened={rejectionPanelOpened}
-        />
-        <Header
-          primary='Profile'
-        />
-        <div
-          css={`
-            width: 100%;
-            min-height: 50vh;
-            display: flex;
-            align-items: flex-end;
-            justify-content: center;
-          `}
-        >
-          <EmptyStateCard
-            text='This DAO does not have a profile. Claim it to edit it!'
-            action={
-              <Button
-                onClick={handleOwnershipIntent}
-                label={ownershipActionLabel}
-              >
-                {ownershipActionLabel}
-              </Button>
-            }
-            disabled={!connected || !wrapperReady}
-          />
-        </div>
-      </div>
-    )
-  }
+  const { organization } = data
 
   return (
     <div>
       <EditSidePanel
         address={daoAddress}
-        description={organisation.profile.description}
-        name={organisation.profile.name}
-        icon={organisation.profile.icon}
-        links={organisation.profile.links}
+        description={organization.profile.description}
+        name={organization.profile.name}
+        icon={organization.profile.icon}
+        links={organization.profile.links}
         opened={editPanelOpened}
         onClose={closeEditPanel}
         refetchQuery={refetch}
@@ -368,7 +312,7 @@ function DaoProfile ({ daoAddress, history }) {
       <TransactionSidePanel
         onClose={closeTransactionPanel}
         opened={transactionPanelOpened}
-        proxies={organisation.proxies}
+        apps={organization.apps}
         transactionPath={transactionPath}
       />
       <RejectionSidePanel
@@ -388,155 +332,135 @@ function DaoProfile ({ daoAddress, history }) {
           </Button>
         }
       />
-      <Split
-        primary={
-          <>
-            <Bar primary={<BackButton onClick={() => {
-              if (history.length) {
-                history.goBack()
-              } else {
-                window.location.href = '/'
-              }
-            }} />} />
-            <Box>
-              <div
-                css={`
-                  display: flex;
-                `}
-              >
-                {organisation.profile.icon && <img src={organisation.profile.icon} height='80px' width='auto' />}
-                <div
-                  css={`
-                    display: flex;
-                    flex-direction: column;
-                    justify-content: space-between;
-                    margin-left: ${2 * GU}px;
-                  `}
-                >
-
-                  <div
-                    css={`
-                      ${textStyle('title3')}
-                    `}
-                  >
-                    {organisation.profile.name || 'No name available.'}
-                  </div>
-
-                  <IdentityBadge entity={daoAddress} />
-
-                </div>
-              </div>
-              <div
-                css={`
-                  display: grid;
-                  grid-template-columns: 1fr 1fr;
-                  ${below('medium') && `
-                    display: flex;
-                    flex-direction: column;
-                  `}
-                `}
-              >
-                <div>
-                  <div
-                    css={`
-                      margin-top: ${2 * GU}px;
-                      margin-bottom: ${1 * GU}px;
-                      ${textStyle('label2')}
-                      color: ${theme.contentSecondary};
-                    `}
-                  >
-                  Description
-                  </div>
-                  <p
-                    css={`
-                      margin-bottom: ${2 * GU}px;
-                      padding-right: ${1 * GU}
-                    `}
-                  >
-                    {organisation.profile.description || 'No description available.'}
-                  </p>
-                </div>
-                <div>
-                  <div
-                    css={`
-                      margin-top: ${2 * GU}px;
-                      margin-bottom: ${1 * GU}px;
-                      ${textStyle('label2')}
-                      color: ${theme.contentSecondary};
-                    `}
-                  >
-                  Editors
-                  </div>
-                  <div>
-                    {organisation.profile.editors.length
-                      ? organisation.profile.editors.map(editor => (
-                        <div
-                          key={editor}
-                          css={`
-                            margin-top: ${1 * GU}px;
-                          `}
-                        >
-                          <IdentityBadge
-                            entity={editor}
-                          />
-                        </div>
-                      )
-                      ) : 'No authorized editors have edited this profile.'}
-                  </div>
-                </div>
-                <div
-                  css={`
-                    grid-column: 2 / span 1;
-                  `}
-                >
-                  <div
-                    css={`
-                      margin-top: ${2 * GU}px;
-                      margin-bottom: ${1 * GU}px;
-                      ${textStyle('label2')}
-                      color: ${theme.contentSecondary};
-                    `}
-                  >
-                  Links
-                  </div>
-                  {organisation.profile.links.length
-                    ? organisation.profile.links
-                      .map(link => (
-                        <div
-                          key={link}
-                          css={`
-                            display: flex;
-                            flex-wrap: wrap;
-                            margin-right: ${1 * GU}px;
-                          `}
-                        >
-                          <SmartLink url={link} />
-                        </div>
-                      )
-                      ) : 'No links available.'}
-                </div>
-              </div>
-              {ownershipStatus === 'NOT_CONNECTED_PROFILE' && (
-                <Info title='Editing Profile' css={`margin-top: ${GU}px`}>
-                  To edit, claim or add yourself as an editor for this DAO profile, please connect to web3.
-                </Info>
-              )}
-            </Box>
-          </>
+      <Bar primary={<BackButton onClick={() => {
+        if (history.length) {
+          history.goBack()
+        } else {
+          window.location.href = '/'
         }
-        secondary={
-          <>
-            <Box>
-              <Text.Block size='xlarge'>◈ {formatNumber(organisation.aum)}</Text.Block>
-              <Text>AUM</Text>
-            </Box>
-            <Box>
-              <Text.Block size='xlarge'>{formatNumber(organisation.activity)}</Text.Block>
-              <Text>activity (90 days)</Text>
-            </Box>
-          </>
-        }
-      />
+      }} />} />
+      <Box>
+        <div
+          css={`
+            display: flex;
+          `}
+        >
+          {organization.profile.icon && <img src={organization.profile.icon} height='80px' width='auto' />}
+          <div
+            css={`
+              display: flex;
+              flex-direction: column;
+              justify-content: space-between;
+              margin-left: ${2 * GU}px;
+            `}
+          >
+            <div
+              css={`
+                ${textStyle('title3')}
+              `}
+            >
+              {organization.profile.name || 'No name available.'}
+            </div>
+            <IdentityBadge entity={daoAddress} />
+          </div>
+        </div>
+        <div
+          css={`
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            ${below('medium') && `
+              display: flex;
+              flex-direction: column;
+            `}
+          `}
+        >
+          <div>
+            <div
+              css={`
+                margin-top: ${2 * GU}px;
+                margin-bottom: ${1 * GU}px;
+                ${textStyle('label2')}
+                color: ${theme.contentSecondary};
+              `}
+            >
+            Description
+            </div>
+            <p
+              css={`
+                margin-bottom: ${2 * GU}px;
+                padding-right: ${1 * GU}
+              `}
+            >
+              {organization.profile.description || 'No description available.'}
+            </p>
+          </div>
+          <div>
+            <div
+              css={`
+                margin-top: ${2 * GU}px;
+                margin-bottom: ${1 * GU}px;
+                ${textStyle('label2')}
+                color: ${theme.contentSecondary};
+              `}
+            >
+            Editors
+            </div>
+            <div>
+              {organization.profile.editors.length
+                ? organization.profile.editors.map(editor => (
+                  <div
+                    key={editor}
+                    css={`
+                      margin-top: ${1 * GU}px;
+                    `}
+                  >
+                    <IdentityBadge
+                      entity={editor}
+                    />
+                  </div>
+                )
+                ) : 'No authorized editors have claimed this profile.'}
+            </div>
+          </div>
+          <div
+            css={`
+              grid-column: 2 / span 1;
+            `}
+          >
+            <div
+              css={`
+                margin-top: ${2 * GU}px;
+                margin-bottom: ${1 * GU}px;
+                ${textStyle('label2')}
+                color: ${theme.contentSecondary};
+              `}
+            >
+            Links
+            </div>
+            {organization.profile.links.length
+              ? organization.profile.links
+                .map(link => (
+                  <div
+                    key={link}
+                    css={`
+                      display: flex;
+                      flex-wrap: wrap;
+                      margin-right: ${1 * GU}px;
+                    `}
+                  >
+                    <SmartLink url={link} />
+                  </div>
+                )
+                ) : 'No links available.'}
+          </div>
+        </div>
+        {ownershipStatus === 'NOT_CONNECTED_PROFILE' && (
+          <Info title='Editing Profile' css={`margin-top: ${GU}px`}>
+            {organization.profile.editors.length === 0 && 'This profile has not been claimed and is open for editing.'}
+            To edit or claim this profile, please connect your wallet.
+          </Info>
+        )}
+      </Box>
     </div>
   )
 }
