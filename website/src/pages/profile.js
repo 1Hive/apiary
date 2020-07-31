@@ -6,12 +6,10 @@ import {
   BackButton,
   Bar,
   Box,
-  Text,
   Button,
   EmptyStateCard,
   Header,
   IdentityBadge,
-  Split,
   textStyle,
   Info,
   useTheme,
@@ -24,7 +22,6 @@ import SmartLink from '../components/SmartLink/SmartLink'
 import EditSidePanel from '../components/SidePanel/EditSidePanel'
 import RejectionSidePanel from '../components/SidePanel/RejectionSidePanel'
 import TransactionSidePanel from '../components/SidePanel/TransactionSidePanel'
-import { formatNumber } from '../utils/numbers'
 import {
   CLAIM_PROFILE,
   EDIT_PROFILE,

@@ -3,10 +3,6 @@ import { useQuery } from 'graphql-hooks'
 import {
   Info,
 
-  Split,
-  Box,
-  Text,
-
   DataView,
   AppBadge,
   ContextMenu,
@@ -148,7 +144,6 @@ export default () => {
     })
   }
 
-  const totalApps = 0
   const firstFetch = loading && !data
   return <div>
     <NavTabs
