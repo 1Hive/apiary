@@ -8,7 +8,9 @@ const KNOWN_PLATFORMS = new Map([
   ['metacartel', 'Metacartel'],
   ['twitter', 'Twitter'],
   ['instagram', 'Instagram'],
-  ['keybase', 'Keybase']
+  ['keybase', 'Keybase'],
+  ['youtube', 'YouTube'],
+  ['medium', 'Medium']
 ])
 
 export default function SmartLink ({ url, ...props }) {

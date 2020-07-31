@@ -7,12 +7,6 @@ services:
     - "27017:27017"
     volumes:
     - mongo-data:/data/db
-  # Cache
-  redis:
-    image: "redis:alpine"
-    entrypoint: redis-server --appendonly yes
-    volumes:
-    - cache-data:/data
   # API
   api:
     build:
@@ -25,32 +19,6 @@ services:
     - ETH_NODE=wss://mainnet.eth.aragon.network/ws
     depends_on:
     - mongo
-  # Taskmaster
-  taskmaster:
-    build:
-      context: ./taskmaster
-      dockerfile: Dockerfile.taskmaster
-    environment:
-     - LOG_LEVEL=debug
-     - ETH_NODE=wss://mainnet.eth.aragon.network/ws
-     - REDIS_URL=redis://redis:6379
-     - IPFS_URI=https://ipfs.eth.aragon.network
-    depends_on:
-     - redis
-  # Worker
-  worker:
-    build:
-      context: ./worker
-      dockerfile: Dockerfile.worker
-    environment:
-     - LOG_LEVEL=debug
-     - MONGODB_URI=mongodb://mongo:27017
-     - ETH_NODE=wss://mainnet.eth.aragon.network/ws
-     - REDIS_URL=redis://redis:6379
-     - IPFS_URI=https://ipfs.eth.aragon.network
-    depends_on:
-     - mongo
-     - redis
   # Website
   website:
     build:
@@ -63,8 +31,6 @@ services:
     - "8888:80"
     depends_on:
     - api
-    - worker
 
 volumes:
-  cache-data:
   mongo-data:

@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react'
 
 export function inverseSortDirection (sortDirection) {
-  return sortDirection === 'ASC' ? 'DESC' : 'ASC'
+  return sortDirection === 'asc' ? 'desc' : 'asc'
 }
 
 export default function useSort (
@@ -13,7 +13,7 @@ export default function useSort (
   const sortBy = useCallback((field) => {
     setSort((sort) => [
       field,
-      sort[0] === field ? inverseSortDirection(sort[1]) : 'DESC'
+      sort[0] === field ? inverseSortDirection(sort[1]) : 'desc'
     ])
   }, [])
 

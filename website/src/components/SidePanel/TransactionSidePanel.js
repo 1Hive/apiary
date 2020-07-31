@@ -17,7 +17,7 @@ import { constructPathDescription } from '../../utils/utils'
 export default function TransactionSidePanel ({
   onClose,
   opened,
-  proxies,
+  apps,
   transactionPath
 }) {
   const [buttonDisabled, setButtonDisabled] = useState(false)
@@ -48,7 +48,7 @@ export default function TransactionSidePanel ({
     return null
   }
 
-  const radioItems = constructPathDescription(transactionPath, proxies)
+  const radioItems = constructPathDescription(transactionPath, apps)
   const { annotatedDescription } = transactionPath[transactionPath.length - 1]
 
   return (
@@ -186,6 +186,6 @@ export default function TransactionSidePanel ({
 TransactionSidePanel.propTypes = {
   onClose: PropTypes.func,
   opened: PropTypes.bool,
-  proxies: PropTypes.array,
+  apps: PropTypes.array,
   transactionPath: PropTypes.array
 }

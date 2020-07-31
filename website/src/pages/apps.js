@@ -3,10 +3,6 @@ import { useQuery } from 'graphql-hooks'
 import {
   Info,
 
-  Split,
-  Box,
-  Text,
-
   DataView,
   AppBadge,
   ContextMenu,
@@ -25,38 +21,29 @@ import useSort from '../hooks/sort'
 
 const APPS_QUERY = `
   query(
-    $before: Cursor
-    $after: Cursor
-    $sort: AppConnectionSort
-    $filter: AppConnectionFilter
+    $first: Int!
+    $skip: Int!
+    $orderBy: Repo_orderBy!
+    $orderDirection: OrderDirection!
+    $filter: Repo_filter
   ) {
-    apps(
-      before: $before,
-      after: $after,
-      sort: $sort,
-      filter: $filter
+    repos(
+      first: $first,
+      skip: $skip,
+      orderBy: $orderBy,
+      orderDirection: $orderDirection,
+      where: $filter
     ) {
-      nodes {
-        repository
-        icons {
-          src
-        }
+      name
+      appCount
+      lastVersion {
+        semanticVersion
+        contentUri
+        manifest
+      }
+      registry {
         name
-        ens
-        description
-        installations
-        sourceUrl
-        changelogUrl
-        hash
-        score
       }
-      pageInfo {
-        startCursor
-        endCursor
-        hasPreviousPage
-        hasNextPage
-      }
-      totalCount
     }
   }
 `
@@ -67,12 +54,11 @@ function renderAppEntry ({
   name,
   ens,
   description,
-  installations,
-  score
+  appCount
 }) {
   let iconSrc
   if (icons.length) {
-    iconSrc = icons[0].src
+    iconSrc = icons[0]
   }
 
   return [
@@ -85,22 +71,21 @@ function renderAppEntry ({
     />,
     <div key='app-repo'>{ens}</div>,
     <div key='app-description'>{description}</div>,
-    <div key='app-installations'>{formatNumber(installations)}</div>,
-    <div key='app-score'>{formatNumber(score * 100, 2)}</div>
+    <div key='app-installations'>{formatNumber(appCount)}</div>
   ]
 }
 
 export default () => {
-  const [sort, sortBy] = useSort('score', 'DESC')
-  const [pagination, setPagination] = useState(['after'])
+  const [sort, sortBy] = useSort('appCount', 'desc')
+  const [pagination, setPagination] = useState(0)
 
   const page = useCallback(
-    (direction, cursor) => setPagination([direction, cursor])
+    (skip) => setPagination(skip)
   )
 
   // Reset pagination after a new sort has been applied
   useEffect(() => {
-    setPagination([])
+    setPagination(0)
   }, [sort])
 
   const {
@@ -109,15 +94,13 @@ export default () => {
     data
   } = useQuery(APPS_QUERY, {
     variables: {
-      sort: {
-        [sort[0]]: sort[1]
-      },
+      orderBy: sort[0],
+      orderDirection: sort[1],
       filter: {
-        installations: {
-          gt: 0
-        }
+        appCount_gt: 0
       },
-      [pagination[0]]: pagination[1]
+      skip: pagination,
+      first: 10
     },
 
     // This is kind of ugly, but this identity function
@@ -130,96 +113,95 @@ export default () => {
     return <Info mode='error'>An error occurred. Try again.</Info>
   }
 
+  let apps = []
+  if (data && data.repos) {
+    apps = data.repos.map((repo) => {
+      const ens = `${repo.name}.${repo.registry.name}`
+      const lastVersion = repo.lastVersion || {}
+      let contentUri = lastVersion.contentUri
+      if (contentUri) {
+        contentUri = contentUri.split(':')[1]
+      }
+      const {
+        name,
+        description,
+        icons = [],
+        changelog_url: changelogUrl,
+        source_url: sourceUrl
+      } = JSON.parse(lastVersion.manifest || null) || {}
+      const appCount = repo.appCount
+      const node = repo.node
+      return {
+        name,
+        description,
+        appCount,
+        icons: icons.map(({ src }) => `https://gateway.ipfs.io/ipfs/${contentUri}${src}`),
+        ens,
+        node,
+        changelogUrl,
+        sourceUrl
+      }
+    })
+  }
+
   const firstFetch = loading && !data
   return <div>
     <NavTabs
       items={[{
-        label: 'Organisations',
+        label: 'Organizations',
         path: '/orgs'
       }, {
         label: 'Apps',
         path: '/apps'
       }]}
     />
-    <Split
-      primary={<div>
-        {!firstFetch && (
-          <DataView
-            fields={[
-              <SortHeader
-                key='sort-app'
-                label='App'
-                onClick={() => sortBy('name')}
-                sortOrder={sort[0] === 'name' && sort[1]}
-              />,
-              <SortHeader
-                key='sort-repo'
-                label='Repository'
-                onClick={() => sortBy('ens')}
-                sortOrder={sort[0] === 'ens' && sort[1]}
-              />,
-              <div key='sort-description'>Description</div>,
-              {
-                label: (
-                  <SortHeader
-                    key='sort-installations'
-                    label='Installations'
-                    onClick={() => sortBy('installations')}
-                    sortOrder={sort[0] === 'installations' && sort[1]}
-                  />
-                ),
-                align: 'end'
-              },
-              {
-                label: (
-                  <SortHeader
-                    key='sort-score'
-                    label='Score'
-                    onClick={() => sortBy('score')}
-                    sortOrder={sort[0] === 'score' && sort[1]}
-                    help={{
-                      hint: 'What is App Score?',
-                      body: 'App Score is a relative weighted ranking of Applications derived from organization scores expressed as a percentage.'
-                    }}
-                  />
-                ),
-                align: 'end'
-              }
-            ]}
-            entries={data.apps.nodes}
-            renderEntry={renderAppEntry}
-            renderEntryActions={({ sourceUrl, changelogUrl, hash }) => [
-              <ContextMenu
-                key='open-org'
-                disabled={!sourceUrl && !changelogUrl && !hash}
-              >
-                {sourceUrl && (
-                  <ContextMenuItem onClick={() => openSafe(sourceUrl)}>Source</ContextMenuItem>
-                )}
-                {changelogUrl && (
-                  <ContextMenuItem onClick={() => openSafe(changelogUrl)}>Changelog</ContextMenuItem>
-                )}
-                {hash && (
-                  <ContextMenuItem onClick={() => { window.location = `/orgs?app=${hash}` }}>Organizations</ContextMenuItem>
-                )}
-              </ContextMenu>
-            ]}
-          />
-        )}
-        {!firstFetch && (
-          <WindowedPagination
-            onPage={page}
-            pageInfo={data.apps.pageInfo}
-          />
-        )}
-        {loading && <SyncIndicator label='Loading...' />}
-      </div>}
-      secondary={<div>
-        <Box>
-          <Text.Block size='xlarge'>{firstFetch ? '-' : formatNumber(data.apps.totalCount)}</Text.Block>
-          <Text>apps</Text>
-        </Box>
-      </div>}
-    />
+    <div>
+      {!firstFetch && (
+        <DataView
+          fields={[
+            'App',
+            'Repository',
+            <div key='sort-description'>Description</div>,
+            {
+              label: (
+                <SortHeader
+                  key='sort-installations'
+                  label='Installations'
+                  onClick={() => sortBy('appCount')}
+                  sortOrder={sort[0] === 'appCount' && sort[1]}
+                />
+              ),
+              align: 'end'
+            }
+          ]}
+          entries={apps}
+          renderEntry={renderAppEntry}
+          renderEntryActions={({ sourceUrl, changelogUrl, node }) => [
+            <ContextMenu
+              key='open-org'
+              disabled={!sourceUrl && !changelogUrl && !node}
+            >
+              {sourceUrl && (
+                <ContextMenuItem onClick={() => openSafe(sourceUrl)}>Source</ContextMenuItem>
+              )}
+              {changelogUrl && (
+                <ContextMenuItem onClick={() => openSafe(changelogUrl)}>Changelog</ContextMenuItem>
+              )}
+              {node && (
+                <ContextMenuItem onClick={() => { window.location = `/orgs?app=${node}` }}>Organizations</ContextMenuItem>
+              )}
+            </ContextMenu>
+          ]}
+        />
+      )}
+      {!firstFetch && (
+        <WindowedPagination
+          onPage={page}
+          skip={pagination}
+          resultCount={apps.length}
+        />
+      )}
+      {loading && <SyncIndicator label='Loading...' />}
+    </div>
   </div>
 }

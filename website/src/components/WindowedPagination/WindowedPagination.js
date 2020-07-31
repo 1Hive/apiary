@@ -2,17 +2,16 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Button } from '@aragon/ui'
 
+const PAGE_SIZE = 10
+
 // eslint-disable-next-line react/display-name
 export const WindowedPagination = React.memo(({
   onPage,
-  pageInfo = {}
+  skip = 0,
+  resultCount = 0
 }) => {
-  const {
-    hasNextPage = false,
-    hasPreviousPage = false,
-    startCursor,
-    endCursor
-  } = pageInfo
+  const hasNextPage = resultCount >= PAGE_SIZE
+  const hasPreviousPage = skip > 0
 
   return (
     <div
@@ -24,7 +23,7 @@ export const WindowedPagination = React.memo(({
       `}
     >
       <Button
-        onClick={() => onPage('before', startCursor)}
+        onClick={() => onPage(skip - PAGE_SIZE)}
         style={{
           marginRight: 'auto',
           visibility: hasPreviousPage ? 'visible' : 'hidden'
@@ -33,7 +32,7 @@ export const WindowedPagination = React.memo(({
         Previous
       </Button>
       <Button
-        onClick={() => onPage('after', endCursor)}
+        onClick={() => onPage(skip + PAGE_SIZE)}
         style={{
           marginLeft: 'auto',
           visibility: hasNextPage ? 'visible' : 'hidden'
@@ -47,10 +46,6 @@ export const WindowedPagination = React.memo(({
 
 WindowedPagination.propTypes = {
   onPage: PropTypes.func.isRequired,
-  pageInfo: PropTypes.shape({
-    hasPreviousPage: PropTypes.bool,
-    hasNextPage: PropTypes.bool,
-    startCursor: PropTypes.string,
-    endCursor: PropTypes.string
-  })
+  skip: PropTypes.number,
+  resultCount: PropTypes.number
 }

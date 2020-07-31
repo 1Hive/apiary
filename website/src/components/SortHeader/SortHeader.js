@@ -10,7 +10,7 @@ import {
 export function SortHeader ({
   onClick,
   label,
-  sortOrder = 'NONE',
+  sortOrder = 'none',
   help
 }) {
   return (
@@ -33,8 +33,8 @@ export function SortHeader ({
           {help.body}
         </Help>}
       </span>
-      {sortOrder === 'DESC' && <IconDown size='tiny' />}
-      {sortOrder === 'ASC' && <IconUp size='tiny' />}
+      {sortOrder === 'desc' && <IconDown size='tiny' />}
+      {sortOrder === 'asc' && <IconUp size='tiny' />}
     </span>
   )
 }
@@ -43,9 +43,9 @@ SortHeader.propTypes = {
   onClick: PropTypes.func.isRequired,
   label: PropTypes.string.isRequired,
   sortOrder: PropTypes.oneOf([
-    'ASC',
-    'DESC',
-    'NONE'
+    'asc',
+    'desc',
+    'none'
   ]),
   help: PropTypes.shape({
     hint: PropTypes.string.isRequired,
