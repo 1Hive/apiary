@@ -12,7 +12,6 @@ const {
 } = require('graphql-tools')
 const DataLoader = require('dataloader')
 const { MongoClient } = require('mongodb')
-const { toChecksumAddress } = require('ethereumjs-util')
 
 async function connectToDatabase () {
   const client = await MongoClient.connect(process.env.MONGODB_URI)
@@ -100,8 +99,9 @@ async function buildSchema ({
         profile: {
           selectionSet: `{ address }`,
           async resolve (org) {
-            const profile = await loaders.profileLoader.load(`${process.env.NETWORK_ID}-${org.address}`) || {}
-
+            const profile = await loaders.profileLoader.load(
+              `${process.env.NETWORK_ID}-${org.address.toLowerCase()}`
+            ) || {}
             profile.links = profile.links || []
             profile.editors = profile.editors || []
 
@@ -151,7 +151,7 @@ async function buildSchema ({
             changeset['$addToSet'] = { editors: signerAddress }
           }
 
-          await db.profiles.updateOne({ address: `${process.env.NETWORK_ID}-${address}` }, changeset)
+          await db.profiles.updateOne({ address: `${process.env.NETWORK_ID}-${address.toLowerCase()}` }, changeset)
 
           return delegateToSchema({
             schema: aragonConnectSchema,
@@ -190,8 +190,6 @@ if (missingEnvVars.length > 0) {
 
 connectToDatabase().then(async (db) => {
   const profileLoader = new DataLoader(async (keys) => {
-    // For some reason addresses in The Graph are not checksummed..
-    keys = keys.map((k) => toChecksumAddress(k))
     const results = await db.profiles
       .find({
         address: {
