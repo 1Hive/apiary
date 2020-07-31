@@ -24,15 +24,17 @@ A GraphQL API. Interactive documentation for the API is available if you visit t
 
 #### Configuration
 
-| Environment Variable   | Description                                                 | Default                     |
-| ---------------------- | ----------------------------------------------------------- | --------------------------- |
-| **Database**           |                                                             |                             |
-| `MONGODB_URI`          | **Required**. The URI of the MongoDB instance to connect to | `mongodb://localhost:27017` |
-| `MONGODB_NAME`         | The name of the MongoDB database to connect to              | `daolist`                   |
-| `GRAPH_ARAGON_CONNECT` | The full URL to the Aragon Connect subgraph                 | None (required)             |
-| **Misc**               |                                                             |                             |
-| `PORT`                 | The port to listen for requests on                          | `3000`                      |
-| `LOG_LEVEL`            | The log level                                               | `info`                      |
+| Environment Variable   | Description                                                  | Default                     |
+| ---------------------- | ------------------------------------------------------------ | --------------------------- |
+| **Database**           |                                                              |                             |
+| `MONGODB_URI`          | **Required**. The URI of the MongoDB instance to connect to  | `mongodb://localhost:27017` |
+| `MONGODB_NAME`         | **Required**. The name of the MongoDB database to connect to | `daolist`                   |
+| `GRAPH_ARAGON_CONNECT` | **Required**. The full URL to the Aragon Connect subgraph    | None (required)             |
+| `NETWORK_ID`           | **Required**. The network ID of the Ethereum node.           |                             |
+| `ETH_NODE`             | **Required**. The Ethereum node to connect to.               |                             |
+| **Misc**               |                                                              |                             |
+| `PORT`                 | The port to listen for requests on                           | `4000`                      |
+| `LOG_LEVEL`            | The log level                                                | `info`                      |
 
 ### [website](/website)
 
