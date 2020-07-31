@@ -5,7 +5,8 @@ setup:
   config:
     ETH_NODE: wss://mainnet-fast.eth.aragon.network/ws
     NODE_ENV: production
-    CHAIN_ID: 1
+    NETWORK_ID: 1
+    GRAPH_ARAGON_CONNECT: https://api.thegraph.com/subgraphs/name/1hive/aragon-mainnet
 build:
   docker:
     web: api/Dockerfile.web

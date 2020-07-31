@@ -177,7 +177,7 @@ const REQUIRED_ENV_VARS = [
 ]
 
 const missingEnvVars = REQUIRED_ENV_VARS.filter(
-  (varName) => !!process.env[varName]
+  (varName) => !process.env[varName]
 )
 for (const missingVar of missingEnvVars) {
   console.error(`Please set ${missingVar}.`)

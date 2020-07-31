@@ -7,7 +7,6 @@
     }
   },
   "addons": [
-    "mongolab:shared-single-small",
-    "heroku-redis"
+    "mongolab:shared-single-small"
   ]
 }
