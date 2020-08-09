@@ -24,7 +24,6 @@ import {
 import { format } from 'date-fns'
 import { WindowedPagination } from '../components/WindowedPagination'
 import { SortHeader } from '../components/SortHeader'
-import { NavTabs } from '../components/NavTabs/NavTabs'
 import SmartLink from '../components/SmartLink/SmartLink'
 import useSort from '../hooks/sort'
 import openSafe from '../utils/open-safe'
@@ -108,15 +107,6 @@ const Orgs = ({ history }) => {
   }
 
   return <div>
-    <NavTabs
-      items={[{
-        label: 'Organizations',
-        path: '/orgs'
-      }, {
-        label: 'Apps',
-        path: '/apps'
-      }]}
-    />
     <Split
       primary={<div>
         {!firstFetch && (
