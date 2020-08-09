@@ -118,8 +118,8 @@ async function buildSchema ({
         async organizations (_, args, context, info) {
           if (args.orderBy === 'upvotes') {
             const sortedOrgs = await db.organizations.find()
+              .limit(args.first + args.skip)
               .skip(args.skip)
-              .limit(args.first)
               .sort({
                 upvotes: args.orderDirection === 'asc' ? 1 : -1
               })
@@ -255,6 +255,7 @@ async function buildSchema ({
           }
 
           await db.profiles.updateOne({ address: toNetworkAddress(address) }, changeset)
+          loaders.profileLoader.clear(toNetworkAddress(address))
 
           return delegateToSchema({
             schema: aragonConnectSchema,
@@ -303,6 +304,7 @@ async function buildSchema ({
                 upvotes: 1
               }
             })
+            loaders.orgLoader.clear(toNetworkAddress(address))
           }
 
           return delegateToSchema({
