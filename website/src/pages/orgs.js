@@ -121,6 +121,7 @@ const Orgs = ({ history }) => {
                 sortOrder={sort[0] === 'upvotes' && sort[1]}
               />,
               'Organization',
+              'Description',
               <SortHeader
                 key='sort-created'
                 label='Created'
@@ -146,6 +147,9 @@ const Orgs = ({ history }) => {
                 {profile.icon && <img src={profile.icon} width='32px' height='auto' css={`margin-right: ${1 * GU}px;`} />}
                 <IdentityBadge key='org-addr' entity={address} label={profile.name || ''} popoverTitle={profile.name || ''} badgeOnly={!!profile.name} />
                 {profile.editors && profile.editors.length > 0 && <IconCircleCheck />}
+              </div>,
+              <div key='org-description'>
+                {profile.description || 'No description set.'}
               </div>,
               <div key='org-created-at'>
                 {format(new Date(createdAt * 1000), 'dd/MM/y')}
