@@ -18,6 +18,7 @@ import Web3 from 'web3'
 import { composeMessage } from '../../utils/utils'
 
 const MAX_CHARACTER_COUNT = 140
+const PROFILE_PREFIX = 'PROFILE_DATA'
 
 const UPDATE_PROFILE_MUTATION = `
   mutation(
@@ -139,7 +140,13 @@ function EditSidePanel ({
     setSaved(true)
     try {
       const web3 = new Web3(ethereum)
-      const messageToSign = composeMessage(address, profileName, profileDescription, profileIcon, profileLinks)
+      const messageToSign = composeMessage(PROFILE_PREFIX, {
+        address,
+        profileName,
+        profileDescription,
+        profileIcon,
+        profileLinks
+      })
 
       const signedMessage = await web3.eth.personal.sign(messageToSign, account)
       const { error } = await updateProfile({

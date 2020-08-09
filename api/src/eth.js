@@ -4,17 +4,8 @@ const Web3EthContract = require('web3-eth-contract')
 const KERNEL_ABI = require('../abis/kernel.json')
 
 const PROFILE_PREFIX = 'PROFILE_DATA'
-export function composeSignedMessage (orgAddress, {
-  name,
-  description,
-  links,
-  icon
-}) {
-  const sanitizedName = name.replace(/\s/g, '')
-  const sanitizedDescription = description.replace(/\s/g, '')
-  const concatenatedLinks = links.join(',')
-
-  return `${PROFILE_PREFIX}${orgAddress}${sanitizedName}${sanitizedDescription}${icon}${concatenatedLinks}`
+export function composeMessage (prefix, obj) {
+  return `${prefix}${JSON.stringify(obj, Object.keys(obj).sort())}`
 }
 
 export function addressEqual (a, b) {
@@ -35,17 +26,6 @@ export function validateSignerAddress (
   })
 
   return addressEqual(recoveredAddress, signerAddress)
-}
-
-export function validateSignature (
-  orgAddress,
-  profile,
-  signedMessage,
-  signerAddress
-) {
-  const originalMessage = composeSignedMessage(orgAddress, profile)
-
-  return validateSignerAddress(originalMessage, signedMessage, signerAddress)
 }
 
 const MANAGE_PROFILE_ROLE = '0x675b358b95ae7561136697fcc3302da54a334ac7c199d53621288290fb863f5c'

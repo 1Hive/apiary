@@ -26,6 +26,7 @@ import { WindowedPagination } from '../components/WindowedPagination'
 import { SortHeader } from '../components/SortHeader'
 import { NavTabs } from '../components/NavTabs/NavTabs'
 import SmartLink from '../components/SmartLink/SmartLink'
+import Vote from '../components/Vote/Vote'
 import useSort from '../hooks/sort'
 import openSafe from '../utils/open-safe'
 import { formatNumber } from '../utils/numbers'
@@ -44,6 +45,7 @@ const ORGANIZATIONS_QUERY = `
       orderBy: $orderBy,
       orderDirection: $orderDirection
     ) {
+      upvotes
       address
       createdAt
       profile {
@@ -61,7 +63,7 @@ const ORGANIZATIONS_QUERY = `
 `
 
 const Orgs = ({ history }) => {
-  const [sort, sortBy] = useSort('createdAt', 'desc')
+  const [sort, sortBy] = useSort('upvotes', 'desc')
   const [pagination, setPagination] = useState(0)
   const { layoutName } = useLayout()
   const theme = useTheme()
@@ -122,6 +124,12 @@ const Orgs = ({ history }) => {
         {!firstFetch && (
           <DataView
             fields={[
+              <SortHeader
+                key='sort-score'
+                label='Score'
+                onClick={() => sortBy('upvotes')}
+                sortOrder={sort[0] === 'upvotes' && sort[1]}
+              />,
               'Organization',
               <SortHeader
                 key='sort-created'
@@ -136,6 +144,7 @@ const Orgs = ({ history }) => {
               createdAt,
               profile = {}
             }) => [
+              <Vote address={address} />,
               <div
                 key='org-addr'
                 css={`
