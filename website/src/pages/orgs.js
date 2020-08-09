@@ -44,6 +44,7 @@ const ORGANIZATIONS_QUERY = `
       orderBy: $orderBy,
       orderDirection: $orderDirection
     ) {
+      upvotes
       address
       createdAt
       profile {
@@ -61,7 +62,7 @@ const ORGANIZATIONS_QUERY = `
 `
 
 const Orgs = ({ history }) => {
-  const [sort, sortBy] = useSort('createdAt', 'desc')
+  const [sort, sortBy] = useSort('upvotes', 'desc')
   const [pagination, setPagination] = useState(0)
   const { layoutName } = useLayout()
   const theme = useTheme()
