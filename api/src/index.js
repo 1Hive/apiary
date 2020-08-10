@@ -80,7 +80,7 @@ async function buildSchema ({
       # Update organization profile.
       updateProfile(
         # The organization address
-        adress: String!,
+        address: String!,
         # The desired organization name.
         name: String,
         # An URL to the desired organization icon.

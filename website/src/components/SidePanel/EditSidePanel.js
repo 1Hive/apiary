@@ -39,7 +39,6 @@ const UPDATE_PROFILE_MUTATION = `
       signerAddress: $signerAddress,
       signedMessage: $signedMessage,
     ) {
-      ens
       profile {
         name
       }
